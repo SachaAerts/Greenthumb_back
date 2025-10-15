@@ -1,7 +1,7 @@
 @org.springframework.modulith.ApplicationModule(
-        allowedDependencies = {"user", "plant", "tracking", "forum", "resources"},
+        allowedDependencies = {"user"},
         type = ApplicationModule.Type.OPEN
 )
-package com.Greanthumb.api.apigateway;
+package com.Greanthumb.api.plant;
 
 import org.springframework.modulith.ApplicationModule;

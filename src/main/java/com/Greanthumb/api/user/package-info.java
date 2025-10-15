@@ -1,5 +1,5 @@
 @org.springframework.modulith.ApplicationModule(
-        allowedDependencies = {},
+        allowedDependencies = {"notification"},
         type = ApplicationModule.Type.OPEN
 )
 package com.Greanthumb.api.user;
