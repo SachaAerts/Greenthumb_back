@@ -1,0 +1,10 @@
+objet sans id, des objets avec une valeur
+
+par exemple Email, Numero_Telephone
+
+Si possible crée le plus d'objet valeur possible
+
+Par exemple :
+
+c'est mieux d'avoir un attribue Email email car on peux mettre dans cette classe la validation de l'email (ce n'est pas
+a la classe user de valider l'email => Single responsibility
