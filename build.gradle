@@ -41,6 +41,7 @@ dependencies {
 	implementation 'org.springframework.modulith:spring-modulith-starter-jpa'
 	implementation 'com.h2database:h2'
 	implementation 'org.springframework.modulith:spring-modulith-docs'
+	implementation 'org.flywaydb:flyway-core'
 
 	compileOnly 'org.projectlombok:lombok'
 
