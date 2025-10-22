@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-10-22-create-user-indexes
+      author: jason engels
+      changes:
+        - createIndex:
+            indexName: idx_plants_id_user
+            tableName: plants
+            columns:
+              - column:
+                  name: id_user
+
+        - createIndex:
+            indexName: idx_ressources_id_user
+            tableName: ressources
+            columns:
+              - column:
+                  name: id_user
+
+        - createIndex:
+            indexName: idx_post_id_user
+            tableName: post
+            columns:
+              - column:
+                  name: id_user
+
+        - createIndex:
+            indexName: idx_reply_id_user
+            tableName: reply
+            columns:
+              - column:
+                  name: id_user
