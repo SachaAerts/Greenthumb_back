@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-10-23-roles-seeder
+      author: jason engels
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: label
+                  value: "ADMIN"
+
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: label
+                  value: "MODERATEUR"
+
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: label
+                  value: "UTILISATEUR"
+
