@@ -24,5 +24,6 @@ public class RoleEntity {
     private String label;
 
     @OneToMany(mappedBy = "role")
+    @Builder.Default
     private List<UserEntity> users = new ArrayList<>();
 }

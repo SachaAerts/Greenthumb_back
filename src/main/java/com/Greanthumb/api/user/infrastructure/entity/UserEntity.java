@@ -40,6 +40,7 @@ public class UserEntity {
     private String biography;
 
     @Column(name = "is_private", nullable = false)
+    @Builder.Default
     private boolean isPrivate = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
