@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-10-25-users-seeder
+      author: jason
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Joe
+              - column:
+                  name: lastname
+                  value: Doe
+              - column:
+                  name: username
+                  value: robocop
+              - column:
+                  name: mail
+                  value: j.doe@gmail.com
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "00000000000"
+              - column:
+                  name: biography
+                  value: "Je suis un robot"
+              - column:
+                  name: id_role
+                  value: "2"

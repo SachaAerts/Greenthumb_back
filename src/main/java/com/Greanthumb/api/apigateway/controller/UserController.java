@@ -17,6 +17,7 @@ public class UserController {
 
     @GetMapping("/count")
     public ResponseEntity<?> getUserCount() {
+        System.out.println(userService.countUsers());
         return ResponseEntity.ok(userService.countUsers());
     }
 
