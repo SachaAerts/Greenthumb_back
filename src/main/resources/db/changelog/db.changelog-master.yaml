@@ -21,3 +21,5 @@ databaseChangeLog:
       file: db/changelog/seeds/2025-10-25-message-seeder.yaml
   - include:
       file: db/changelog/seeds/2025-10-25-messages-3-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-25-resources-seeder.yaml
