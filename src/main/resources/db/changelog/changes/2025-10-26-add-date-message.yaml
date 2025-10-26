@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-10-26-add-date-message
+      author: jason
+      changes:
+        - addColumn:
+            tableName: messages
+            columns:
+              - column:
+                  name: published_date
+                  type: datetime
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
