@@ -3,7 +3,6 @@ package com.Greanthumb.api.apigateway.controller;
 import com.Greanthumb.api.apigateway.service.MessageService;
 import com.Greanthumb.api.user.domain.exception.NoFoundException;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/messages")
 public class ForumController {
 
-    private MessageService messageService;
+    private final MessageService messageService;
 
     public ForumController(MessageService messageService) {
         this.messageService = messageService;

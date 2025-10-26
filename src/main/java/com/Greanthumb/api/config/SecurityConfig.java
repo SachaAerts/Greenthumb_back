@@ -13,7 +13,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/count", "/api/messages/top3like").permitAll()
+                        .requestMatchers("/api/users/count",
+                                "/api/messages/top3like",
+                                "api/resources/threeResource")
+                        .permitAll()
                         .anyRequest().authenticated()
                 );
 
