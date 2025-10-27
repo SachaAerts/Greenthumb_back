@@ -1,0 +1,131 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-10-26-seed-messages3-seeder
+      author: jason
+      changes:
+        - insert:
+            tableName: messages
+            columns:
+              - column:
+                  name: title
+                  value: "Comment récolté du coton"
+              - column:
+                  name: text
+                  value: "Demander à sacha"
+              - column:
+                  name: number_like
+                  valueNumeric: "70000000"
+              - column:
+                  name: published_date
+                  valueDate: "2025-10-24T10:00:00"
+
+        - insert:
+            tableName: messages
+            columns:
+              - column:
+                  name: title
+                  value: "Le soleil est important"
+              - column:
+                  name: text
+                  value: "Quelqu'un sait comment faire poussé un tomates"
+              - column:
+                  name: number_like
+                  valueNumeric: "3"
+              - column:
+                  name: published_date
+                  valueDate: "2025-10-24T10:00:00"
+
+        - insert:
+            tableName: messages
+            columns:
+              - column:
+                  name: title
+                  value: "Plant Carnivore ?"
+              - column:
+                  name: text
+                  value: "Quelqu'un sait comment faire poussé un tomates"
+              - column:
+                  name: number_like
+                  valueNumeric: "30"
+              - column:
+                  name: published_date
+                  valueDate: "2025-10-24T10:00:00"
+
+        - insert:
+            tableName: tag
+            columns:
+              - column:
+                  name: id_message
+                  valueComputed: "(SELECT id_message FROM messages WHERE title = 'Comment récolté du coton')"
+              - column:
+                  name: id_tag
+                  valueComputed: "(SELECT id_tag FROM categories WHERE label = 'question')"
+
+        - insert:
+            tableName: tag
+            columns:
+              - column:
+                  name: id_message
+                  valueComputed: "(SELECT id_message FROM messages WHERE title = 'Comment récolté du coton')"
+              - column:
+                  name: id_tag
+                  valueComputed: "(SELECT id_tag FROM categories WHERE label = 'aide')"
+
+        - insert:
+            tableName: tag
+            columns:
+              - column:
+                  name: id_message
+                  valueComputed: "(SELECT id_message FROM messages WHERE title = 'Le soleil est important')"
+              - column:
+                  name: id_tag
+                  valueComputed: "(SELECT id_tag FROM categories WHERE label = 'question')"
+
+        - insert:
+            tableName: tag
+            columns:
+              - column:
+                  name: id_message
+                  valueComputed: "(SELECT id_message FROM messages WHERE title = 'Plant Carnivore ?')"
+              - column:
+                  name: id_tag
+                  valueComputed: "(SELECT id_tag FROM categories WHERE label = 'aide')"
+
+        - insert:
+            tableName: post
+            columns:
+              - column:
+                  name: id_user
+                  value: "1"
+              - column:
+                  name: id_message
+                  valueComputed: "(SELECT id_message FROM messages WHERE title = 'Comment récolté du coton')"
+              - column:
+                  name: is_like
+                  valueBoolean: "true"
+
+        - insert:
+            tableName: post
+            columns:
+              - column:
+                  name: id_user
+                  value: "1"
+              - column:
+                  name: id_message
+                  valueComputed: "(SELECT id_message FROM messages WHERE title = 'Le soleil est important')"
+              - column:
+                  name: is_like
+                  valueBoolean: "true"
+
+        - insert:
+            tableName: post
+            columns:
+              - column:
+                  name: id_user
+                  value: "1"
+              - column:
+                  name: id_message
+                  valueComputed: "(SELECT id_message FROM messages WHERE title = 'Plant Carnivore ?')"
+              - column:
+                  name: is_like
+                  valueBoolean: "true"
