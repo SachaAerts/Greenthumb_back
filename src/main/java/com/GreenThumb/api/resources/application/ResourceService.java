@@ -1,4 +1,4 @@
-package com.GreenThumb.api.resources.infrastructure.application;
+package com.GreenThumb.api.resources.application;
 
 import com.GreenThumb.api.resources.domain.entity.Resource;
 import com.GreenThumb.api.resources.domain.repository.ResourceRepository;

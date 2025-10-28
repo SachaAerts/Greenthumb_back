@@ -2,7 +2,7 @@ package com.GreenThumb.api.apigateway.service;
 
 import com.GreenThumb.api.apigateway.mapper.ResourceMapper;
 import com.GreenThumb.api.apigateway.dto.Resource;
-import com.GreenThumb.api.resources.infrastructure.application.ResourceService;
+import com.GreenThumb.api.resources.application.ResourceService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
