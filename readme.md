@@ -16,3 +16,9 @@ réaliser les actions de l'utilisateur
 1. Cloner le répository
 2. Configurer la base de donnée (installer postgreSql et crée une base de donnée GreenThumb)
 3. lancer ./Gradlew bootrun (il lance les migrations, les seeders et lance le back)
+
+### Installer PostgreSQL
+1. Installer postgreSQL : https://www.postgresql.org/download/ (version 18)
+2. Quand il affiche la fenetre d'execution de stack builder, fermez-là
+3. Ouvrer pgAdmin4 et ajouter une une base de donnée GreenThumb
+4. Configurer la bd sur intelliJ pour avoir accés depuis l'ide
