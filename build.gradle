@@ -45,6 +45,7 @@ dependencies {
 	implementation 'org.springframework.modulith:spring-modulith-docs'
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'org.springframework.boot:spring-boot-configuration-processor'
+	implementation 'org.passay:passay:1.6.6'
 
 	compileOnly 'org.projectlombok:lombok'
 
