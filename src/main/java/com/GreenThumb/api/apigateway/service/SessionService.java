@@ -1,18 +1,28 @@
 package com.GreenThumb.api.apigateway.service;
 
 import com.GreenThumb.api.apigateway.dto.LoginRequest;
+import com.GreenThumb.api.apigateway.dto.Session;
+import com.GreenThumb.api.apigateway.mapper.UserMapper;
 import com.GreenThumb.api.apigateway.utils.EmailValidator;
-import lombok.extern.slf4j.Slf4j;
+import com.GreenThumb.api.user.application.service.UserService;
+import com.GreenThumb.api.user.domain.entity.User;
 import org.springframework.stereotype.Service;
 
-@Slf4j
+import java.util.Map;
+import java.util.UUID;
+
 @Service
 public class SessionService {
 
     private final EmailValidator emailValidator;
 
-    public SessionService(EmailValidator emailValidator) {
+    private final UserService userService;
+    private final TokenService tokenService;
+
+    public SessionService(EmailValidator emailValidator, UserService userService, TokenService tokenService) {
         this.emailValidator = emailValidator;
+        this.userService = userService;
+        this.tokenService = tokenService;
     }
 
     public void loginRequest(LoginRequest loginRequest) {
@@ -30,7 +40,15 @@ public class SessionService {
         }
     }
 
-    private void loginWithEmail(LoginRequest loginRequest) {
+    private Session loginWithEmail(LoginRequest loginRequest) {
+        User user = userService.getUserByEmail(loginRequest.login());
+        generateTokenCookie(user);
 
+        return new Session(UserMapper.toResponse(user));
+    }
+
+    private void generateTokenCookie(User user) {
+        String accessToken = tokenService.generateAccessToken(user.username().username(), Map.of("role", user.role()));
+        String refreshToken = tokenService.generateRefreshToken(user.username().username());
     }
 }

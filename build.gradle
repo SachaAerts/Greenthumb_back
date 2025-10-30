@@ -46,6 +46,7 @@ dependencies {
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'org.springframework.boot:spring-boot-configuration-processor'
 	implementation 'org.passay:passay:1.6.6'
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.7'
 
 	compileOnly 'org.projectlombok:lombok'
 
@@ -54,6 +55,8 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'org.springframework.modulith:spring-modulith-actuator'
 	runtimeOnly 'org.springframework.modulith:spring-modulith-observability'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.7'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.7'
 
 	annotationProcessor 'org.projectlombok:lombok'
 

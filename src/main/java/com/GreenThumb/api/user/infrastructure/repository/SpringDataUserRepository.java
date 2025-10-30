@@ -3,4 +3,8 @@ package com.GreenThumb.api.user.infrastructure.repository;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long> { }
+import java.util.Optional;
+
+public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long> {
+    Optional<UserEntity> findByEmail(String email);
+}
