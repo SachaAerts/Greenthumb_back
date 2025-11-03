@@ -25,7 +25,7 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     public User getUserByEmail(String email) throws NoFoundException, IllegalArgumentException {
-        return jpaRepo.findByEmail(email)
+        return jpaRepo.findByMail(email)
                 .map(userEntity -> {
                     try {
                         return UserMapper.toDomain(userEntity);

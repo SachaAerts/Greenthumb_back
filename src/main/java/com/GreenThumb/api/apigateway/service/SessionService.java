@@ -9,20 +9,22 @@ import com.GreenThumb.api.user.domain.entity.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class SessionService {
 
     private final EmailValidator emailValidator;
-
     private final UserService userService;
     private final TokenService tokenService;
+    private final RedisService redisService;
 
-    public SessionService(EmailValidator emailValidator, UserService userService, TokenService tokenService) {
+    public SessionService(EmailValidator emailValidator, UserService userService,
+                          TokenService tokenService, RedisService redisService) {
         this.emailValidator = emailValidator;
         this.userService = userService;
         this.tokenService = tokenService;
+        this.redisService = redisService;
     }
 
     public void loginRequest(LoginRequest loginRequest) {
@@ -48,7 +50,10 @@ public class SessionService {
     }
 
     private void generateTokenCookie(User user) {
-        String accessToken = tokenService.generateAccessToken(user.username().username(), Map.of("role", user.role()));
-        String refreshToken = tokenService.generateRefreshToken(user.username().username());
+        String username = user.username().username();
+        String accessToken = tokenService.generateAccessToken(username, Map.of("role", user.role()));
+        String refreshToken = tokenService.generateRefreshToken(username);
+
+        redisService.save("refresh:" + username, refreshToken, 7, TimeUnit.DAYS);
     }
 }

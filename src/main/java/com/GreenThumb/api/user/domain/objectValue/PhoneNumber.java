@@ -1,10 +1,12 @@
 package com.GreenThumb.api.user.domain.objectValue;
 
 import com.GreenThumb.api.user.domain.exception.FormatException;
+import lombok.Getter;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+@Getter
 public class PhoneNumber {
     private static final Pattern PHONE_PATTERN = Pattern.compile(
             "^0\\d{1,14}$"
@@ -16,10 +18,6 @@ public class PhoneNumber {
         checkNumber(number);
 
         this.number = number;
-    }
-
-    public String getNumber() {
-        return number;
     }
 
     public void setNumber(String number) throws FormatException {
