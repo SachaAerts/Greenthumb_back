@@ -39,6 +39,10 @@ public class UserEntity {
     @Column(name = "biography", length = 1000)
     private String biography;
 
+    @Column(name = "enabled", nullable = false)
+    @Builder.Default
+    private boolean enabled = false;
+
     @Column(name = "is_private", nullable = false)
     @Builder.Default
     private boolean isPrivate = false;
