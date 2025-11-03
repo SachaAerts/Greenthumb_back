@@ -15,7 +15,12 @@ réaliser les actions de l'utilisateur
 ## Installation et Execution
 1. Cloner le répository
 2. Configurer la base de donnée (installer postgreSql et crée une base de donnée GreenThumb)
-3. lancer ./Gradlew bootrun (il lance les migrations, les seeders et lance le back)
+3. lancer ./gradlew bootRun (il lance les migrations, les seeders et lance le back) => lance en dev
+
+Commande possible : 
+
+    - ./gradlew bootRunProd
+    - ./gradlew bootRunStanging
 
 ### Installer PostgreSQL
 1. Installer postgreSQL : https://www.postgresql.org/download/ (version 18)
