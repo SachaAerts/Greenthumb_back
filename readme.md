@@ -7,7 +7,7 @@ réaliser les actions de l'utilisateur
 
 ## Architecture
 - Spring boot 3.5.6
-- Java 25
+- Java 21
 - PostgreSQL 
 - Gradle
 - Rest
