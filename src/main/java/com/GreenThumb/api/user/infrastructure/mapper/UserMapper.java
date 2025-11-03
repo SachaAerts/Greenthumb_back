@@ -1,0 +1,26 @@
+package com.GreenThumb.api.user.infrastructure.mapper;
+
+import com.GreenThumb.api.user.domain.entity.User;
+import com.GreenThumb.api.user.domain.exception.FormatException;
+import com.GreenThumb.api.user.domain.objectValue.*;
+import com.GreenThumb.api.user.infrastructure.entity.RoleEntity;
+import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
+
+public class UserMapper {
+
+    public static User toDomain(UserEntity userEntity) throws FormatException {
+        return new User(
+                new Username(userEntity.getUsername()),
+                new FullName(userEntity.getFirstname(), userEntity.getLastname()),
+                new Email(userEntity.getMail()),
+                new PhoneNumber(userEntity.getPhoneNumber()),
+                userEntity.getBiography(),
+                userEntity.isPrivate(),
+                toDomain(userEntity.getRole())
+        );
+    }
+
+    public static Role toDomain(RoleEntity roleEntity) {
+        return new Role(roleEntity.getLabel());
+    }
+}
