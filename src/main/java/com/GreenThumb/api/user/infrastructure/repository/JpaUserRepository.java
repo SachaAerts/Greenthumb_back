@@ -5,6 +5,8 @@ import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class JpaUserRepository implements UserRepository {
     private final SpringDataUserRepository jpaRepo;
@@ -23,6 +25,11 @@ public class JpaUserRepository implements UserRepository {
     @Override
     public long count() {
         return jpaRepo.count();
+    }
+
+    @Override
+    public UserEntity save(UserEntity user) {
+        return jpaRepo.save(user);
     }
 
 }
