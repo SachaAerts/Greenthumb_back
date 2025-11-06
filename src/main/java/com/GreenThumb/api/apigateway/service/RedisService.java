@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,4 +26,5 @@ public class RedisService {
     public void delete(String key) {
         redisTemplate.delete(key);
     }
+    
 }

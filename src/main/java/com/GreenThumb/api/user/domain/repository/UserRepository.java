@@ -5,7 +5,9 @@ import com.GreenThumb.api.user.domain.entity.User;
 public interface UserRepository {
     String getUsername(Long id_user);
 
-    User getUserByEmail(String email);
+    User getUserByEmail(String email, String password);
+
+    User getUserByUsername(String username, String password);
 
     long count();
 }

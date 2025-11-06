@@ -1,8 +1,10 @@
 package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.dto.LoginRequest;
+import com.GreenThumb.api.apigateway.dto.Session;
 import com.GreenThumb.api.apigateway.service.SessionService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +20,18 @@ public class SessionController {
 
     @PostMapping("sessions")
     public ResponseEntity<?> postSessions(@Valid @RequestBody LoginRequest request) {
-        sessionService.loginRequest(request);
+        Session session = sessionService.loginRequest(request);
 
-        return ResponseEntity.ok().build();
+        ResponseCookie refreshCookie = ResponseCookie.from("refresh_cookie", session.refreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite("Strict")
+                .maxAge(7 * 24 * 60 * 60)
+                .build();
+
+        return ResponseEntity.ok()
+                .header("Set-Cookie", refreshCookie.toString())
+                .body(session.accessToken());
     }
 }
