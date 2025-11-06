@@ -1,6 +1,6 @@
 package com.GreenThumb.api.apigateway.mapper;
 
-import com.GreenThumb.api.apigateway.dto.UserResponse;
+import com.GreenThumb.api.apigateway.dto.user.UserResponse;
 import com.GreenThumb.api.user.domain.entity.User;
 
 public class UserMapper {

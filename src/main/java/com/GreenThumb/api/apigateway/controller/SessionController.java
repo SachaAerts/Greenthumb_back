@@ -1,7 +1,8 @@
 package com.GreenThumb.api.apigateway.controller;
 
-import com.GreenThumb.api.apigateway.dto.UserConnection;
+import com.GreenThumb.api.apigateway.dto.user.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
+import com.GreenThumb.api.apigateway.dto.user.UserRegister;
 import com.GreenThumb.api.apigateway.service.SessionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseCookie;
@@ -33,5 +34,11 @@ public class SessionController {
         return ResponseEntity.ok()
                 .header("Set-Cookie", refreshCookie.toString())
                 .body(session.accessToken());
+    }
+
+    @PostMapping("register")
+    public ResponseEntity<?> postRegister(@Valid @RequestBody UserRegister request) {
+        //Call class authentication
+        return ResponseEntity.accepted().build();
     }
 }
