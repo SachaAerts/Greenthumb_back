@@ -1,6 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
-import com.GreenThumb.api.apigateway.dto.LoginRequest;
+import com.GreenThumb.api.apigateway.dto.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
 import com.GreenThumb.api.apigateway.service.SessionService;
 import jakarta.validation.Valid;
@@ -19,7 +19,8 @@ public class SessionController {
     }
 
     @PostMapping("sessions")
-    public ResponseEntity<?> postSessions(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<?> postSessions(@Valid @RequestBody UserConnection request) {
+        System.out.println(request.login() + " " + request.password());
         Session session = sessionService.loginRequest(request);
 
         ResponseCookie refreshCookie = ResponseCookie.from("refresh_cookie", session.refreshToken())
