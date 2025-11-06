@@ -1,12 +1,11 @@
 package com.GreenThumb.api.apigateway.service;
 
-import com.GreenThumb.api.apigateway.dto.LoginRequest;
+import com.GreenThumb.api.apigateway.dto.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
 import com.GreenThumb.api.apigateway.mapper.UserMapper;
 import com.GreenThumb.api.apigateway.utils.EmailValidator;
 import com.GreenThumb.api.user.application.service.UserService;
 import com.GreenThumb.api.user.domain.entity.User;
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -31,7 +30,7 @@ public class SessionService {
         this.redisService = redisService;
     }
 
-    public Session loginRequest(LoginRequest loginRequest) {
+    public Session loginRequest(UserConnection loginRequest) {
         if (loginRequest == null || loginRequest.login().isEmpty() || loginRequest.password().isEmpty()) {
             throw new IllegalArgumentException("Requête invalide");
         }
@@ -47,7 +46,7 @@ public class SessionService {
                 : loginWithUsername(loginRequest);
     }
 
-    private Session loginWithEmail(LoginRequest loginRequest) throws IllegalArgumentException {
+    private Session loginWithEmail(UserConnection loginRequest) throws IllegalArgumentException {
         User user = userService.getUserByEmail(loginRequest.login(), loginRequest.password());
 
         Map<String, String> tokens = saveAndCreateTokens(user);
@@ -55,7 +54,7 @@ public class SessionService {
         return new Session(UserMapper.toResponse(user), tokens.get("ACCESS_TOKEN"), tokens.get("REFRESH_TOKEN"));
     }
 
-    private Session loginWithUsername(LoginRequest loginRequest) {
+    private Session loginWithUsername(UserConnection loginRequest) {
         User user = userService.getUserByUsername(loginRequest.login(), loginRequest.password());
 
         Map<String, String> tokens = saveAndCreateTokens(user);
