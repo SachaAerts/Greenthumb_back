@@ -15,7 +15,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/count",
                                 "/api/messages/top3like",
-                                "/api/resources/three-resources")
+                                "/api/resources/three-resources",
+                                "/api/sessions"
+                        )
                         .permitAll()
                         .anyRequest().authenticated()
                 );
