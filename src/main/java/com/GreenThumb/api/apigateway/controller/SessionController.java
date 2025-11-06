@@ -18,8 +18,8 @@ public class SessionController {
         this.sessionService = sessionService;
     }
 
-    @PostMapping("sessions")
-    public ResponseEntity<?> postSessions(@Valid @RequestBody UserConnection request) {
+    @PostMapping("/sessions")
+    public ResponseEntity<?> postLogin(@Valid @RequestBody UserConnection request) {
         System.out.println(request.login() + " " + request.password());
         Session session = sessionService.loginRequest(request);
 
