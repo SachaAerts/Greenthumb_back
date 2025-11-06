@@ -19,8 +19,7 @@ public class SessionController {
     }
 
     @PostMapping("sessions")
-    public ResponseEntity<?> postSessions(@Valid @RequestBody UserConnection request) {
-        System.out.println(request.login() + " " + request.password());
+    public ResponseEntity<?> postLogin(@Valid @RequestBody UserConnection request) {
         Session session = sessionService.loginRequest(request);
 
         ResponseCookie refreshCookie = ResponseCookie.from("refresh_cookie", session.refreshToken())
