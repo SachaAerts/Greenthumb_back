@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.application.service;
 
+import com.GreenThumb.api.user.domain.entity.User;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -20,4 +21,13 @@ public class UserService {
     public String getUsername(long id_user) throws NoFoundException {
         return userRepository.getUsername(id_user);
     }
+
+    public User getUserByEmail(String email, String password) throws NoFoundException, IllegalArgumentException {
+        return userRepository.getUserByEmail(email, password);
+    }
+
+    public User getUserByUsername(String username, String password) throws NoFoundException, IllegalArgumentException {
+        return userRepository.getUserByUsername(username, password);
+    }
+
 }

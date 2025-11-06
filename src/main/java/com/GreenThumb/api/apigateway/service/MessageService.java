@@ -13,8 +13,8 @@ import java.util.Map;
 @Service
 public class MessageService {
 
-    private CommentaryService commentaryService;
-    private UserService userService;
+    private final CommentaryService commentaryService;
+    private final UserService userService;
 
     public MessageService(CommentaryService commentaryService, UserService userService) {
         this.commentaryService = commentaryService;

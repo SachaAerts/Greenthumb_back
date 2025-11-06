@@ -4,7 +4,6 @@ import com.GreenThumb.api.apigateway.dto.Message;
 import com.GreenThumb.api.apigateway.service.MessageService;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

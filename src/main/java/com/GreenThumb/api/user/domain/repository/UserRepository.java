@@ -1,7 +1,13 @@
 package com.GreenThumb.api.user.domain.repository;
 
-public interface UserRepository {
+import com.GreenThumb.api.user.domain.entity.User;
 
+public interface UserRepository {
     String getUsername(Long id_user);
+
+    User getUserByEmail(String email, String password);
+
+    User getUserByUsername(String username, String password);
+
     long count();
 }
