@@ -16,7 +16,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/count",
                                 "/api/messages/top3like",
                                 "/api/resources/three-resources",
-                                "/api/sessions"
+                                "/api/sessions",
+                                "/api/session/refresh"
                         )
                         .permitAll()
                         .anyRequest().authenticated()
