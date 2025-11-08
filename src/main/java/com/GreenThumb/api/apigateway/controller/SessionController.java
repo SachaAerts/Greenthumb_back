@@ -31,16 +31,8 @@ public class SessionController {
         System.out.println(request.login() + " " + request.password());
         Session session = sessionService.loginRequest(request);
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refresh_cookie", session.refreshToken())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .sameSite("Strict")
-                .maxAge(7 * 24 * 60 * 60)
-                .build();
-
         return ResponseEntity.ok()
-                .header("Set-Cookie", refreshCookie.toString())
+                .header("Set-Cookie", getRefreshCookie(session.refreshToken()).toString())
                 .body(session.accessToken());
     }
 
@@ -62,16 +54,18 @@ public class SessionController {
 
         Map<String, String> tokens = sessionService.refreshToken(refreshToken);
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refresh_cookie", tokens.get("refresh_token"))
+        return ResponseEntity.ok()
+                .header("Set-Cookie", getRefreshCookie(tokens.get("refresh_token")).toString())
+                .body(tokens.get("access_token"));
+    }
+
+    private ResponseCookie getRefreshCookie(String token) {
+        return ResponseCookie.from("refresh_cookie", token)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
                 .sameSite("Strict")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
-
-        return ResponseEntity.ok()
-                .header("Set-Cookie", refreshCookie.toString())
-                .body(tokens.get("access_token"));
     }
 }
