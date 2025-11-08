@@ -1,20 +1,28 @@
 package com.GreenThumb.api.user.infrastructure.repository;
 
+import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
 import com.GreenThumb.api.user.domain.exception.FormatException;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
+import com.GreenThumb.api.user.domain.repository.RoleRepository;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.GreenThumb.api.user.domain.service.PasswordService;
+import com.GreenThumb.api.user.infrastructure.entity.RoleEntity;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import com.GreenThumb.api.user.infrastructure.mapper.UserMapper;
 import org.springframework.stereotype.Repository;
+
+import static com.GreenThumb.api.user.domain.service.PasswordService.hash;
 
 @Repository
 public class JpaUserRepository implements UserRepository {
     private final SpringDataUserRepository jpaRepo;
 
-    public JpaUserRepository(SpringDataUserRepository jpaRepo) {
+    private final RoleRepository roleRepository;
+
+    public JpaUserRepository(SpringDataUserRepository jpaRepo,  RoleRepository roleRepository) {
         this.jpaRepo = jpaRepo;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -55,6 +63,13 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    public void postUserRegistration(UserRegister user) {
+        String hashPassword = hash(user.password());
+        //Call RoleEntity
+        //Mapper into
+    }
+
+    @Override
     public long count() {
         return jpaRepo.count();
     }
@@ -65,5 +80,4 @@ public class JpaUserRepository implements UserRepository {
             throw new IllegalArgumentException("Mot de passe incorrect");
         }
     }
-
 }

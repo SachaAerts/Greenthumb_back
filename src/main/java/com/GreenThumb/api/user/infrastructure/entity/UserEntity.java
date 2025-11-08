@@ -46,4 +46,8 @@ public class UserEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_role", nullable = false)
     private RoleEntity role;
+
+    @Column(name = "enabled", nullable = false)
+    @Builder.Default
+    private boolean enabled = false;
 }

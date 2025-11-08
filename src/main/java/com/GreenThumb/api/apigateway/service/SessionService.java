@@ -28,11 +28,7 @@ public class SessionService {
         this.redisService = redisService;
     }
 
-    public Session loginRequest(UserConnection loginRequest) {
-        if (loginRequest == null || loginRequest.login().isEmpty() || loginRequest.password().isEmpty()) {
-            throw new IllegalArgumentException("Requête invalide");
-        }
-
+    public Session sessionLoginRequest(UserConnection loginRequest) {
         boolean isEmail = loginRequest.isEmail();
 
         if (isEmail && !EmailValidator.isValid(loginRequest.login())) {

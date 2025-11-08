@@ -2,9 +2,11 @@ package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.dto.user.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
-import com.GreenThumb.api.apigateway.dto.user.UserRegister;
+import com.GreenThumb.api.apigateway.service.AuthenticationService;
+import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.apigateway.service.SessionService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +17,16 @@ public class SessionController {
 
     private final SessionService sessionService;
 
-    public SessionController(SessionService sessionService) {
+    private final AuthenticationService authenticationService;
+
+    public SessionController(SessionService sessionService,  AuthenticationService authenticationService) {
         this.sessionService = sessionService;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("sessions")
     public ResponseEntity<?> postLogin(@Valid @RequestBody UserConnection request) {
-        Session session = sessionService.loginRequest(request);
+        Session session = sessionService.sessionLoginRequest(request);
 
         ResponseCookie refreshCookie = ResponseCookie.from("refresh_cookie", session.refreshToken())
                 .httpOnly(true)
@@ -38,7 +43,10 @@ public class SessionController {
 
     @PostMapping("register")
     public ResponseEntity<?> postRegister(@Valid @RequestBody UserRegister request) {
-        //Call class authentication
-        return ResponseEntity.accepted().build();
+        authenticationService.registerRequest(request);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 }

@@ -1,4 +1,4 @@
-package com.GreenThumb.api.apigateway.dto.user;
+package com.GreenThumb.api.user.application.dto;
 
 import com.GreenThumb.api.apigateway.utils.tags.PasswordMatch;
 import jakarta.validation.constraints.AssertTrue;
