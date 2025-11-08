@@ -26,8 +26,12 @@ public class UserService {
         return userRepository.getUserByEmail(email, password);
     }
 
-    public User getUserByUsername(String username, String password) throws NoFoundException, IllegalArgumentException {
-        return userRepository.getUserByUsername(username, password);
+    public User getUserByUsernameAndPassword(String username, String password) throws NoFoundException, IllegalArgumentException {
+        return userRepository.getUserByUsernameAndPassword(username, password);
+    }
+
+    public User getUserByUsername(String username) throws NoFoundException, IllegalArgumentException {
+        return userRepository.getUserByUsername(username);
     }
 
 }

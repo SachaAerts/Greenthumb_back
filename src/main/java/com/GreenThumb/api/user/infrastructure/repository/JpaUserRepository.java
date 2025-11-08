@@ -7,8 +7,10 @@ import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.GreenThumb.api.user.domain.service.PasswordService;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import com.GreenThumb.api.user.infrastructure.mapper.UserMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
 public class JpaUserRepository implements UserRepository {
     private final SpringDataUserRepository jpaRepo;
@@ -40,7 +42,7 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public User getUserByUsername(String username, String password) throws NoFoundException, IllegalArgumentException {
+    public User getUserByUsernameAndPassword(String username, String password) throws NoFoundException, IllegalArgumentException {
         return jpaRepo.findByUsername(username)
                 .map(userEntity -> {
                     checkPassword(password, userEntity);
@@ -48,10 +50,23 @@ public class JpaUserRepository implements UserRepository {
                     try {
                         return UserMapper.toDomain(userEntity);
                     } catch (FormatException e) {
+
                         throw new IllegalArgumentException("Erreur de format interne", e);
                     }
                 })
                 .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+    }
+
+    public User getUserByUsername(String username) throws NoFoundException, IllegalArgumentException {
+        return jpaRepo.findByUsername(username)
+                .map(userEntity -> {
+                    try {
+                        return UserMapper.toDomain(userEntity);
+                    } catch (FormatException e) {
+                        throw new IllegalArgumentException("Erreur de format interne", e);
+                    }
+                })
+                .orElseThrow(() ->  new NoFoundException("L'utilisateur n'a pas été trouvé"));
     }
 
     @Override
