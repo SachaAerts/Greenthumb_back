@@ -11,6 +11,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Map;
 
 @Slf4j
@@ -36,9 +37,9 @@ public class SessionController {
                 .body(session.accessToken());
     }
 
-    @PostMapping("/session/refresh")
+    @PostMapping("/sessions/refresh")
     public ResponseEntity<?> refresh(
-            @CookieValue(value = "refresh_token", required = false) String refreshToken
+            @CookieValue(value = "refresh_cookie", required = false) String refreshToken
     ) {
         if (refreshToken == null) {
             log.warn("Refresh token is null");
@@ -57,6 +58,15 @@ public class SessionController {
         return ResponseEntity.ok()
                 .header("Set-Cookie", getRefreshCookie(tokens.get("refresh_token")).toString())
                 .body(tokens.get("access_token"));
+    }
+
+    @GetMapping("/sessions/check")
+    public ResponseEntity<?> checkAuthentication(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized"));
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     private ResponseCookie getRefreshCookie(String token) {
