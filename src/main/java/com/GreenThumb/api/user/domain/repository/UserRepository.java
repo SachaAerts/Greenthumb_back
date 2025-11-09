@@ -11,6 +11,12 @@ public interface UserRepository {
 
     User getUserByUsername(String username, String password);
 
+    User findByEmail(String email);
+
+    void enableUser(String email);
+
+    boolean isUserEnabled(String email);
+
     long count();
 
     UserEntity save(UserEntity user);

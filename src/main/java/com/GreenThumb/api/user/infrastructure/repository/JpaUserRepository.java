@@ -57,6 +57,34 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    public User findByEmail(String email) throws NoFoundException {
+        return jpaRepo.findByMail(email)
+                .map(userEntity -> {
+                    try {
+                        return UserMapper.toDomain(userEntity);
+                    } catch (FormatException e) {
+                        throw new IllegalArgumentException("Erreur de format interne", e);
+                    }
+                })
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+    }
+
+    @Override
+    public void enableUser(String email) throws NoFoundException {
+        UserEntity user = jpaRepo.findByMail(email)
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+        user.setEnabled(true);
+        jpaRepo.save(user);
+    }
+
+    @Override
+    public boolean isUserEnabled(String email) throws NoFoundException {
+        return jpaRepo.findByMail(email)
+                .map(UserEntity::isEnabled)
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+    }
+
+    @Override
     public long count() {
         return jpaRepo.count();
     }

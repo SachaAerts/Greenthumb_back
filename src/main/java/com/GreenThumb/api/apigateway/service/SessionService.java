@@ -4,8 +4,11 @@ import com.GreenThumb.api.apigateway.dto.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
 import com.GreenThumb.api.apigateway.mapper.UserMapper;
 import com.GreenThumb.api.apigateway.utils.EmailValidator;
+import com.GreenThumb.api.user.application.service.EmailVerificationService;
 import com.GreenThumb.api.user.application.service.UserService;
 import com.GreenThumb.api.user.domain.entity.User;
+import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
+import com.GreenThumb.api.user.domain.exception.UserAlreadyVerifiedException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,13 +24,16 @@ public class SessionService {
     private final UserService userService;
     private final TokenService tokenService;
     private final RedisService redisService;
+    private final EmailVerificationService emailVerificationService;
 
     public SessionService(EmailValidator emailValidator, UserService userService,
-                          TokenService tokenService, RedisService redisService) {
+                          TokenService tokenService, RedisService redisService,
+                          EmailVerificationService emailVerificationService) {
         this.emailValidator = emailValidator;
         this.userService = userService;
         this.tokenService = tokenService;
         this.redisService = redisService;
+        this.emailVerificationService = emailVerificationService;
     }
 
     public Session loginRequest(UserConnection loginRequest) {
@@ -78,6 +84,29 @@ public class SessionService {
 
         redisService.save("refresh:" + username, tokens.get("REFRESH_TOKEN"), 7, TimeUnit.DAYS);
         return tokens;
+    }
+
+    public Session verifyEmailAndCreateSession(String token) {
+        String email = emailVerificationService.consumeToken(token)
+                .orElseThrow(() -> new InvalidTokenException("Token de vérification invalide ou expiré"));
+        
+        if (userService.isUserEnabled(email)) {
+            throw new UserAlreadyVerifiedException(
+                    "Votre compte est déjà vérifié. Vous pouvez vous connecter normalement."
+            );
+        }
+        
+        userService.enableUser(email);
+        
+        User user = userService.findByEmail(email);
+        
+        Map<String, String> tokens = saveAndCreateTokens(user);
+
+        return new Session(
+                UserMapper.toResponse(user),
+                tokens.get("ACCESS_TOKEN"),
+                tokens.get("REFRESH_TOKEN")
+        );
     }
 
 }

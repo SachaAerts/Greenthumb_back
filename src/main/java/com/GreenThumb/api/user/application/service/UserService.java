@@ -30,4 +30,16 @@ public class UserService {
         return userRepository.getUserByUsername(username, password);
     }
 
+    public User findByEmail(String email) throws NoFoundException {
+        return userRepository.findByEmail(email);
+    }
+
+    public void enableUser(String email) throws NoFoundException {
+        userRepository.enableUser(email);
+    }
+
+    public boolean isUserEnabled(String email) throws NoFoundException {
+        return userRepository.isUserEnabled(email);
+    }
+
 }

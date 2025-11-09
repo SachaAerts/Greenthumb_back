@@ -1,5 +1,8 @@
 package com.GreenThumb.api.apigateway.controller.adivce;
 
+import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
+import com.GreenThumb.api.user.domain.exception.UserAlreadyVerifiedException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +22,20 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidTokenException(InvalidTokenException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(UserAlreadyVerifiedException.class)
+    public ResponseEntity<Map<String, String>> handleUserAlreadyVerifiedException(UserAlreadyVerifiedException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
     }
 
     @ExceptionHandler(Exception.class)
