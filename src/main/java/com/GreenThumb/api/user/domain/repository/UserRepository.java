@@ -1,6 +1,7 @@
 package com.GreenThumb.api.user.domain.repository;
 
 import com.GreenThumb.api.user.domain.entity.User;
+import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 
 public interface UserRepository {
 

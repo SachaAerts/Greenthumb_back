@@ -1,5 +1,6 @@
 package com.GreenThumb.api.notification;
 
+import com.GreenThumb.api.notification.service.MailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

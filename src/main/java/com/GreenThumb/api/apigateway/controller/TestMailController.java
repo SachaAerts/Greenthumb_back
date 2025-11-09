@@ -1,6 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
-import com.GreenThumb.api.notification.MailService;
+import com.GreenThumb.api.notification.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

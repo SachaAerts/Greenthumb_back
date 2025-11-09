@@ -1,4 +1,4 @@
-package com.GreenThumb.api.notification;
+package com.GreenThumb.api.notification.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
