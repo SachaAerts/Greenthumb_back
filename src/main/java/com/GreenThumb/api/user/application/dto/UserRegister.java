@@ -1,10 +1,7 @@
 package com.GreenThumb.api.user.application.dto;
 
 import com.GreenThumb.api.apigateway.utils.tags.PasswordMatch;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 
 @PasswordMatch(
         password = "password",
@@ -28,14 +25,14 @@ public record UserRegister(
     String lastname,
 
     @NotBlank(message = "Le mot de passe est requis")
-    @Min(8)
+    @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
     @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).+$",
             message="Le mot de passe doit contenir au moins une majuscule, " +
                     "une minuscule, un chiffre et un caractère spécial")
     String password,
 
     @NotBlank(message = "La confirmation du mot de passe est requise")
-    @Min(8)
+    @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
     @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).+$",
             message="Le mot de passe doit contenir au moins une majuscule, " +
                     "une minuscule, un chiffre et un caractère spécial")

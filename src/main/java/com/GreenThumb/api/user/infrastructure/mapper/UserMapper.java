@@ -28,6 +28,7 @@ public class UserMapper {
     public static UserEntity toEntityForRegistration(
             UserRegister userRegister,
             String hashedPassword,
+            String avatar,
             RoleEntity role) {
 
         return UserEntity.builder()
@@ -41,6 +42,7 @@ public class UserMapper {
                 .isPrivate(false)
                 .role(role)
                 .enabled(false)
+                .avatar(avatar)
                 .build();
     }
 }

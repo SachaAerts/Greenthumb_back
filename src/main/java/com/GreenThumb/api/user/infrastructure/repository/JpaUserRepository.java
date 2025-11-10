@@ -8,6 +8,7 @@ import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.exception.PhoneNumberAlreadyUsedException;
 import com.GreenThumb.api.user.domain.repository.RoleRepository;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
+import com.GreenThumb.api.user.domain.service.AvatarStorageService;
 import com.GreenThumb.api.user.domain.service.PasswordService;
 import com.GreenThumb.api.user.infrastructure.entity.RoleEntity;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
@@ -67,14 +68,15 @@ public class JpaUserRepository implements UserRepository {
     @Override
     public void postUserRegistration(UserRegister user) {
         String hashPassword = hash(user.password());
-        RoleEntity roleUser = roleRepository.getRoleEntity("Utilisateur");
+        RoleEntity roleUser = roleRepository.getRoleEntity("UTILISATEUR");
         if (roleUser == null) {
-            throw new NoFoundException("Le rôle 'Utilisateur' n'existe pas dans la base de données");
+            throw new NoFoundException("Le rôle n'existe pas !");
         }
 
         checkMailAndPhone(user.email(), user.phoneNumber());
-        UserEntity userEntity = UserMapper.toEntityForRegistration(user, hashPassword, roleUser);
 
+        String avatarPath = saveAvatar(user.avatar());
+        UserEntity userEntity = UserMapper.toEntityForRegistration(user, hashPassword, avatarPath, roleUser);
         jpaRepo.save(userEntity);
     }
 
@@ -86,6 +88,11 @@ public class JpaUserRepository implements UserRepository {
         if (jpaRepo.existsByPhoneNumber(phone)) {
             throw new PhoneNumberAlreadyUsedException("Le numéro de téléphone est déjà utilisé pour un compte");
         }
+    }
+
+    private String saveAvatar(String avatar) {
+        AvatarStorageService avatarStorageService = new AvatarStorageService();
+        return avatarStorageService.storeUserImage(avatar);
     }
 
     @Override
