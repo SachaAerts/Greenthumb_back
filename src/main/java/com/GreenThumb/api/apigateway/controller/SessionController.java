@@ -24,9 +24,10 @@ public class SessionController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("sessions")
+    @PostMapping("/sessions")
     public ResponseEntity<?> postLogin(@Valid @RequestBody UserConnection request) {
-        Session session = sessionService.sessionLoginRequest(request);
+        System.out.println(request.login() + " " + request.password());
+        Session session = sessionService.loginRequest(request);
 
         ResponseCookie refreshCookie = ResponseCookie.from("refresh_cookie", session.refreshToken())
                 .httpOnly(true)
