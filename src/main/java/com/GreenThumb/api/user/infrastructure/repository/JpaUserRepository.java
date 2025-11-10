@@ -2,8 +2,10 @@ package com.GreenThumb.api.user.infrastructure.repository;
 
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
+import com.GreenThumb.api.user.domain.exception.EmailAlreadyUsedException;
 import com.GreenThumb.api.user.domain.exception.FormatException;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
+import com.GreenThumb.api.user.domain.exception.PhoneNumberAlreadyUsedException;
 import com.GreenThumb.api.user.domain.repository.RoleRepository;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.GreenThumb.api.user.domain.service.PasswordService;
@@ -65,8 +67,25 @@ public class JpaUserRepository implements UserRepository {
     @Override
     public void postUserRegistration(UserRegister user) {
         String hashPassword = hash(user.password());
-        //Call RoleEntity
-        //Mapper into
+        RoleEntity roleUser = roleRepository.getRoleEntity("Utilisateur");
+        if (roleUser == null) {
+            throw new NoFoundException("Le rôle 'Utilisateur' n'existe pas dans la base de données");
+        }
+
+        checkMailAndPhone(user.email(), user.phoneNumber());
+        UserEntity userEntity = UserMapper.toEntityForRegistration(user, hashPassword, roleUser);
+
+        jpaRepo.save(userEntity);
+    }
+
+    private void checkMailAndPhone(String mail, String phone) {
+        if (jpaRepo.existsByMail(mail)) {
+            throw new EmailAlreadyUsedException("Le mail est déjà utilisé pour un compte");
+        }
+
+        if (jpaRepo.existsByPhoneNumber(phone)) {
+            throw new PhoneNumberAlreadyUsedException("Le numéro de téléphone est déjà utilisé pour un compte");
+        }
     }
 
     @Override
