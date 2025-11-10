@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.infrastructure.mapper;
 
+import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
 import com.GreenThumb.api.user.domain.exception.FormatException;
 import com.GreenThumb.api.user.domain.objectValue.*;
@@ -22,5 +23,26 @@ public class UserMapper {
 
     public static Role toDomain(RoleEntity roleEntity) {
         return new Role(roleEntity.getLabel());
+    }
+
+    public static UserEntity toEntityForRegistration(
+            UserRegister userRegister,
+            String hashedPassword,
+            String avatar,
+            RoleEntity role) {
+
+        return UserEntity.builder()
+                .username(userRegister.username())
+                .firstname(userRegister.firstname())
+                .lastname(userRegister.lastname())
+                .mail(userRegister.email())
+                .password(hashedPassword)
+                .phoneNumber(userRegister.phoneNumber())
+                .biography(null)
+                .isPrivate(false)
+                .role(role)
+                .enabled(false)
+                .avatar(avatar)
+                .build();
     }
 }

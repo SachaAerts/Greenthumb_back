@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.domain.repository;
 
+import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
 
 public interface UserRepository {
@@ -10,4 +11,6 @@ public interface UserRepository {
     User getUserByUsername(String username, String password);
 
     long count();
+
+    void postUserRegistration(UserRegister user);
 }

@@ -3,7 +3,6 @@ package com.GreenThumb.api.user.infrastructure.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Entity
 @Table(name = "users")
 @Getter
@@ -46,4 +45,12 @@ public class UserEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_role", nullable = false)
     private RoleEntity role;
+
+    @Column(name = "enabled", nullable = false)
+    @Builder.Default
+    private boolean enabled = false;
+
+    @Column(name = "avatar", nullable = false)
+    private String avatar;
+
 }

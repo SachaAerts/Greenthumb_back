@@ -1,3 +1,0 @@
-Objet de retour avec que les valeur afficher
-
-ne pas retourner user car contient des donnée sensible (mdp) mais un dto qui aurra que les donnée affichable de user

@@ -1,4 +1,4 @@
-package com.GreenThumb.api.apigateway.controller.adivce;
+package com.GreenThumb.api.apigateway.controller.advice;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

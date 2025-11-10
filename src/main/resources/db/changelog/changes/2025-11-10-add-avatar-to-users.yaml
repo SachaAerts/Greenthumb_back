@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-11-10-add-avatar-to-users
+      author: Sacha Aerts
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: image_path
+                  type: VARCHAR(512)
+
+      rollback:
+        - dropColumn:
+            tableName: users
+            columnName: image_path
