@@ -29,7 +29,6 @@ public class SessionController {
 
     @PostMapping("/sessions")
     public ResponseEntity<?> postLogin(@Valid @RequestBody UserConnection request) {
-        System.out.println(request.login() + " " + request.password());
         Session session = sessionService.loginRequest(request);
 
         return ResponseEntity.ok()
