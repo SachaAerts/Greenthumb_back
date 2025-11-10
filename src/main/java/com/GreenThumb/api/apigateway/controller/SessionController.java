@@ -1,11 +1,14 @@
 package com.GreenThumb.api.apigateway.controller;
 
-import com.GreenThumb.api.apigateway.dto.UserConnection;
+import com.GreenThumb.api.apigateway.dto.user.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
+import com.GreenThumb.api.apigateway.service.AuthenticationService;
+import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.apigateway.service.SessionService;
 import com.GreenThumb.api.apigateway.service.TokenService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +25,19 @@ public class SessionController {
     private final SessionService sessionService;
     private final TokenService tokenService;
 
+    private final AuthenticationService authenticationService;
+
+    public SessionController(SessionService sessionService,  AuthenticationService authenticationService) {
     public SessionController(SessionService sessionService, TokenService tokenService) {
         this.sessionService = sessionService;
+        this.authenticationService = authenticationService;
         this.tokenService = tokenService;
     }
 
     @PostMapping("/sessions")
     public ResponseEntity<?> postLogin(@Valid @RequestBody UserConnection request) {
+        System.out.println(request.login() + " " + request.password());
+        Session session = sessionService.sessionLoginRequest(request);
         Session session = sessionService.loginRequest(request);
 
         return ResponseEntity.ok()
@@ -75,6 +84,15 @@ public class SessionController {
                 .path("/")
                 .sameSite("Strict")
                 .maxAge(7 * 24 * 60 * 60)
+                .build();
+    }
+
+    @PostMapping("register")
+    public ResponseEntity<?> postRegister(@Valid @RequestBody UserRegister request) {
+        authenticationService.registerRequest(request);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
                 .build();
     }
 }

@@ -1,6 +1,6 @@
 package com.GreenThumb.api.apigateway.service;
 
-import com.GreenThumb.api.apigateway.dto.UserConnection;
+import com.GreenThumb.api.apigateway.dto.user.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
 import com.GreenThumb.api.apigateway.mapper.UserMapper;
 import com.GreenThumb.api.apigateway.utils.EmailValidator;
@@ -20,27 +20,21 @@ public class SessionService {
     private final static String REFRESH_TOKEN = "refresh_token";
     private final static String RADIS_REFRESH_TOKEN_ID = "refresh:";
 
-    private final EmailValidator emailValidator;
     private final UserService userService;
     private final TokenService tokenService;
     private final RedisService redisService;
 
-    public SessionService(EmailValidator emailValidator, UserService userService,
+    public SessionService(UserService userService,
                           TokenService tokenService, RedisService redisService) {
-        this.emailValidator = emailValidator;
         this.userService = userService;
         this.tokenService = tokenService;
         this.redisService = redisService;
     }
 
-    public Session loginRequest(UserConnection loginRequest) {
-        if (loginRequest == null || loginRequest.login().isEmpty() || loginRequest.password().isEmpty()) {
-            throw new IllegalArgumentException("Requête invalide");
-        }
-
+    public Session sessionLoginRequest(UserConnection loginRequest) {
         boolean isEmail = loginRequest.isEmail();
 
-        if (isEmail && !emailValidator.isValid(loginRequest.login())) {
+        if (isEmail && !EmailValidator.isValid(loginRequest.login())) {
             throw new IllegalArgumentException("Email invalide");
         }
 

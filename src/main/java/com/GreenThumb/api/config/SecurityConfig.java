@@ -36,9 +36,14 @@ public class SecurityConfig {
                                 "/api/messages/top3like",
                                 "/api/resources/three-resources",
                                 "/api/sessions",
-                                "/api/sessions/refresh"
+                                "/api/sessions/refresh",
+                                "/api/register"
                         ).permitAll()
                         .anyRequest().authenticated());
+
+                        )
+                );
+
         return http.build();
     }
 

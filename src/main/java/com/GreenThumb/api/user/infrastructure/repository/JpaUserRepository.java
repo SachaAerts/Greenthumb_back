@@ -1,22 +1,33 @@
 package com.GreenThumb.api.user.infrastructure.repository;
 
+import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
+import com.GreenThumb.api.user.domain.exception.EmailAlreadyUsedException;
 import com.GreenThumb.api.user.domain.exception.FormatException;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
+import com.GreenThumb.api.user.domain.exception.PhoneNumberAlreadyUsedException;
+import com.GreenThumb.api.user.domain.repository.RoleRepository;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
+import com.GreenThumb.api.user.domain.service.AvatarStorageService;
 import com.GreenThumb.api.user.domain.service.PasswordService;
+import com.GreenThumb.api.user.infrastructure.entity.RoleEntity;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import com.GreenThumb.api.user.infrastructure.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import static com.GreenThumb.api.user.domain.service.PasswordService.hash;
 
 @Slf4j
 @Repository
 public class JpaUserRepository implements UserRepository {
     private final SpringDataUserRepository jpaRepo;
 
-    public JpaUserRepository(SpringDataUserRepository jpaRepo) {
+    private final RoleRepository roleRepository;
+
+    public JpaUserRepository(SpringDataUserRepository jpaRepo,  RoleRepository roleRepository) {
         this.jpaRepo = jpaRepo;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -66,7 +77,37 @@ public class JpaUserRepository implements UserRepository {
                         throw new IllegalArgumentException("Erreur de format interne", e);
                     }
                 })
-                .orElseThrow(() ->  new NoFoundException("L'utilisateur n'a pas été trouvé"));
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+    }
+
+    @Override
+    public void postUserRegistration(UserRegister user) {
+        String hashPassword = hash(user.password());
+        RoleEntity roleUser = roleRepository.getRoleEntity("UTILISATEUR");
+        if (roleUser == null) {
+            throw new NoFoundException("Le rôle n'existe pas !");
+        }
+
+        checkMailAndPhone(user.email(), user.phoneNumber());
+
+        String avatarPath = saveAvatar(user.avatar());
+        UserEntity userEntity = UserMapper.toEntityForRegistration(user, hashPassword, avatarPath, roleUser);
+        jpaRepo.save(userEntity);
+    }
+
+    private void checkMailAndPhone(String mail, String phone) {
+        if (jpaRepo.existsByMail(mail)) {
+            throw new EmailAlreadyUsedException("Le mail est déjà utilisé pour un compte");
+        }
+
+        if (jpaRepo.existsByPhoneNumber(phone)) {
+            throw new PhoneNumberAlreadyUsedException("Le numéro de téléphone est déjà utilisé pour un compte");
+        }
+    }
+
+    private String saveAvatar(String avatar) {
+        AvatarStorageService avatarStorageService = new AvatarStorageService();
+        return avatarStorageService.storeUserImage(avatar);
     }
 
     @Override

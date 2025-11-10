@@ -1,4 +1,4 @@
-package com.GreenThumb.api.apigateway.dto;
+package com.GreenThumb.api.apigateway.dto.user;
 
 public record UserResponse(
         String username,

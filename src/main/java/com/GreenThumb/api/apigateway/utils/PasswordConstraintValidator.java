@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.utils;
 
+import com.GreenThumb.api.apigateway.utils.tags.ValidPassword;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.passay.*;
