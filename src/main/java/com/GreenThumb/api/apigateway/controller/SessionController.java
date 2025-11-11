@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
+import com.GreenThumb.api.apigateway.dto.ResendVerificationEmailRequest;
 import com.GreenThumb.api.apigateway.dto.user.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
 import com.GreenThumb.api.apigateway.dto.VerifyEmailRequest;
@@ -9,7 +10,6 @@ import com.GreenThumb.api.apigateway.service.SessionService;
 import com.GreenThumb.api.apigateway.service.TokenService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -101,6 +101,14 @@ public class SessionController {
         return ResponseEntity.ok()
                 .header("Set-Cookie", refreshCookie.toString())
                 .body(session.accessToken());
+    }
+
+    @PostMapping("/sessions/verify/resend")
+    public ResponseEntity<?> resendVerificationEmail(@Valid @RequestBody ResendVerificationEmailRequest request) {
+        sessionService.resendVerificationEmail(request.email());
+
+        return ResponseEntity.ok()
+                .body(Map.of("message", "Un nouvel email de vérification a été envoyé"));
     }
 
     @PostMapping("register")

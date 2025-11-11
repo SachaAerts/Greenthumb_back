@@ -29,6 +29,9 @@ public class SessionService {
     private final EmailVerificationService emailVerificationService;
     private final EmailValidator emailValidator;
 
+    @org.springframework.beans.factory.annotation.Value("${greenthumb.frontend.url}")
+    private String frontendUrl;
+
     public SessionService(EmailValidator emailValidator, UserService userService,
                           TokenService tokenService, RedisService redisService,
                           EmailVerificationService emailVerificationService) {
@@ -118,9 +121,22 @@ public class SessionService {
 
         return new Session(
                 UserMapper.toResponse(user),
-                tokens.get("ACCESS_TOKEN"),
-                tokens.get("REFRESH_TOKEN")
+                tokens.get(ACCESS_TOKEN),
+                tokens.get(REFRESH_TOKEN)
         );
+    }
+
+    public void resendVerificationEmail(String email) {
+        User user = userService.findByEmail(email);
+        
+        if (userService.isUserEnabled(email)) {
+            throw new UserAlreadyVerifiedException(
+                    "Votre compte est déjà vérifié. Vous pouvez vous connecter normalement."
+            );
+        }
+        
+        emailVerificationService.sendVerificationEmail(email, frontendUrl);
+        log.info("Nouvel email de vérification envoyé à {}", email);
     }
 
 }
