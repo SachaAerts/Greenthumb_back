@@ -57,6 +57,14 @@ public class TokenService {
                 .getSubject();
     }
 
+    public boolean isEquals(String userToken, String token) {
+        if (userToken == null || token == null) {
+            return false;
+        }
+
+        return userToken.trim().equals(token.trim());
+    }
+
     private String generateToken(String subject, Map<String, Object> claims, long expirationMs) {
         Instant now = Instant.now();
         Instant expiry = now.plusMillis(expirationMs);
@@ -65,6 +73,7 @@ public class TokenService {
                 .claims(claims)
                 .subject(subject)
                 .issuedAt(Date.from(now))
+                .expiration(Date.from(expiry))
                 .signWith(secretKey)
                 .compact();
 
