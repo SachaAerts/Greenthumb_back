@@ -76,6 +76,13 @@ public class JpaUserRepository implements UserRepository {
                     try {
                         return UserMapper.toDomain(userEntity);
                     } catch (FormatException e) {
+                        log.warn("Erreur de format pour user username='{}', email='{}', id={}: {} - phoneNumber='{}', enabled={}",
+                                username,
+                                userEntity.getMail(),
+                                userEntity.getId(),
+                                e.getMessage(),
+                                userEntity.getPhoneNumber(),
+                                userEntity.isEnabled());
                         throw new IllegalArgumentException("Erreur de format interne", e);
                     }
                 })
@@ -89,6 +96,13 @@ public class JpaUserRepository implements UserRepository {
                     try {
                         return UserMapper.toDomain(userEntity);
                     } catch (FormatException e) {
+                        log.warn("Erreur de format pour user email='{}', username='{}', id={}: {} - phoneNumber='{}', enabled={}",
+                                email,
+                                userEntity.getUsername(),
+                                userEntity.getId(),
+                                e.getMessage(),
+                                userEntity.getPhoneNumber(),
+                                userEntity.isEnabled());
                         throw new IllegalArgumentException("Erreur de format interne", e);
                     }
                 })

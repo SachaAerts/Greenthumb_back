@@ -28,6 +28,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<Map<String, String>> handleInvalidTokenException(InvalidTokenException exception) {
+        log.warn("Token invalide: {}", exception.getMessage());
         Map<String, String> errors = new HashMap<>();
         errors.put("error", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
@@ -35,6 +36,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyVerifiedException.class)
     public ResponseEntity<Map<String, String>> handleUserAlreadyVerifiedException(UserAlreadyVerifiedException exception) {
+        log.warn("Utilisateur déjà vérifié: {}", exception.getMessage());
         Map<String, String> errors = new HashMap<>();
         errors.put("error", exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
