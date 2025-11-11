@@ -90,13 +90,7 @@ public class SessionController {
     public ResponseEntity<?> verifyEmail(@Valid @RequestBody VerifyEmailRequest request) {
         Session session = sessionService.verifyEmailAndCreateSession(request.token());
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refresh_cookie", session.refreshToken())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .sameSite("Strict")
-                .maxAge(7 * 24 * 60 * 60)
-                .build();
+        ResponseCookie refreshCookie = getRefreshCookie(session.refreshToken());
 
         return ResponseEntity.ok()
                 .header("Set-Cookie", refreshCookie.toString())
