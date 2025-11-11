@@ -7,16 +7,6 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: avatar
-                  type: VARCHAR(512)
-                  defaultValue: ""
-
-        - addNotNullConstraint:
-            tableName: users
-            columnName: avatar
-            columnDataType: VARCHAR(512)
-
-      rollback:
-        - dropColumn:
-            tableName: users
-            columnName: avatar
+                  name: enabled
+                  type: boolean
+                  defaultValueBoolean: false
