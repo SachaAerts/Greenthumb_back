@@ -24,6 +24,7 @@ public class SessionService {
     private final TokenService tokenService;
     private final RedisService redisService;
     private final EmailVerificationService emailVerificationService;
+    private final EmailValidator emailValidator;
 
     public SessionService(EmailValidator emailValidator, UserService userService,
                           TokenService tokenService, RedisService redisService,
