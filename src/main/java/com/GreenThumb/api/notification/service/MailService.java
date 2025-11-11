@@ -7,12 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MailService {
     private final JavaMailSender mailSender;
+
+    @Value("${spring.mail.username}")
+    private String fromEmail;
 
     public void send(String to, String subject, String body) {
         try {
@@ -22,7 +26,7 @@ public class MailService {
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(body, true);
-            helper.setFrom("greenthumb.application@gmail.com");
+            helper.setFrom(fromEmail);
 
             mailSender.send(message);
             log.info("Email HTML envoyé avec succès à {}", to);
