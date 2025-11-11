@@ -10,7 +10,9 @@ public interface UserRepository {
 
     User getUserByEmail(String email, String password);
 
-    User getUserByUsername(String username, String password);
+    User getUserByUsernameAndPassword(String username, String password);
+
+    User getUserByUsername(String username);
 
     User findByEmail(String email);
 
