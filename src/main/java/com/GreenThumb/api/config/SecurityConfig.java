@@ -39,9 +39,7 @@ public class SecurityConfig {
                                 "/api/sessions/refresh",
                                 "/api/register"
                         ).permitAll()
-                        .anyRequest().authenticated());
-
-                        )
+                        .anyRequest().authenticated()
                 );
 
         return http.build();

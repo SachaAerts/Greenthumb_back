@@ -27,8 +27,7 @@ public class SessionController {
 
     private final AuthenticationService authenticationService;
 
-    public SessionController(SessionService sessionService,  AuthenticationService authenticationService) {
-    public SessionController(SessionService sessionService, TokenService tokenService) {
+    public SessionController(SessionService sessionService,  AuthenticationService authenticationService, TokenService tokenService) {
         this.sessionService = sessionService;
         this.authenticationService = authenticationService;
         this.tokenService = tokenService;
@@ -38,7 +37,6 @@ public class SessionController {
     public ResponseEntity<?> postLogin(@Valid @RequestBody UserConnection request) {
         System.out.println(request.login() + " " + request.password());
         Session session = sessionService.sessionLoginRequest(request);
-        Session session = sessionService.loginRequest(request);
 
         return ResponseEntity.ok()
                 .header("Set-Cookie", getRefreshCookie(session.refreshToken()).toString())
