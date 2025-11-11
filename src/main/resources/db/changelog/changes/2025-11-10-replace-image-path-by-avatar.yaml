@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20251110-4-fix-avatar-column
+      author: Sacha Aerts
+      changes:
+        - dropColumn:
+            tableName: users
+            columnName: image_path
+
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: avatar
+                  type: VARCHAR(512)
+                  defaultValue: ""
+
+      rollback:
+        - dropColumn:
+            tableName: users
+            columnName: avatar
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: image_path
+                  type: VARCHAR(512)
+

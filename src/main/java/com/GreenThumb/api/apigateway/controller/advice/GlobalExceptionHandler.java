@@ -1,4 +1,4 @@
-package com.GreenThumb.api.apigateway.controller.adivce;
+package com.GreenThumb.api.apigateway.controller.advice;
 
 import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
 import com.GreenThumb.api.user.domain.exception.UserAlreadyVerifiedException;

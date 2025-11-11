@@ -1,8 +1,10 @@
 package com.GreenThumb.api.user.application.service;
 
+import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
+import com.GreenThumb.api.user.domain.service.AvatarStorageService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,6 +32,9 @@ public class UserService {
         return userRepository.getUserByUsername(username, password);
     }
 
+    public void postUserRegistration(UserRegister registerRequest) throws NoFoundException, IllegalArgumentException {
+        userRepository.postUserRegistration(registerRequest);
+    }
     public User findByEmail(String email) throws NoFoundException {
         return userRepository.findByEmail(email);
     }

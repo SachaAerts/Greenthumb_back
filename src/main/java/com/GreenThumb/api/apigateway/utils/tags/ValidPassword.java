@@ -1,5 +1,6 @@
-package com.GreenThumb.api.apigateway.utils;
+package com.GreenThumb.api.apigateway.utils.tags;
 
+import com.GreenThumb.api.apigateway.utils.PasswordConstraintValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

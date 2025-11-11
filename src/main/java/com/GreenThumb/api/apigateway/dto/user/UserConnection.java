@@ -1,6 +1,6 @@
-package com.GreenThumb.api.apigateway.dto;
+package com.GreenThumb.api.apigateway.dto.user;
 
-import com.GreenThumb.api.apigateway.utils.ValidPassword;
+import com.GreenThumb.api.apigateway.utils.tags.ValidPassword;
 import jakarta.validation.constraints.NotBlank;
 
 public record UserConnection(

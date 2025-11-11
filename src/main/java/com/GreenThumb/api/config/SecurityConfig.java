@@ -17,7 +17,8 @@ public class SecurityConfig {
                                 "/api/messages/top3like",
                                 "/api/resources/three-resources",
                                 "/api/sessions",
-                                "/api/resources/three-resources")
+                                "/api/register"
+                        )
                         .permitAll()
                         .anyRequest().authenticated()
                 );

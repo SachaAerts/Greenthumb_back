@@ -1,6 +1,6 @@
 package com.GreenThumb.api.apigateway.service;
 
-import com.GreenThumb.api.apigateway.dto.UserConnection;
+import com.GreenThumb.api.apigateway.dto.user.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
 import com.GreenThumb.api.apigateway.mapper.UserMapper;
 import com.GreenThumb.api.apigateway.utils.EmailValidator;
@@ -20,7 +20,6 @@ public class SessionService {
     private final static String ACCESS_TOKEN = "access_token";
     private final static String REFRESH_TOKEN = "refresh_token";
 
-    private final EmailValidator emailValidator;
     private final UserService userService;
     private final TokenService tokenService;
     private final RedisService redisService;
@@ -36,14 +35,10 @@ public class SessionService {
         this.emailVerificationService = emailVerificationService;
     }
 
-    public Session loginRequest(UserConnection loginRequest) {
-        if (loginRequest == null || loginRequest.login().isEmpty() || loginRequest.password().isEmpty()) {
-            throw new IllegalArgumentException("Requête invalide");
-        }
-
+    public Session sessionLoginRequest(UserConnection loginRequest) {
         boolean isEmail = loginRequest.isEmail();
 
-        if (isEmail && !emailValidator.isValid(loginRequest.login())) {
+        if (isEmail && !EmailValidator.isValid(loginRequest.login())) {
             throw new IllegalArgumentException("Email invalide");
         }
 
@@ -89,17 +84,17 @@ public class SessionService {
     public Session verifyEmailAndCreateSession(String token) {
         String email = emailVerificationService.consumeToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Token de vérification invalide ou expiré"));
-        
+
         if (userService.isUserEnabled(email)) {
             throw new UserAlreadyVerifiedException(
                     "Votre compte est déjà vérifié. Vous pouvez vous connecter normalement."
             );
         }
-        
+
         userService.enableUser(email);
-        
+
         User user = userService.findByEmail(email);
-        
+
         Map<String, String> tokens = saveAndCreateTokens(user);
 
         return new Session(
