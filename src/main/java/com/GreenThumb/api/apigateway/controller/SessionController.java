@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.security.Principal;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class SessionController {
 
     private final AuthenticationService authenticationService;
 
+
     public SessionController(SessionService sessionService,  AuthenticationService authenticationService, TokenService tokenService) {
         this.sessionService = sessionService;
         this.authenticationService = authenticationService;
@@ -36,7 +38,6 @@ public class SessionController {
 
     @PostMapping("/sessions")
     public ResponseEntity<?> postLogin(@Valid @RequestBody UserConnection request) {
-        System.out.println(request.login() + " " + request.password());
         Session session = sessionService.sessionLoginRequest(request);
 
         return ResponseEntity.ok()
