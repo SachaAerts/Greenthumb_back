@@ -1,7 +1,9 @@
 package com.GreenThumb.api.apigateway.controller;
 
+import com.GreenThumb.api.apigateway.dto.ResendVerificationEmailRequest;
 import com.GreenThumb.api.apigateway.dto.user.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
+import com.GreenThumb.api.apigateway.dto.VerifyEmailRequest;
 import com.GreenThumb.api.apigateway.service.AuthenticationService;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.apigateway.service.SessionService;
@@ -9,10 +11,10 @@ import com.GreenThumb.api.apigateway.service.TokenService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.security.Principal;
 import java.util.Map;
@@ -27,6 +29,7 @@ public class SessionController {
 
     private final AuthenticationService authenticationService;
 
+
     public SessionController(SessionService sessionService,  AuthenticationService authenticationService, TokenService tokenService) {
         this.sessionService = sessionService;
         this.authenticationService = authenticationService;
@@ -35,7 +38,6 @@ public class SessionController {
 
     @PostMapping("/sessions")
     public ResponseEntity<?> postLogin(@Valid @RequestBody UserConnection request) {
-        System.out.println(request.login() + " " + request.password());
         Session session = sessionService.sessionLoginRequest(request);
 
         return ResponseEntity.ok()
@@ -83,6 +85,25 @@ public class SessionController {
                 .sameSite("Strict")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
+    }
+
+    @PostMapping("/sessions/verify")
+    public ResponseEntity<?> verifyEmail(@Valid @RequestBody VerifyEmailRequest request) {
+        Session session = sessionService.verifyEmailAndCreateSession(request.token());
+
+        ResponseCookie refreshCookie = getRefreshCookie(session.refreshToken());
+
+        return ResponseEntity.ok()
+                .header("Set-Cookie", refreshCookie.toString())
+                .body(session.accessToken());
+    }
+
+    @PostMapping("/sessions/verify/resend")
+    public ResponseEntity<?> resendVerificationEmail(@Valid @RequestBody ResendVerificationEmailRequest request) {
+        sessionService.resendVerificationEmail(request.email());
+
+        return ResponseEntity.ok()
+                .body(Map.of("message", "Un nouvel email de vérification a été envoyé"));
     }
 
     @PostMapping("register")

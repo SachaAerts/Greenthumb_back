@@ -37,6 +37,8 @@ public class SecurityConfig {
                                 "/api/resources/three-resources",
                                 "/api/sessions",
                                 "/api/sessions/refresh",
+                                "/api/sessions/verify",
+                                "/api/sessions/verify/resend",
                                 "/api/register"
                         ).permitAll()
                         .anyRequest().authenticated()

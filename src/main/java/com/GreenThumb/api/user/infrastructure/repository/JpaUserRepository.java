@@ -16,6 +16,8 @@ import com.GreenThumb.api.user.infrastructure.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 import static com.GreenThumb.api.user.domain.service.PasswordService.hash;
 
 @Slf4j
@@ -74,9 +76,51 @@ public class JpaUserRepository implements UserRepository {
                     try {
                         return UserMapper.toDomain(userEntity);
                     } catch (FormatException e) {
+                        log.warn("Erreur de format pour user username='{}', email='{}', id={}: {} - phoneNumber='{}', enabled={}",
+                                username,
+                                userEntity.getMail(),
+                                userEntity.getId(),
+                                e.getMessage(),
+                                userEntity.getPhoneNumber(),
+                                userEntity.isEnabled());
                         throw new IllegalArgumentException("Erreur de format interne", e);
                     }
                 })
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+    }
+
+    @Override
+    public User findByEmail(String email) throws NoFoundException {
+        return jpaRepo.findByMail(email)
+                .map(userEntity -> {
+                    try {
+                        return UserMapper.toDomain(userEntity);
+                    } catch (FormatException e) {
+                        log.warn("Erreur de format pour user email='{}', username='{}', id={}: {} - phoneNumber='{}', enabled={}",
+                                email,
+                                userEntity.getUsername(),
+                                userEntity.getId(),
+                                e.getMessage(),
+                                userEntity.getPhoneNumber(),
+                                userEntity.isEnabled());
+                        throw new IllegalArgumentException("Erreur de format interne", e);
+                    }
+                })
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+    }
+
+    @Override
+    public void enableUser(String email) throws NoFoundException {
+        UserEntity user = jpaRepo.findByMail(email)
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+        user.setEnabled(true);
+        jpaRepo.save(user);
+    }
+
+    @Override
+    public boolean isUserEnabled(String email) throws NoFoundException {
+        return jpaRepo.findByMail(email)
+                .map(UserEntity::isEnabled)
                 .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
     }
 
@@ -115,6 +159,10 @@ public class JpaUserRepository implements UserRepository {
         return jpaRepo.count();
     }
 
+    @Override
+    public UserEntity save(UserEntity user) {
+        return jpaRepo.save(user);
+    }
 
     private void checkPassword(String password, UserEntity userEntity) {
         if (!PasswordService.verify(userEntity.getPassword(), password)) {
