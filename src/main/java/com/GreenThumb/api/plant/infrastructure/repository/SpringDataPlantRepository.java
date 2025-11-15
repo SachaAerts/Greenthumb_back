@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SpringDataPlantRepository extends JpaRepository<PlantEntity, Long> {
-
     List<PlantEntity> findAll();
+
+    List<PlantEntity> findAllByUser_username(String username);
+
 }

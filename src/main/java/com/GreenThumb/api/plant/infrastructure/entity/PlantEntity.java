@@ -1,5 +1,6 @@
 package com.GreenThumb.api.plant.infrastructure.entity;
 
+import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +24,7 @@ public class PlantEntity {
     @Column(name = "scientific_name", nullable = false, length = 255)
     private String scientificName;
 
-    @Column(name = "common_name", length = 255)
+    @Column(name = "common_name")
     private String commonName;
 
     @Column(name = "life_cycle", length = 100)
@@ -35,10 +36,10 @@ public class PlantEntity {
     @Column(name = "light")
     private int lightLevel;
 
-    @Column(name = "soil_ph_min", precision = 3, scale = 1)
+    @Column(name = "soil_ph_min")
     private Double soilPhMin;
 
-    @Column(name = "soil_ph_max", precision = 3, scale = 1)
+    @Column(name = "soil_ph_max")
     private Double soilPhMax;
 
     @Column(name = "temperature_min")
@@ -54,12 +55,15 @@ public class PlantEntity {
     private String bloomMonths;
 
     @Column(name = "pet_toxic")
+    @Builder.Default
     private Boolean petToxic = false;
 
     @Column(name = "human_toxic")
+    @Builder.Default
     private Boolean humanToxic = false;
 
     @Column(name = "indoor_friendly")
+    @Builder.Default
     private Boolean indoorFriendly = true;
 
     @Column(name = "image_url", columnDefinition = "TEXT")
@@ -67,4 +71,8 @@ public class PlantEntity {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user", nullable = false)
+    private UserEntity user;
 }

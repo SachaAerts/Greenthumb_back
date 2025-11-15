@@ -21,4 +21,10 @@ public class JpaPlantRepository implements PlantRepository {
                 .map(PlantMapper::toDomain)
                 .toList();
     }
+
+    public List<Plant> findAllByUser_username(String username) {
+        return plantRepository.findAllByUser_username(username).stream()
+                .map(PlantMapper::toDomain)
+                .toList();
+    }
 }
