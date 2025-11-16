@@ -4,12 +4,12 @@ import java.util.Map;
 
 public record PlantStat (
     String duration,
-    int lightLevel,
+    Integer lightLevel,
     PhStat phStat,
     TemperatureStat temperatureStat,
-    int humidityNeed,
+    Integer humidityNeed,
     Toxic toxic,
-    boolean indoorFriendly
+    Boolean indoorFriendly
 ) {
     public Map<String, Double> getMaxMinPh() {
          return phStat.getMaxMinPh();

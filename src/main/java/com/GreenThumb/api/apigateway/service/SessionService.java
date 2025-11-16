@@ -99,7 +99,10 @@ public class SessionService {
 
         Map<String, String> tokens = createToken(username, user.role().label());
 
-        redisService.save(RADIS_REFRESH_TOKEN_ID + username, tokens.get(REFRESH_TOKEN), 7, TimeUnit.DAYS);
+        String key = RADIS_REFRESH_TOKEN_ID + username;
+        redisService.save(key, tokens.get(REFRESH_TOKEN));
+        redisService.expiry(key,7, TimeUnit.DAYS);
+
         return tokens;
     }
 
