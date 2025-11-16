@@ -2,6 +2,8 @@ package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.service.UserServiceGateway;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,19 @@ public class UserController {
     @GetMapping("/{username}/plants")
     public ResponseEntity<?> getAllPlant(@PathVariable String username) throws JsonProcessingException {
         return ResponseEntity.ok(userService.getAllPlantsByUsername(username));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getMe(HttpServletRequest request) throws JsonProcessingException {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
+        }
+
+        String token = authHeader.substring(7);
+
+        return  ResponseEntity.ok(userService.getMe(token));
     }
 
     

@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.application.service;
 
+import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
@@ -23,23 +24,23 @@ public class UserService {
         return userRepository.getUsername(id_user);
     }
 
-    public User getUserByEmail(String email, String password) throws NoFoundException, IllegalArgumentException {
-        return userRepository.getUserByEmail(email, password);
+    public UserDto getUserByEmail(String email, String password) throws NoFoundException, IllegalArgumentException {
+        return UserDto.of(userRepository.getUserByEmail(email, password));
     }
 
-    public User getUserByUsernameAndPassword(String username, String password) throws NoFoundException, IllegalArgumentException {
-        return userRepository.getUserByUsernameAndPassword(username, password);
+    public UserDto getUserByUsernameAndPassword(String username, String password) throws NoFoundException, IllegalArgumentException {
+        return UserDto.of(userRepository.getUserByUsernameAndPassword(username, password));
     }
 
-    public User getUserByUsername(String username) throws NoFoundException, IllegalArgumentException {
-        return userRepository.getUserByUsername(username);
+    public UserDto getUserByUsername(String username) throws NoFoundException, IllegalArgumentException {
+        return UserDto.of(userRepository.getUserByUsername(username));
     }
 
     public void postUserRegistration(UserRegister registerRequest) throws NoFoundException, IllegalArgumentException {
         userRepository.postUserRegistration(registerRequest);
     }
-    public User findByEmail(String email) throws NoFoundException {
-        return userRepository.findByEmail(email);
+    public UserDto findByEmail(String email) throws NoFoundException {
+        return UserDto.of(userRepository.findByEmail(email));
     }
 
     public void enableUser(String email) throws NoFoundException {
