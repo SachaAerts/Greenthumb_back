@@ -143,4 +143,10 @@ public class SessionService {
         log.info("Nouvel email de vérification envoyé à {}", email);
     }
 
+    public void invalidateRefreshToken(String refreshToken) {
+        String username = tokenService.extractUsername(refreshToken);
+
+        redisService.delete(RADIS_REFRESH_TOKEN_ID + username);
+    }
+
 }
