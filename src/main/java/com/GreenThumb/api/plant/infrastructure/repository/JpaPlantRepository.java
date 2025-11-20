@@ -18,7 +18,7 @@ public class JpaPlantRepository implements PlantRepository {
 
     public List<Plant> findAll() {
         return plantRepository.findAll().stream()
-                .map(PlantMapper::toDomain)
+                .map((PlantMapper::toDomain))
                 .toList();
     }
 
@@ -26,5 +26,9 @@ public class JpaPlantRepository implements PlantRepository {
         return plantRepository.findAllByUser_username(username).stream()
                 .map(PlantMapper::toDomain)
                 .toList();
+    }
+
+    public Long findIdBySlug(String slug) {
+        return plantRepository.findIdBySlug(slug);
     }
 }

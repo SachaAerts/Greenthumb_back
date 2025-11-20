@@ -1,11 +1,15 @@
 package com.GreenThumb.api.plant.infrastructure.mapper;
 
 import com.GreenThumb.api.plant.domain.entity.Plant;
+import com.GreenThumb.api.plant.domain.entity.Task;
 import com.GreenThumb.api.plant.domain.objecValue.PhStat;
 import com.GreenThumb.api.plant.domain.objecValue.PlantStat;
 import com.GreenThumb.api.plant.domain.objecValue.TemperatureStat;
 import com.GreenThumb.api.plant.domain.objecValue.Toxic;
 import com.GreenThumb.api.plant.infrastructure.entity.PlantEntity;
+import com.GreenThumb.api.plant.infrastructure.entity.TaskEntity;
+
+import java.util.List;
 
 public class PlantMapper {
 

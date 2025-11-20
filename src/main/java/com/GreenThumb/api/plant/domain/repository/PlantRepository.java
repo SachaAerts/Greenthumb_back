@@ -8,4 +8,6 @@ public interface PlantRepository {
     List<Plant> findAll();
 
     List<Plant> findAllByUser_username(String username);
+
+    Long findIdBySlug(String slug);
 }

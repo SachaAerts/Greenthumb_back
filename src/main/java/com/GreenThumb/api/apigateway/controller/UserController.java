@@ -34,10 +34,6 @@ public class UserController {
     public ResponseEntity<?> getMe(HttpServletRequest request) throws JsonProcessingException {
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
-        }
-
         String token = authHeader.substring(7);
 
         return  ResponseEntity.ok(userService.getMe(token));
