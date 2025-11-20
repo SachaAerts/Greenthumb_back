@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.domain.repository;
 
+import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
@@ -22,7 +23,7 @@ public interface UserRepository {
 
     long count();
 
-    UserEntity save(UserEntity user);
-
     void postUserRegistration(UserRegister user);
+
+    void editUser(UserEdit user);
 }

@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.infrastructure.repository;
 
+import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
 import com.GreenThumb.api.user.domain.exception.EmailAlreadyUsedException;
@@ -159,15 +160,14 @@ public class JpaUserRepository implements UserRepository {
         return jpaRepo.count();
     }
 
-    @Override
-    public UserEntity save(UserEntity user) {
-        return jpaRepo.save(user);
-    }
-
     private void checkPassword(String password, UserEntity userEntity) {
         if (!PasswordService.verify(userEntity.getPassword(), password)) {
             throw new IllegalArgumentException("Mot de passe incorrect");
         }
     }
 
+    @Override
+    public void editUser(UserEdit user) {
+        //TODO: Complete
+    }
 }

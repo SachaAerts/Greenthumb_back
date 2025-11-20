@@ -1,6 +1,7 @@
 package com.GreenThumb.api.user.application.service;
 
 import com.GreenThumb.api.user.application.dto.UserDto;
+import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
@@ -49,6 +50,10 @@ public class UserService {
 
     public boolean isUserEnabled(String email) throws NoFoundException {
         return userRepository.isUserEnabled(email);
+    }
+
+    public void editUser(UserEdit user) {
+        userRepository.editUser(user);
     }
 
 }

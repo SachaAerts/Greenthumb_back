@@ -1,14 +1,13 @@
 package com.GreenThumb.api.apigateway.controller;
 
+import com.GreenThumb.api.user.application.dto.UserEdit;
+import com.GreenThumb.api.user.application.service.UserService;
 import com.GreenThumb.api.apigateway.service.UserServiceGateway;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -43,5 +42,9 @@ public class UserController {
         return  ResponseEntity.ok(userService.getMe(token));
     }
 
-    
+
+    @PatchMapping("/{username}")
+    public ResponseEntity<?> editUser(@RequestBody UserEdit user) {
+
+    }
 }
