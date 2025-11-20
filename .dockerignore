@@ -1,0 +1,59 @@
+# ========================================
+# Fichiers à ignorer lors du build Docker
+# ========================================
+
+# Build et artifacts
+build/
+target/
+*.jar
+*.war
+*.class
+
+# Gradle
+.gradle/
+gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Fichiers temporaires
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+readme.md
+*.md
+docs/
+
+# Configuration locale
+.env
+.env.*
+*.env
+memory
+
+# Tests
+.coverage
+coverage/
+test-results/
