@@ -4,6 +4,7 @@ import com.GreenThumb.api.apigateway.dto.user.UserConnection;
 import com.GreenThumb.api.apigateway.dto.Session;
 import com.GreenThumb.api.apigateway.mapper.UserMapper;
 import com.GreenThumb.api.apigateway.utils.EmailValidator;
+import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.service.EmailVerificationService;
 import com.GreenThumb.api.user.application.service.UserService;
 import com.GreenThumb.api.user.domain.entity.User;
@@ -64,13 +65,13 @@ public class SessionService {
     public Map<String, String> refreshToken(String refreshToken) {
         String username = tokenService.extractUsername(refreshToken);
 
-        User user = userService.getUserByUsername(username);
+        UserDto user = userService.getUserByUsername(username);
 
         return saveAndCreateTokens(user);
     }
 
     private Session loginWithEmail(UserConnection loginRequest) throws IllegalArgumentException {
-        User user = userService.getUserByEmail(loginRequest.login(), loginRequest.password());
+        UserDto user = userService.getUserByEmail(loginRequest.login(), loginRequest.password());
 
         Map<String, String> tokens = saveAndCreateTokens(user);
 
@@ -78,7 +79,7 @@ public class SessionService {
     }
 
     private Session loginWithUsername(UserConnection loginRequest) {
-        User user = userService.getUserByUsernameAndPassword(loginRequest.login(), loginRequest.password());
+        UserDto user = userService.getUserByUsernameAndPassword(loginRequest.login(), loginRequest.password());
 
         Map<String, String> tokens = saveAndCreateTokens(user);
 
@@ -94,12 +95,15 @@ public class SessionService {
         return tokens;
     }
 
-    private Map<String, String> saveAndCreateTokens(User user) {
-        String username = user.username().username();
+    private Map<String, String> saveAndCreateTokens(UserDto user) {
+        String username = user.username();
 
-        Map<String, String> tokens = createToken(username, user.role().label());
+        Map<String, String> tokens = createToken(username, user.role());
 
-        redisService.save(RADIS_REFRESH_TOKEN_ID + username, tokens.get(REFRESH_TOKEN), 7, TimeUnit.DAYS);
+        String key = RADIS_REFRESH_TOKEN_ID + username;
+        redisService.save(key, tokens.get(REFRESH_TOKEN));
+        redisService.expiry(key,7, TimeUnit.DAYS);
+
         return tokens;
     }
 
@@ -115,7 +119,7 @@ public class SessionService {
 
         userService.enableUser(email);
 
-        User user = userService.findByEmail(email);
+        UserDto user = userService.findByEmail(email);
 
         Map<String, String> tokens = saveAndCreateTokens(user);
 
@@ -127,8 +131,8 @@ public class SessionService {
     }
 
     public void resendVerificationEmail(String email) {
-        User user = userService.findByEmail(email);
-        
+        UserDto user = userService.findByEmail(email);
+
         if (userService.isUserEnabled(email)) {
             throw new UserAlreadyVerifiedException(
                     "Votre compte est déjà vérifié. Vous pouvez vous connecter normalement."

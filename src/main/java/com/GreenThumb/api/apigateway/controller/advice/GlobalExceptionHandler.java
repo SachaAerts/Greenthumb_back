@@ -2,6 +2,7 @@ package com.GreenThumb.api.apigateway.controller.advice;
 
 import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
 import com.GreenThumb.api.user.domain.exception.UserAlreadyVerifiedException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,14 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put("error", exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<Map<String, String>> handleJsonProcessingException(JsonProcessingException exception) {
+        log.error("Erreur de serialisation JSON lors de la mise en cache");
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Erreur de serialisation JSON lors de la mise en cache");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
     }
 
     @ExceptionHandler(Exception.class)
