@@ -28,7 +28,7 @@ RUN ./gradlew bootJar --no-daemon -x test
 # STAGE 2: RUNTIME
 # ========================================
 # Utilise une image légère avec uniquement le JRE 21
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jre-jammy
 
 # Informations sur l'image
 LABEL maintainer="GreenThumb Team"
@@ -36,7 +36,7 @@ LABEL description="Backend Spring Boot pour GreenThumb"
 LABEL version="0.1.0"
 
 # Crée un utilisateur non-root pour des raisons de sécurité
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN groupadd -r spring && useradd -r -g spring spring
 
 # Définit le répertoire de travail
 WORKDIR /app
@@ -44,8 +44,9 @@ WORKDIR /app
 # Copie le JAR depuis le stage de build
 COPY --from=builder /app/build/libs/*.jar app.jar
 
-# Crée le répertoire logs pour Logback
-RUN mkdir -p logs && chown -R spring:spring logs app.jar
+# Crée les répertoires nécessaires avec les bonnes permissions
+RUN mkdir -p logs uploads/users && \
+    chown -R spring:spring logs uploads app.jar
 
 # Passe à l'utilisateur non-root
 USER spring:spring

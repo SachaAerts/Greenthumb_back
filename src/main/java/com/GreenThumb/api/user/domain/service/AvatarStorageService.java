@@ -1,7 +1,9 @@
 package com.GreenThumb.api.user.domain.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.*;
@@ -11,15 +13,18 @@ import java.util.UUID;
 @Service
 public class AvatarStorageService {
 
-    private final Path staticDir;
+    private final Path uploadDir;
 
-    public AvatarStorageService() {
-        this.staticDir = Paths.get("src/main/resources/static/users").toAbsolutePath().normalize();
+    public AvatarStorageService(@Value("${greenthumb.upload.dir:/app/uploads/users}") String uploadPath) {
+        this.uploadDir = Paths.get(uploadPath).toAbsolutePath().normalize();
+    }
 
+    @PostConstruct
+    public void init() {
         try {
-            Files.createDirectories(this.staticDir);
+            Files.createDirectories(this.uploadDir);
         } catch (IOException ex) {
-            throw new RuntimeException("Impossible de créer le dossier static/users.", ex);
+            throw new RuntimeException("Impossible de créer le dossier d'uploads: " + uploadDir, ex);
         }
     }
 
@@ -48,7 +53,7 @@ public class AvatarStorageService {
         }
 
         String filename = UUID.randomUUID() + ext;
-        Path targetLocation = staticDir.resolve(filename);
+        Path targetLocation = uploadDir.resolve(filename);
 
         try (FileOutputStream fos = new FileOutputStream(targetLocation.toFile())) {
             fos.write(imageBytes);
