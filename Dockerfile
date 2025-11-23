@@ -1,7 +1,7 @@
 # ========================================
 # STAGE 1: BUILD
 # ========================================
-FROM eclipse-temurin:21-jdk-alpine AS builder
+FROM eclipse-temurin:21-jdk-jammy AS builder
 
 WORKDIR /app
 
