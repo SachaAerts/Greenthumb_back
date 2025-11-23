@@ -35,5 +35,10 @@ public record UserEdit(
 
         boolean is_private,
 
-        String avatar
+        String avatar,
+
+        @NotBlank(message = "L'ancien nom d'utilisateur ne doit pas être vide")
+        @Pattern(regexp="^[a-zA-Z0-9]+$",
+                message="Le nom d'utilisateur ne peut pas contenir de caractères spéciaux")
+        String oldUsername
 ){}

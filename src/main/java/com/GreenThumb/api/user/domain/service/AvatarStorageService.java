@@ -11,6 +11,9 @@ import java.util.UUID;
 @Service
 public class AvatarStorageService {
 
+    private static final String DEFAULT_AVATAR = "users/default.png";
+    private static final String USERS_FOLDER = "users/";
+
     private final Path staticDir;
 
     public AvatarStorageService() {
@@ -25,29 +28,60 @@ public class AvatarStorageService {
 
     public String storeUserImage(String base64Image) {
         if (base64Image == null || base64Image.isEmpty()) {
-            return "users/default.png";
+            return DEFAULT_AVATAR;
         }
 
+        byte[] imageBytes = decodeBase64Image(base64Image);
+        String extension = extractImageExtension(base64Image);
+        String filename = generateFilename(extension);
+
+        saveImageToFile(imageBytes, filename);
+
+        return USERS_FOLDER + filename;
+    }
+
+    public String replaceUserImage(String oldAvatarPath, String newBase64Image) {
+        if (newBase64Image == null || newBase64Image.isEmpty()) {
+            return oldAvatarPath;
+        }
+
+        byte[] imageBytes = decodeBase64Image(newBase64Image);
+        String extension = extractImageExtension(newBase64Image);
+        String filename = generateFilename(extension);
+
+        saveImageToFile(imageBytes, filename);
+
+        deleteOldAvatar(oldAvatarPath);
+
+        return USERS_FOLDER + filename;
+    }
+
+    private byte[] decodeBase64Image(String base64Image) {
         String[] parts = base64Image.split(",");
         String dataPart = parts.length > 1 ? parts[1] : parts[0];
 
-        String ext;
-        if (base64Image.startsWith("data:image/jpeg") || base64Image.startsWith("data:image/jpg")) {
-            ext = ".jpg";
-        } else if (base64Image.startsWith("data:image/png")) {
-            ext = ".png";
-        } else {
-            throw new RuntimeException("Type de fichier non supporté. Seuls PNG/JPG/JPEG sont autorisés.");
-        }
-
-        byte[] imageBytes;
         try {
-            imageBytes = Base64.getDecoder().decode(dataPart);
+            return Base64.getDecoder().decode(dataPart);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Base64 invalide.", e);
         }
+    }
 
-        String filename = UUID.randomUUID() + ext;
+    private String extractImageExtension(String base64Image) {
+        if (base64Image.startsWith("data:image/jpeg") || base64Image.startsWith("data:image/jpg")) {
+            return ".jpg";
+        } else if (base64Image.startsWith("data:image/png")) {
+            return ".png";
+        } else {
+            throw new RuntimeException("Type de fichier non supporté. Seuls PNG/JPG/JPEG sont autorisés.");
+        }
+    }
+
+    private String generateFilename(String extension) {
+        return UUID.randomUUID() + extension;
+    }
+
+    private void saveImageToFile(byte[] imageBytes, String filename) {
         Path targetLocation = staticDir.resolve(filename);
 
         try (FileOutputStream fos = new FileOutputStream(targetLocation.toFile())) {
@@ -55,7 +89,22 @@ public class AvatarStorageService {
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors de l'enregistrement du fichier.", e);
         }
+    }
 
-        return "users/" + filename;
+    private void deleteOldAvatar(String avatarPath) {
+        if (avatarPath == null || avatarPath.equals(DEFAULT_AVATAR)) {
+            return;
+        }
+
+        String filename = avatarPath.replace(USERS_FOLDER, "");
+        Path fileToDelete = staticDir.resolve(filename);
+
+        try {
+            if (Files.exists(fileToDelete)) {
+                Files.delete(fileToDelete);
+            }
+        } catch (IOException e) {
+            System.err.println("Impossible de supprimer l'ancien avatar: " + fileToDelete);
+        }
     }
 }

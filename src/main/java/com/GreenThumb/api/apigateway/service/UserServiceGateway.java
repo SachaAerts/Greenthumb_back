@@ -4,6 +4,7 @@ import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
 
 import com.GreenThumb.api.user.application.dto.UserDto;
+import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -84,5 +85,9 @@ public class UserServiceGateway {
     private List<PlantDto> getPlantsInCache(String key) throws JsonProcessingException {
         String plantJson = redisService.get(key);
         return objectMapper.readValue(plantJson, new TypeReference<>() {});
+    }
+
+    public void editUser(UserEdit user) {
+        userService.editUser(user);
     }
 }

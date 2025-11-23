@@ -16,6 +16,7 @@ import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import com.GreenThumb.api.user.infrastructure.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -126,6 +127,7 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    @Transactional
     public void postUserRegistration(UserRegister user) {
         String hashPassword = hash(user.password());
         RoleEntity roleUser = roleRepository.getRoleEntity("UTILISATEUR");
@@ -167,7 +169,25 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public void editUser(UserEdit user) {
-        //TODO: Complete
+    @Transactional
+    public void editUser(UserEdit userEdit) {
+        UserEntity user = jpaRepo.findByUsername(userEdit.oldUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        editUser(userEdit, user);
+
+        jpaRepo.save(user);
+    }
+
+    private void editUser(UserEdit userEdit, UserEntity user) {
+        if (userEdit.username() != null) {user.setUsername(userEdit.username());}
+        if (userEdit.firstname() != null) {user.setFirstname(userEdit.firstname());}
+        if (userEdit.lastname() != null) {user.setLastname(userEdit.lastname());}
+        if (userEdit.email() != null) {user.setMail(userEdit.email());}
+        if (userEdit.phoneNumber() != null) {user.setPhoneNumber(userEdit.phoneNumber());}
+        if (userEdit.biography() != null) {user.setBiography(userEdit.biography());}
+
+        AvatarStorageService avatarStorageService = new AvatarStorageService();
+        avatarStorageService.replaceUserImage(user.getAvatar(), userEdit.avatar());
     }
 }

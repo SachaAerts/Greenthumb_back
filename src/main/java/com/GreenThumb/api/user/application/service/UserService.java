@@ -40,6 +40,7 @@ public class UserService {
     public void postUserRegistration(UserRegister registerRequest) throws NoFoundException, IllegalArgumentException {
         userRepository.postUserRegistration(registerRequest);
     }
+
     public UserDto findByEmail(String email) throws NoFoundException {
         return UserDto.of(userRepository.findByEmail(email));
     }
