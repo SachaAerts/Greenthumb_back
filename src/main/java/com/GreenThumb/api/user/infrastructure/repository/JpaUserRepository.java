@@ -24,12 +24,13 @@ import static com.GreenThumb.api.user.domain.service.PasswordService.hash;
 @Repository
 public class JpaUserRepository implements UserRepository {
     private final SpringDataUserRepository jpaRepo;
-
     private final RoleRepository roleRepository;
+    private final AvatarStorageService avatarStorageService;
 
-    public JpaUserRepository(SpringDataUserRepository jpaRepo,  RoleRepository roleRepository) {
+    public JpaUserRepository(SpringDataUserRepository jpaRepo, RoleRepository roleRepository, AvatarStorageService avatarStorageService) {
         this.jpaRepo = jpaRepo;
         this.roleRepository = roleRepository;
+        this.avatarStorageService = avatarStorageService;
     }
 
     @Override
@@ -150,7 +151,6 @@ public class JpaUserRepository implements UserRepository {
     }
 
     private String saveAvatar(String avatar) {
-        AvatarStorageService avatarStorageService = new AvatarStorageService();
         return avatarStorageService.storeUserImage(avatar);
     }
 
