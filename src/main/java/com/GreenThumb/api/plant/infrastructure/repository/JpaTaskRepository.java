@@ -20,4 +20,8 @@ public class JpaTaskRepository implements TaskRepository {
                 .map(TaskMapper::toDomain)
                 .toList();
     }
+
+    public long countTask() {
+        return springDataTaskRepository.count();
+    }
 }

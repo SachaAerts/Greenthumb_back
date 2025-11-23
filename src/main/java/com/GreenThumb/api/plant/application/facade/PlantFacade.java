@@ -8,4 +8,6 @@ public interface PlantFacade {
     List<PlantDto> getAllPlants();
 
     List<PlantDto> getAllPlantsByUsername(String username);
+
+    long countTask();
 }

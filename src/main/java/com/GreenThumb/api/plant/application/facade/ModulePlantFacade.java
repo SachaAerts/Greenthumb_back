@@ -41,4 +41,8 @@ public class ModulePlantFacade implements PlantFacade {
     public List<PlantDto> getAllPlantsByUsername(String username) {
         return plantService.findAllByUser_username(username);
     }
+
+    public long countTask() {
+        return plantService.countTask();
+    }
 }

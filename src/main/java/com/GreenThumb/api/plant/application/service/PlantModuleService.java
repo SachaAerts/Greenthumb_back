@@ -34,6 +34,10 @@ public class PlantModuleService {
         return toDto(plantsDomain);
     }
 
+    public long countTask() {
+        return taskRepository.countTask();
+    }
+
     private List<PlantDto> toDto(List<Plant> plantsDomain) {
         return plantsDomain.stream()
                 .map(plant -> {
