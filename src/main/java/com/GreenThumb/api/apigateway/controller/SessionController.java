@@ -114,4 +114,31 @@ public class SessionController {
                 .status(HttpStatus.CREATED)
                 .build();
     }
+
+    @DeleteMapping("/sessions")
+    public ResponseEntity<?> deleteSession(
+            @CookieValue(value = "refresh_cookie", required = false) String refreshToken,
+            Principal principal
+    ) {
+        if (refreshToken != null && tokenService.isTokenValid(refreshToken)) {
+            try {
+                sessionService.invalidateRefreshToken(refreshToken);
+                log.info("Refresh token invalidated for user: {}", principal != null ? principal.getName() : "unknown");
+            } catch (Exception e) {
+                log.error("Error invalidating refresh token", e);
+            }
+        }
+
+        ResponseCookie deletedCookie = ResponseCookie.from("refresh_cookie", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite("Strict")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.noContent()
+                .header("Set-Cookie", deletedCookie.toString())
+                .build();
+    }
 }

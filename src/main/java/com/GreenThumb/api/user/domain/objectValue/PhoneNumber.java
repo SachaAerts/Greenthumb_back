@@ -20,6 +20,10 @@ public class PhoneNumber {
         this.number = number;
     }
 
+    public String getPhoneNumber() {
+        return number;
+    }
+
     public void setNumber(String number) throws FormatException {
         checkNumber(number);
 

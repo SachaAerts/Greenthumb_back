@@ -27,3 +27,5 @@ databaseChangeLog:
       file: db/changelog/changes/2025-11-10-add-enabled-to-users.yaml
   - include:
       file: db/changelog/changes/2025-11-10-replace-image-path-by-avatar.yaml
+  - include:
+      file: db/changelog/changes/2025-11-20-add-task-table.yaml
