@@ -6,10 +6,13 @@ import com.GreenThumb.api.plant.domain.entity.Plant;
 import com.GreenThumb.api.plant.domain.entity.Task;
 import com.GreenThumb.api.plant.domain.repository.PlantRepository;
 import com.GreenThumb.api.plant.domain.repository.TaskRepository;
+import org.h2.table.Plan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 public class PlantModuleService {
@@ -28,10 +31,10 @@ public class PlantModuleService {
         return toDto(plantsDomain);
     }
 
-    public List<PlantDto> findAllByUser_username(String username) {
-        List<Plant> plantsDomain =  plantRepository.findAllByUser_username(username);
+    public Page<PlantDto> findAllByUser_username(String username, Pageable pageable) {
+        Page<Plant> plants = plantRepository.findAllByUser_username(username, pageable);
 
-        return toDto(plantsDomain);
+        return toDto(plants);
     }
 
     public long countTask() {
@@ -40,26 +43,34 @@ public class PlantModuleService {
 
     private List<PlantDto> toDto(List<Plant> plantsDomain) {
         return plantsDomain.stream()
-                .map(plant -> {
-                    Long plantId = plantRepository.findIdBySlug(plant.slug());
-
-                    List<TaskDto> tasksDto = taskRepository.findByPlantId(plantId).stream()
-                            .map(task -> new TaskDto(
-                                    task.title(),
-                                    task.description(),
-                                    task.endDate().toString(),
-                                    task.color()
-                            ))
-                            .toList();
-
-                    return new PlantDto(
-                            plant.slug(),
-                            plant.scientificName(),
-                            plant.commonName(),
-                            plant.imageUrl(),
-                            tasksDto
-                    );
-                })
+                .map(createPlantDto())
                 .toList();
+    }
+
+    private Page<PlantDto> toDto(Page<Plant> plantsDomain) {
+        return plantsDomain.map(createPlantDto());
+    }
+
+    private Function<Plant, PlantDto> createPlantDto() {
+        return plant -> {
+            Long plantId = plantRepository.findIdBySlug(plant.slug());
+
+            List<TaskDto> tasksDto = taskRepository.findByPlantId(plantId).stream()
+                    .map(task -> new TaskDto(
+                            task.title(),
+                            task.description(),
+                            task.endDate().toString(),
+                            task.color()
+                    ))
+                    .toList();
+
+            return new PlantDto(
+                    plant.slug(),
+                    plant.scientificName(),
+                    plant.commonName(),
+                    plant.imageUrl(),
+                    tasksDto
+            );
+        };
     }
 }

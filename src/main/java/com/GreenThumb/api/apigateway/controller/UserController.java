@@ -5,10 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -26,8 +23,12 @@ public class UserController {
     }
 
     @GetMapping("/{username}/plants")
-    public ResponseEntity<?> getAllPlant(@PathVariable String username) throws JsonProcessingException {
-        return ResponseEntity.ok(userService.getAllPlantsByUsername(username));
+    public ResponseEntity<?> getAllPlant(
+            @PathVariable String username,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) throws JsonProcessingException {
+        return ResponseEntity.ok(userService.getAllPlantsByUsername(username, page, size));
     }
 
     @GetMapping("/me")

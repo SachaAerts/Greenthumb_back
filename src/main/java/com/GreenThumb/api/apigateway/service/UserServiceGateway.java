@@ -8,6 +8,9 @@ import com.GreenThumb.api.user.application.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,12 +38,12 @@ public class UserServiceGateway {
         return userService.countUsers();
     }
 
-    public List<PlantDto> getAllPlantsByUsername(String username) throws JsonProcessingException {
-        String key = "user:" + username + ":plants";
+    public Page<PlantDto> getAllPlantsByUsername(String username, int page, int size) throws JsonProcessingException {
+        String key = "user:" + username + ":plants:page:" + page + ":size:" + size;
 
         return redisService.checkKey(key)
                 ? getPlantsInCache(key)
-                : getPlantsInDBAndSaveInCache(username, key);
+                : getPlantsPageInDBAndSaveInCache(username, page, size, key);
     }
 
     public UserDto getMe(String token) throws JsonProcessingException {
@@ -67,21 +70,26 @@ public class UserServiceGateway {
         return objectMapper.readValue(userJson, UserDto.class);
     }
 
-    private List<PlantDto> getPlantsInDBAndSaveInCache(String username, String key) throws JsonProcessingException {
-        List<PlantDto> plants;
-        plants = plantModule.getAllPlantsByUsername(username);
+    private Page<PlantDto> getPlantsPageInDBAndSaveInCache(
+            String username,
+            int page,
+            int size,
+            String key
+    ) throws JsonProcessingException {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PlantDto> result = plantModule.getAllPlantsByUsername(username, pageable);
 
-        saveInCache(key, plants);
-        return plants;
+        saveInCache(key, result);
+        return result;
     }
 
-    private void saveInCache(String key, List<PlantDto> plants) throws JsonProcessingException {
+    private void saveInCache(String key, Page<PlantDto> plants) throws JsonProcessingException {
         String plantJson = objectMapper.writeValueAsString(plants);
         redisService.saveJson(key, plantJson);
         redisService.expiry(key, 5, TimeUnit.MINUTES);
     }
 
-    private List<PlantDto> getPlantsInCache(String key) throws JsonProcessingException {
+    private Page<PlantDto> getPlantsInCache(String key) throws JsonProcessingException {
         String plantJson = redisService.get(key);
         return objectMapper.readValue(plantJson, new TypeReference<>() {});
     }
