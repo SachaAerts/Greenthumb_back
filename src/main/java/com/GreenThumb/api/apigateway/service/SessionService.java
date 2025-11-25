@@ -33,6 +33,12 @@ public class SessionService {
     @org.springframework.beans.factory.annotation.Value("${greenthumb.frontend.url}")
     private String frontendUrl;
 
+    @org.springframework.beans.factory.annotation.Value("${security.jwt.expiration.refresh}")
+    private long refreshTokenExpirationLong;
+
+    @org.springframework.beans.factory.annotation.Value("${security.jwt.expiration.refresh.short}")
+    private long refreshTokenExpirationShort;
+
     public SessionService(EmailValidator emailValidator, UserService userService,
                           TokenService tokenService, RedisService redisService,
                           EmailVerificationService emailVerificationService) {
@@ -73,7 +79,7 @@ public class SessionService {
     private Session loginWithEmail(UserConnection loginRequest) throws IllegalArgumentException {
         UserDto user = userService.getUserByEmail(loginRequest.login(), loginRequest.password());
 
-        Map<String, String> tokens = saveAndCreateTokens(user);
+        Map<String, String> tokens = saveAndCreateTokens(user, loginRequest.rememberMe());
 
         return new Session(UserMapper.toResponse(user), tokens.get(ACCESS_TOKEN), tokens.get(REFRESH_TOKEN));
     }
@@ -81,7 +87,7 @@ public class SessionService {
     private Session loginWithUsername(UserConnection loginRequest) {
         UserDto user = userService.getUserByUsernameAndPassword(loginRequest.login(), loginRequest.password());
 
-        Map<String, String> tokens = saveAndCreateTokens(user);
+        Map<String, String> tokens = saveAndCreateTokens(user, loginRequest.rememberMe());
 
         return new Session(UserMapper.toResponse(user), tokens.get(ACCESS_TOKEN), tokens.get(REFRESH_TOKEN));
     }
@@ -95,16 +101,29 @@ public class SessionService {
         return tokens;
     }
 
-    private Map<String, String> saveAndCreateTokens(UserDto user) {
+    private Map<String, String> saveAndCreateTokens(UserDto user, boolean rememberMe) {
         String username = user.username();
 
         Map<String, String> tokens = createToken(username, user.role());
 
         String key = RADIS_REFRESH_TOKEN_ID + username;
         redisService.save(key, tokens.get(REFRESH_TOKEN));
-        redisService.expiry(key,7, TimeUnit.DAYS);
+
+        long expirationMs = rememberMe ? refreshTokenExpirationLong : refreshTokenExpirationShort;
+        long expirationSeconds = expirationMs / 1000;
+
+        redisService.expiry(key, expirationSeconds, TimeUnit.SECONDS);
+
+        log.info("Refresh token cr�� pour l'utilisateur {} avec dur�e de {} jours (rememberMe: {})",
+                username,
+                rememberMe ? 7 : 1,
+                rememberMe);
 
         return tokens;
+    }
+
+    private Map<String, String> saveAndCreateTokens(UserDto user) {
+        return saveAndCreateTokens(user, true);
     }
 
     public Session verifyEmailAndCreateSession(String token) {

@@ -9,8 +9,16 @@ public record UserConnection(
 
         @NotBlank(message = "le mot de passe est requis")
         @ValidPassword
-        String password
+        String password,
+
+        Boolean rememberMe
 ) {
+
+    public UserConnection {
+        if (rememberMe == null) {
+            rememberMe = false;
+        }
+    }
 
     public boolean isEmail() {
         return login.contains("@");
