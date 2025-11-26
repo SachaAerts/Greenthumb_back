@@ -87,7 +87,7 @@ public class UserServiceGateway {
         return objectMapper.readValue(plantJson, new TypeReference<>() {});
     }
 
-    public void editUser(UserEdit user) {
-        userService.editUser(user);
+    public void editUser(UserEdit user, String oldUsername) throws JsonProcessingException {
+        userService.editUser(user, oldUsername);
     }
 }

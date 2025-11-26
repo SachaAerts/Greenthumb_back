@@ -3,9 +3,9 @@ package com.GreenThumb.api.user.application.service;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
-import com.GreenThumb.api.user.domain.entity.User;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,8 +53,8 @@ public class UserService {
         return userRepository.isUserEnabled(email);
     }
 
-    public void editUser(UserEdit user) {
-        userRepository.editUser(user);
+    public void editUser(UserEdit user,  String oldUsername) throws JsonProcessingException {
+        userRepository.editUser(user, oldUsername);
     }
 
 }

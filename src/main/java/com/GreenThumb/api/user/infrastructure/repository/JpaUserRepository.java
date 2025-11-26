@@ -170,8 +170,8 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     @Transactional
-    public void editUser(UserEdit userEdit) {
-        UserEntity user = jpaRepo.findByUsername(userEdit.oldUsername())
+    public void editUser(UserEdit userEdit, String oldUsername) {
+        UserEntity user = jpaRepo.findByUsername(oldUsername)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         editUser(userEdit, user);
