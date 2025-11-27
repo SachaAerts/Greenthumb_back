@@ -20,7 +20,7 @@ import java.util.Arrays;
 @Configuration
 public class SecurityConfig {
     @Value("${greenthumb.cors.allowed-origins}")
-    private String allowedOrigins;
+    private String allowedOrigin;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthFilter(TokenService tokenService) {
@@ -31,8 +31,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:5173",  // Frontend dev
-                allowedOrigins  // Frontend prod
+                allowedOrigin
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));

@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-11-27-id-change
+      author: jason
+      changes:
+        # Table: roles
+        - modifyDataType:
+            tableName: roles
+            columnName: id_role
+            newDataType: bigint
+
+        # Table: users
+        - modifyDataType:
+            tableName: users
+            columnName: id_user
+            newDataType: bigint
+
+        # Table: plants
+        - modifyDataType:
+            tableName: plants
+            columnName: id_plant
+            newDataType: bigint
+
+        # Table: ressources
+        - modifyDataType:
+            tableName: ressources
+            columnName: id_resource
+            newDataType: bigint
+
+        # Table: messages
+        - modifyDataType:
+            tableName: messages
+            columnName: id_message
+            newDataType: bigint
+
+        # Table: commentaries
+        - modifyDataType:
+            tableName: commentaries
+            columnName: id_commentary
+            newDataType: bigint
+
+        # Table: medias
+        - modifyDataType:
+            tableName: medias
+            columnName: id_picture
+            newDataType: bigint
+
+        # Table: plants_api
+        - modifyDataType:
+            tableName: plants_api
+            columnName: id_plant
+            newDataType: bigint
