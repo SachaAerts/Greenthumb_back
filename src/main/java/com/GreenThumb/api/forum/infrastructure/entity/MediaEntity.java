@@ -26,5 +26,5 @@ public class MediaEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_commentary", nullable = false, unique = true)
-    private MessageEntity commentary;
+    private CommentaryEntity commentary;
 }
