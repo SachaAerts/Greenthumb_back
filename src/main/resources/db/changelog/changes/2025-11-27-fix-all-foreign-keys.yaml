@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-11-27-fix-all-foreign-keys-to-bigint
+      author: jason
+      changes:
+        # Table: users - FK vers roles
+        - modifyDataType:
+            tableName: users
+            columnName: id_role
+            newDataType: bigint
+
+        # Table: plants - FK vers users
+        - modifyDataType:
+            tableName: plants
+            columnName: id_user
+            newDataType: bigint
+
+        # Table: ressources - FK vers users
+        - modifyDataType:
+            tableName: ressources
+            columnName: id_user
+            newDataType: bigint
+
+        # Table: commentaries - FK vers messages
+        - modifyDataType:
+            tableName: commentaries
+            columnName: id_message
+            newDataType: bigint
+
+        # Table: medias - FK vers commentaries
+        - modifyDataType:
+            tableName: medias
+            columnName: id_commentary
+            newDataType: bigint
+
+        # Table: medias - FK vers messages
+        - modifyDataType:
+            tableName: medias
+            columnName: id_message
+            newDataType: bigint
+
+        # Table: post - FK vers users
+        - modifyDataType:
+            tableName: post
+            columnName: id_user
+            newDataType: bigint
+
+        # Table: post - FK vers messages
+        - modifyDataType:
+            tableName: post
+            columnName: id_message
+            newDataType: bigint
+
+        # Table: reply - FK vers users
+        - modifyDataType:
+            tableName: reply
+            columnName: id_user
+            newDataType: bigint
+
+        # Table: reply - FK vers commentaries
+        - modifyDataType:
+            tableName: reply
+            columnName: id_commentary
+            newDataType: bigint
+
+        # Table: tag - FK vers messages
+        - modifyDataType:
+            tableName: tag
+            columnName: id_message
+            newDataType: bigint
+
+        # Table: tag - FK vers categories
+        - modifyDataType:
+            tableName: tag
+            columnName: id_tag
+            newDataType: bigint
