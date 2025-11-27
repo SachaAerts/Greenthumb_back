@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-11-27-fix-id-tag-type-in-categories
+      author: jason
+      changes:
+        - modifyDataType:
+            tableName: categories
+            columnName: id_tag
+            newDataType: bigint
