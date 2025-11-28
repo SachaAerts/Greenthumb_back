@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-11-28-fix-plants-schema
+      author: ling
+      changes:
+        - modifyDataType:
+            tableName: plants
+            columnName: humidity_need
+            newDataType: INTEGER
+
+        - modifyDataType:
+            tableName: plants
+            columnName: light
+            newDataType: INTEGER

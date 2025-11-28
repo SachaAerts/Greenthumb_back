@@ -37,3 +37,5 @@ databaseChangeLog:
       file: db/changelog/changes/2025-11-27-fix-all-foreign-keys.yaml
   - include:
       file: db/changelog/changes/2025-11-28-create-event-publication-table.yaml
+  - include:
+      file: db/changelog/changes/2025-11-28-fix-plants-schema-data-type.yaml
