@@ -3,10 +3,7 @@ package com.GreenThumb.api.user.infrastructure.repository;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
-import com.GreenThumb.api.user.domain.exception.EmailAlreadyUsedException;
-import com.GreenThumb.api.user.domain.exception.FormatException;
-import com.GreenThumb.api.user.domain.exception.NoFoundException;
-import com.GreenThumb.api.user.domain.exception.PhoneNumberAlreadyUsedException;
+import com.GreenThumb.api.user.domain.exception.*;
 import com.GreenThumb.api.user.domain.repository.RoleRepository;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.GreenThumb.api.user.domain.service.AvatarStorageService;
@@ -17,8 +14,6 @@ import com.GreenThumb.api.user.infrastructure.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static com.GreenThumb.api.user.domain.service.PasswordService.hash;
 
@@ -135,20 +130,27 @@ public class JpaUserRepository implements UserRepository {
             throw new NoFoundException("Le rôle n'existe pas !");
         }
 
-        checkMailAndPhone(user.email(), user.phoneNumber());
+        checkMailPhone(user.email(), user.phoneNumber());
+        checkUsername(user.username());
 
         String avatarPath = saveAvatar(user.avatar());
         UserEntity userEntity = UserMapper.toEntityForRegistration(user, hashPassword, avatarPath, roleUser);
         jpaRepo.save(userEntity);
     }
 
-    private void checkMailAndPhone(String mail, String phone) {
+    private void checkMailPhone(String mail, String phone) {
         if (jpaRepo.existsByMail(mail)) {
             throw new EmailAlreadyUsedException("Le mail est déjà utilisé pour un compte");
         }
 
         if (jpaRepo.existsByPhoneNumber(phone)) {
             throw new PhoneNumberAlreadyUsedException("Le numéro de téléphone est déjà utilisé pour un compte");
+        }
+    }
+
+    private void checkUsername(String username) {
+        if (jpaRepo.existsByUsername(username)) {
+            throw new UsernameAlreadyUsedException("Le nom d'utilisateur est déjà pris");
         }
     }
 
@@ -174,6 +176,11 @@ public class JpaUserRepository implements UserRepository {
         UserEntity user = jpaRepo.findByUsername(oldUsername)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        checkMailPhone(userEdit.email(), userEdit.phoneNumber());
+        if (!oldUsername.equals(userEdit.username())) {
+            checkUsername(userEdit.username());
+        }
+
         editUser(userEdit, user);
 
         jpaRepo.save(user);
@@ -188,6 +195,7 @@ public class JpaUserRepository implements UserRepository {
         if (userEdit.biography() != null) {user.setBiography(userEdit.biography());}
 
         AvatarStorageService avatarStorageService = new AvatarStorageService();
-        avatarStorageService.replaceUserImage(user.getAvatar(), userEdit.avatar());
+        String newAvatar = avatarStorageService.replaceUserImage(user.getAvatar(), userEdit.avatar());
+        if (newAvatar != null) {user.setAvatar(newAvatar);}
     }
 }

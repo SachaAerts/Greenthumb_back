@@ -46,12 +46,12 @@ public class UserController {
     @PatchMapping("/{oldUsername}")
     public ResponseEntity<?> editUser(@PathVariable String oldUsername, @RequestBody UserEdit user) {
         try {
-            System.out.println(user.firstname() + " " + user.lastname() + " and oldUsername: " + oldUsername);
-            //userService.editUser(user, oldUsername);
+            System.out.println(user.avatar());
+            userService.editUser(user, oldUsername);
             return ResponseEntity.ok(Map.of("message", "Profil mis à jour avec succès"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("message", "Erreur lors de la mise à jour du profil: " + e.getMessage()));
+                    .body(Map.of("message", e.getMessage()));
         }
     }
 }

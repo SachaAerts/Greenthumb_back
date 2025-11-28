@@ -42,7 +42,7 @@ public class AvatarStorageService {
 
     public String replaceUserImage(String oldAvatarPath, String newBase64Image) {
         if (newBase64Image == null || newBase64Image.isEmpty()) {
-            return oldAvatarPath;
+            return DEFAULT_AVATAR;
         }
 
         byte[] imageBytes = decodeBase64Image(newBase64Image);
