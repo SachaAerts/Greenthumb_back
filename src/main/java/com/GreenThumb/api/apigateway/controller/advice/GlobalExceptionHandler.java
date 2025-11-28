@@ -53,6 +53,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException exception) {
+        log.warn("Invalid argument: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<Map<String, String>> handleJsonProcessingException(JsonProcessingException exception) {
         log.error("Erreur de serialisation JSON lors de la mise en cache", exception);
