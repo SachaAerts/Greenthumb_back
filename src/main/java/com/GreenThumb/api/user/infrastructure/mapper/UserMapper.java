@@ -17,7 +17,8 @@ public class UserMapper {
                 new PhoneNumber(userEntity.getPhoneNumber()),
                 userEntity.getBiography(),
                 userEntity.isPrivate(),
-                toDomain(userEntity.getRole())
+                toDomain(userEntity.getRole()),
+                new Avatar(userEntity.getAvatar())
         );
     }
 

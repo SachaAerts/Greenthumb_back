@@ -18,7 +18,7 @@ public class AvatarStorageService {
     private static final Logger log = LoggerFactory.getLogger(AvatarStorageService.class);
     private final Path uploadDir;
 
-    public AvatarStorageService(@Value("${greenthumb.upload.dir:/app/uploads/users}") String uploadPath) {
+    public AvatarStorageService(@Value("${greenthumb.upload.dir:./uploads/users}") String uploadPath) {
         this.uploadDir = Paths.get(uploadPath).toAbsolutePath().normalize();
     }
 
@@ -35,7 +35,8 @@ public class AvatarStorageService {
 
     public String storeUserImage(String base64Image) {
         if (base64Image == null || base64Image.isEmpty()) {
-            return "users/default.png";
+            log.info("Aucune image fournie, utilisation de l'avatar par défaut.");
+            return "/users/default.png";
         }
 
         String[] parts = base64Image.split(",");
@@ -63,8 +64,6 @@ public class AvatarStorageService {
         String filename = UUID.randomUUID() + ext;
         Path targetLocation = uploadDir.resolve(filename);
 
-        log.info("Tentative d'enregistrement de l'image à: {}", targetLocation);
-
         try (FileOutputStream fos = new FileOutputStream(targetLocation.toFile())) {
             fos.write(imageBytes);
             log.info("Image enregistrée avec succès: {}", filename);
@@ -73,6 +72,6 @@ public class AvatarStorageService {
             throw new RuntimeException("Erreur lors de l'enregistrement du fichier: " + e.getMessage(), e);
         }
 
-        return "users/" + filename;
+        return "/users/" + filename;
     }
 }
