@@ -33,17 +33,15 @@ public class MessageEntity {
     @Column(name = "published_date")
     private LocalDateTime date;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<CommentaryEntity> comments = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<MediaEntity> medias = new ArrayList<>();
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<TagEntity> tags = new ArrayList<>();
-
-
 }
