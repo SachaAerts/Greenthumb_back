@@ -57,6 +57,14 @@ public class TokenService {
                 .getSubject();
     }
 
+    public Map<String, Object> extractClaims(String token) {
+       return Jwts.parser()
+               .verifyWith(secretKey)
+               .build()
+               .parseSignedClaims(token)
+               .getPayload();
+    }
+
     public boolean isEquals(String userToken, String token) {
         if (userToken == null || token == null) {
             return false;
