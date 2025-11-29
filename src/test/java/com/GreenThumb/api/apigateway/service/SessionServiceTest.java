@@ -78,7 +78,7 @@ class SessionServiceTest {
     void sessionLoginRequest_shouldLoginWithValidEmail() {
         // Given
         setupTokenMocks();
-        UserConnection loginRequest = new UserConnection("test@example.com", "password123");
+        UserConnection loginRequest = new UserConnection("test@example.com", "password123", false);
         when(userService.getUserByEmail("test@example.com", "password123")).thenReturn(testUser);
 
         // When
@@ -99,7 +99,7 @@ class SessionServiceTest {
     @DisplayName("sessionLoginRequest - Doit rejeter un email invalide")
     void sessionLoginRequest_shouldRejectInvalidEmail() {
         // Given
-        UserConnection loginRequest = new UserConnection("invalid@email", "password123");
+        UserConnection loginRequest = new UserConnection("invalid@email", "password123", false);
 
         // When & Then
         assertThatThrownBy(() -> sessionService.sessionLoginRequest(loginRequest))
@@ -115,7 +115,7 @@ class SessionServiceTest {
     void sessionLoginRequest_shouldLoginWithUsername() {
         // Given
         setupTokenMocks();
-        UserConnection loginRequest = new UserConnection("testuser", "password123");
+        UserConnection loginRequest = new UserConnection("testuser", "password123", false);
         when(userService.getUserByUsernameAndPassword("testuser", "password123")).thenReturn(testUser);
 
         // When

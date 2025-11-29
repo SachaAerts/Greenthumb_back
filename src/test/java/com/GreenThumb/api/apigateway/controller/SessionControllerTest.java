@@ -64,7 +64,7 @@ class SessionControllerTest {
     @DisplayName("POST /api/sessions - Doit créer une session et retourner les tokens")
     void postLogin_shouldCreateSessionAndReturnTokens() throws Exception {
         // Given
-        UserConnection userConnection = new UserConnection("test@example.com", "Password123!");
+        UserConnection userConnection = new UserConnection("test@example.com", "Password123!", false);
         UserResponse userResponse = new UserResponse(
             "testuser", "Test", "User", "test@example.com",
             "0123456789", "Bio", false, "USER"
