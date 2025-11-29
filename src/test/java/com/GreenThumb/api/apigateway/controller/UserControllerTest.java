@@ -5,7 +5,9 @@ import com.GreenThumb.api.apigateway.service.UserServiceGateway;
 import com.GreenThumb.api.apigateway.validation.PaginationValidator;
 import com.GreenThumb.api.apigateway.validation.UsernameValidator;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
+import com.GreenThumb.api.plant.application.facade.PlantFacade;
 import com.GreenThumb.api.user.application.dto.UserDto;
+import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,6 +56,9 @@ class UserControllerTest {
 
     @MockitoBean
     private UsernameValidator usernameValidator;
+
+    @MockitoBean
+    private PlantFacade plantFacade;
 
     @Test
     @DisplayName("GET /api/users/count - Doit retourner le nombre d'utilisateurs")
@@ -385,5 +390,85 @@ class UserControllerTest {
                         .header("Authorization", "Bearer token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isPrivate").value(true));
+    }
+
+    @Test
+    @DisplayName("GET /api/users/{username}/tasks - Doit retourner le nombre de tâches de l'utilisateur")
+    void getUserTasks_shouldReturnTaskCount() throws Exception {
+        // Given
+        String username = "testuser";
+        long userId = 123L;
+        long taskCount = 5L;
+
+        when(userService.getIdByUsername(username)).thenReturn(userId);
+        when(plantFacade.countTask(userId)).thenReturn(taskCount);
+
+        // When & Then
+        mockMvc.perform(get("/api/users/{username}/tasks", username))
+                .andExpect(status().isOk())
+                .andExpect(content().string("5"));
+    }
+
+    @Test
+    @DisplayName("GET /api/users/{username}/tasks - Doit retourner 0 quand l'utilisateur n'a pas de tâches")
+    void getUserTasks_shouldReturnZeroWhenNoTasks() throws Exception {
+        // Given
+        String username = "testuser";
+        long userId = 123L;
+
+        when(userService.getIdByUsername(username)).thenReturn(userId);
+        when(plantFacade.countTask(userId)).thenReturn(0L);
+
+        // When & Then
+        mockMvc.perform(get("/api/users/{username}/tasks", username))
+                .andExpect(status().isOk())
+                .andExpect(content().string("0"));
+    }
+
+    @Test
+    @DisplayName("GET /api/users/{username}/tasks - Doit retourner un grand nombre de tâches")
+    void getUserTasks_shouldReturnLargeTaskCount() throws Exception {
+        // Given
+        String username = "testuser";
+        long userId = 123L;
+        long taskCount = 1000L;
+
+        when(userService.getIdByUsername(username)).thenReturn(userId);
+        when(plantFacade.countTask(userId)).thenReturn(taskCount);
+
+        // When & Then
+        mockMvc.perform(get("/api/users/{username}/tasks", username))
+                .andExpect(status().isOk())
+                .andExpect(content().string("1000"));
+    }
+
+    @Test
+    @DisplayName("GET /api/users/{username}/tasks - Doit gérer un username contenant uniquement des espaces")
+    void getUserTasks_shouldHandleWhitespaceUsername() throws Exception {
+        // Given
+        String username = "   ";
+
+        when(userService.getIdByUsername(username))
+                .thenThrow(new NoFoundException("Utilisateur non trouvé"));
+
+        // When & Then
+        mockMvc.perform(get("/api/users/{username}/tasks", username))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Utilisateur non trouvé"));
+    }
+
+    @Test
+    @DisplayName("GET /api/users/{username}/tasks - Doit gérer l'utilisateur inexistant (erreur 404)")
+    void getUserTasks_shouldHandleUserNotFound() throws Exception {
+        // Given
+        String username = "nonexistentuser";
+
+        when(userService.getIdByUsername(username))
+                .thenThrow(new NoFoundException("Utilisateur non trouvé"));
+
+        // When & Then
+        mockMvc.perform(get("/api/users/{username}/tasks", username))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Utilisateur non trouvé"));
     }
 }
