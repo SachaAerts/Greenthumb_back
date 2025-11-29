@@ -89,13 +89,13 @@ public class SessionController {
 
     @PostMapping("/sessions/verify")
     public ResponseEntity<?> verifyEmail(@Valid @RequestBody VerifyEmailRequest request) {
-        Session session = sessionService.verifyEmailAndCreateSession(request.token());
-
-        ResponseCookie refreshCookie = getRefreshCookie(session.refreshToken());
+        sessionService.verifyEmailWithCode(request.email(), request.code());
 
         return ResponseEntity.ok()
-                .header("Set-Cookie", refreshCookie.toString())
-                .body(session.accessToken());
+                .body(Map.of(
+                        "message", "Votre compte a été vérifié avec succès. Vous pouvez maintenant vous connecter.",
+                        "verified", true
+                ));
     }
 
     @PostMapping("/sessions/verify/resend")
