@@ -8,5 +8,5 @@ import java.util.List;
 public interface SpringDataTaskRepository extends JpaRepository<TaskEntity, Long> {
     List<TaskEntity> findByPlantId(Long plantId);
 
-    long count();
+    long countByPlantUserId(Long userId);
 }

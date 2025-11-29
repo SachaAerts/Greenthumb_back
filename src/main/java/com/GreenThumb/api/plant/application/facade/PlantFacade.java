@@ -11,5 +11,5 @@ public interface PlantFacade {
 
     Page<PlantDto> getAllPlantsByUsername(String username, Pageable pageable);
 
-    long countTask();
+    long countTask(Long userId);
 }

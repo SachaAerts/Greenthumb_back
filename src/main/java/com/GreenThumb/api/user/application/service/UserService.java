@@ -50,4 +50,8 @@ public class UserService {
         return userRepository.isUserEnabled(email);
     }
 
+    public long getIdByUsername(String username) throws NoFoundException {
+        return  userRepository.getIdByUsername(username);
+    }
+
 }

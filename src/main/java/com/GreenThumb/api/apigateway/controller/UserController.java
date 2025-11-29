@@ -5,7 +5,9 @@ import com.GreenThumb.api.apigateway.service.UserServiceGateway;
 import com.GreenThumb.api.apigateway.validation.PaginationValidator;
 import com.GreenThumb.api.apigateway.validation.UsernameValidator;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
+import com.GreenThumb.api.plant.application.facade.PlantFacade;
 import com.GreenThumb.api.user.application.dto.UserDto;
+import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,7 @@ public class UserController {
     private final TokenExtractor tokenExtractor;
     private final PaginationValidator paginationValidator;
     private final UsernameValidator usernameValidator;
+    private final PlantFacade plantFacade;
 
     /**
      * Constructs a new UserController with required dependencies.
@@ -43,12 +46,14 @@ public class UserController {
             UserServiceGateway userService,
             TokenExtractor tokenExtractor,
             PaginationValidator paginationValidator,
-            UsernameValidator usernameValidator
+            UsernameValidator usernameValidator,
+            PlantFacade plantFacade
     ) {
         this.userService = userService;
         this.tokenExtractor = tokenExtractor;
         this.paginationValidator = paginationValidator;
         this.usernameValidator = usernameValidator;
+        this.plantFacade = plantFacade;
     }
 
     /**
@@ -90,6 +95,20 @@ public class UserController {
 
         log.debug("Found {} plants for user '{}'", plants.getTotalElements(), username);
         return ResponseEntity.ok(plants);
+    }
+
+
+    @GetMapping("/{username}/tasks")
+    public ResponseEntity<Long> getUserTasks(
+            @PathVariable String username
+    ) {
+        if (username == null || username.isEmpty()) {
+            throw new NoFoundException("Aucun tache trouvé pour cette utilisateur");
+        }
+
+        long userId = userService.getIdByUsername(username);
+
+        return ResponseEntity.ok(plantFacade.countTask(userId));
     }
 
     /**
