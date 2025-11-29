@@ -66,6 +66,8 @@ class SessionServiceTest {
 
         frontendUrl = "http://localhost:3000";
         ReflectionTestUtils.setField(sessionService, "frontendUrl", frontendUrl);
+        ReflectionTestUtils.setField(sessionService, "refreshTokenExpirationLong", 604800000L);
+        ReflectionTestUtils.setField(sessionService, "refreshTokenExpirationShort", 86400000L);
     }
 
     private void setupTokenMocks() {
@@ -92,7 +94,7 @@ class SessionServiceTest {
 
         verify(userService, times(1)).getUserByEmail("test@example.com", "password123");
         verify(redisService, times(1)).save(eq("refresh:testuser"), eq("refresh-token"));
-        verify(redisService, times(1)).expiry(eq("refresh:testuser"), eq(7L), eq(TimeUnit.DAYS));
+        verify(redisService, times(1)).expiry(eq("refresh:testuser"), eq(86400L), eq(TimeUnit.SECONDS));
     }
 
     @Test
