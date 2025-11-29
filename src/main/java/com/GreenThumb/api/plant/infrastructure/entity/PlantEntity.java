@@ -36,6 +36,9 @@ public class PlantEntity {
     @Column(name = "light")
     private int lightLevel;
 
+    @Column(name = "soil_type", length = 100)
+    private String soilType;
+
     @Column(name = "soil_ph_min")
     private Double soilPhMin;
 
