@@ -40,8 +40,10 @@ public class SessionController {
     public ResponseEntity<?> postLogin(@Valid @RequestBody UserConnection request) {
         Session session = sessionService.sessionLoginRequest(request);
 
+        boolean rememberMe = request.rememberMe() != null ? request.rememberMe() : false;
+
         return ResponseEntity.ok()
-                .header("Set-Cookie", getRefreshCookie(session.refreshToken()).toString())
+                .header("Set-Cookie", getRefreshCookie(session.refreshToken(), rememberMe).toString())
                 .body(session.accessToken());
     }
 
@@ -77,14 +79,20 @@ public class SessionController {
         return ResponseEntity.ok().build();
     }
 
-    private ResponseCookie getRefreshCookie(String token) {
+    private ResponseCookie getRefreshCookie(String token, boolean rememberMe) {
+        long maxAgeSeconds = rememberMe ? (7L * 24 * 60 * 60) : (1L * 24 * 60 * 60);
+
         return ResponseCookie.from("refresh_cookie", token)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
                 .sameSite("Strict")
-                .maxAge(7 * 24 * 60 * 60)
+                .maxAge(maxAgeSeconds)
                 .build();
+    }
+
+    private ResponseCookie getRefreshCookie(String token) {
+        return getRefreshCookie(token, true);
     }
 
     @PostMapping("/sessions/verify")
