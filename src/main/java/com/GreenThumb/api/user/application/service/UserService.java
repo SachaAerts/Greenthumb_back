@@ -57,4 +57,8 @@ public class UserService {
         userRepository.editUser(user, oldUsername);
     }
 
+    public long getIdByUsername(String username) throws NoFoundException {
+        return  userRepository.getIdByUsername(username);
+    }
+
 }

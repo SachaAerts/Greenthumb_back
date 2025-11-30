@@ -4,6 +4,8 @@ package com.GreenThumb.api.plant.infrastructure.repository;
 import com.GreenThumb.api.plant.domain.entity.Plant;
 import com.GreenThumb.api.plant.domain.repository.PlantRepository;
 import com.GreenThumb.api.plant.infrastructure.mapper.PlantMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,13 +20,16 @@ public class JpaPlantRepository implements PlantRepository {
 
     public List<Plant> findAll() {
         return plantRepository.findAll().stream()
-                .map(PlantMapper::toDomain)
+                .map((PlantMapper::toDomain))
                 .toList();
     }
 
-    public List<Plant> findAllByUser_username(String username) {
-        return plantRepository.findAllByUser_username(username).stream()
-                .map(PlantMapper::toDomain)
-                .toList();
+    public Page<Plant> findAllByUser_username(String username, Pageable pageable) {
+        return plantRepository.findAllByUser_username(username, pageable)
+                .map(PlantMapper::toDomain);
+    }
+
+    public Long findIdBySlug(String slug) {
+        return plantRepository.findIdBySlug(slug);
     }
 }

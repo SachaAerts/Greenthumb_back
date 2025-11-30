@@ -9,6 +9,7 @@ public record User(
         PhoneNumber phoneNumber,
         String biography,
         boolean isPrivate,
-        Role role
+        Role role,
+        Avatar avatar
 ) {
 }

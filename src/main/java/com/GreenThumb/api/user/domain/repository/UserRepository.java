@@ -27,4 +27,6 @@ public interface UserRepository {
     void postUserRegistration(UserRegister user);
 
     void editUser(UserEdit user,  String oldUsername);
+
+    long getIdByUsername(String username);
 }

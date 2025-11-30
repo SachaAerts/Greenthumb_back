@@ -9,7 +9,8 @@ public record UserDto(
         String phoneNumber,
         String biography,
         boolean isPrivate,
-        String role
+        String role,
+        String avatar
 ) {
     public static UserDto of(User user) {
         return new UserDto(
@@ -19,7 +20,8 @@ public record UserDto(
                 user.phoneNumber().getPhoneNumber(),
                 user.biography(),
                 user.isPrivate(),
-                user.role().label()
+                user.role().label(),
+                user.avatar().avatar()
         );
     }
 }

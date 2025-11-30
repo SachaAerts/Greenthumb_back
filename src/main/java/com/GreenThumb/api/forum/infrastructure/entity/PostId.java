@@ -15,8 +15,8 @@ import java.io.Serializable;
 public class PostId implements Serializable {
 
     @Column(name = "id_user")
-    private String userId;
+    private Long userId;
 
     @Column(name = "id_message")
-    private String messageId;
+    private Long messageId;
 }

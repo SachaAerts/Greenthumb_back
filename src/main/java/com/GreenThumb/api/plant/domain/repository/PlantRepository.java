@@ -1,11 +1,15 @@
 package com.GreenThumb.api.plant.domain.repository;
 
 import com.GreenThumb.api.plant.domain.entity.Plant;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface PlantRepository {
     List<Plant> findAll();
 
-    List<Plant> findAllByUser_username(String username);
+    Page<Plant> findAllByUser_username(String username, Pageable pageable);
+
+    Long findIdBySlug(String slug);
 }

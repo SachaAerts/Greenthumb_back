@@ -21,12 +21,13 @@ import static com.GreenThumb.api.user.domain.service.PasswordService.hash;
 @Repository
 public class JpaUserRepository implements UserRepository {
     private final SpringDataUserRepository jpaRepo;
-
     private final RoleRepository roleRepository;
+    private final AvatarStorageService avatarStorageService;
 
-    public JpaUserRepository(SpringDataUserRepository jpaRepo,  RoleRepository roleRepository) {
+    public JpaUserRepository(SpringDataUserRepository jpaRepo, RoleRepository roleRepository, AvatarStorageService avatarStorageService) {
         this.jpaRepo = jpaRepo;
         this.roleRepository = roleRepository;
+        this.avatarStorageService = avatarStorageService;
     }
 
     @Override
@@ -138,6 +139,22 @@ public class JpaUserRepository implements UserRepository {
         jpaRepo.save(userEntity);
     }
 
+    @Override
+    public long count() {
+        return jpaRepo.count();
+    }
+
+    @Override
+    public UserEntity save(UserEntity user) {
+        return jpaRepo.save(user);
+    }
+
+    @Override
+    public long getIdByUsername(String username) {
+        return jpaRepo.findIdByUsername(username);
+    }
+
+    private void checkMailAndPhone(String mail, String phone) {
     private void checkMailPhone(String mail, String phone) {
         if (jpaRepo.existsByMail(mail)) {
             throw new EmailAlreadyUsedException("Le mail est déjà utilisé pour un compte");
@@ -155,13 +172,7 @@ public class JpaUserRepository implements UserRepository {
     }
 
     private String saveAvatar(String avatar) {
-        AvatarStorageService avatarStorageService = new AvatarStorageService();
         return avatarStorageService.storeUserImage(avatar);
-    }
-
-    @Override
-    public long count() {
-        return jpaRepo.count();
     }
 
     private void checkPassword(String password, UserEntity userEntity) {
