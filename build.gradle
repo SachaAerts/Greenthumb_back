@@ -95,6 +95,10 @@ springBoot {
 	mainClass = 'com.GreenThumb.api.BackApplication'
 }
 
+tasks.withType(JavaCompile) {
+	options.compilerArgs << '-parameters'
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 	finalizedBy jacocoTestReport

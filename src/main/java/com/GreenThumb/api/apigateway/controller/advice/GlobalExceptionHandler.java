@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.controller.advice;
 
+import com.GreenThumb.api.user.domain.exception.AccountNotVerifiedException;
 import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.exception.UserAlreadyVerifiedException;
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -61,12 +63,37 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
+    @ExceptionHandler(AccountNotVerifiedException.class)
+    public ResponseEntity<Map<String, String>> handleAccountNotVerifiedException(AccountNotVerifiedException exception) {
+        log.warn("Tentative de connexion avec compte non vérifié: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "account_not_verified");
+        errors.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errors);
+    }
+
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<Map<String, String>> handleJsonProcessingException(JsonProcessingException exception) {
         log.error("Erreur de serialisation JSON lors de la mise en cache", exception);
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "Erreur de serialisation JSON lors de la mise en cache");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        log.error("Erreur de désérialisation JSON", exception);
+
+        String detailedMessage = exception.getMostSpecificCause().getMessage();
+        log.error("Détails de l'erreur: {}", detailedMessage);
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Données JSON invalides");
+        errors.put("message", "Le format des données envoyées est incorrect. Veuillez vérifier votre requête.");
+        errors.put("details", detailedMessage);
+        errors.put("hint", "Format attendu: {\"email\":\"exemple@domaine.com\"}");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(Exception.class)
