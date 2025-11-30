@@ -42,6 +42,13 @@ public class JpaUserRepository implements UserRepository {
     public User getUserByEmail(String email, String password) throws NoFoundException, IllegalArgumentException {
         return jpaRepo.findByMail(email)
                 .map(userEntity -> {
+                    if (!userEntity.isEnabled()) {
+                        log.warn("Tentative de connexion avec un compte non vérifié: {}", email);
+                        throw new AccountNotVerifiedException(
+                                "Votre compte n'est pas encore vérifié. Veuillez vérifier votre email."
+                        );
+                    }
+
                     checkPassword(password, userEntity);
 
                     try {
@@ -57,6 +64,13 @@ public class JpaUserRepository implements UserRepository {
     public User getUserByUsernameAndPassword(String username, String password) throws NoFoundException, IllegalArgumentException {
         return jpaRepo.findByUsername(username)
                 .map(userEntity -> {
+                    if (!userEntity.isEnabled()) {
+                        log.warn("Tentative de connexion avec un compte non vérifié: {}", username);
+                        throw new AccountNotVerifiedException(
+                                "Votre compte n'est pas encore vérifié. Veuillez vérifier votre email."
+                        );
+                    }
+
                     checkPassword(password, userEntity);
 
                     try {

@@ -126,27 +126,20 @@ public class SessionService {
         return saveAndCreateTokens(user, true);
     }
 
-    public Session verifyEmailAndCreateSession(String token) {
-        String email = emailVerificationService.consumeToken(token)
-                .orElseThrow(() -> new InvalidTokenException("Token de vérification invalide ou expiré"));
+    public void verifyEmailWithCode(String email, String code) {
+        String verifiedEmail = emailVerificationService.verifyAndConsumeCode(email, code)
+                .orElseThrow(() -> new InvalidTokenException(
+                        "Code de vérification invalide, expiré ou nombre maximum de tentatives dépassé"
+                ));
 
-        if (userService.isUserEnabled(email)) {
+        if (userService.isUserEnabled(verifiedEmail)) {
             throw new UserAlreadyVerifiedException(
                     "Votre compte est déjà vérifié. Vous pouvez vous connecter normalement."
             );
         }
 
-        userService.enableUser(email);
-
-        UserDto user = userService.findByEmail(email);
-
-        Map<String, String> tokens = saveAndCreateTokens(user);
-
-        return new Session(
-                UserMapper.toResponse(user),
-                tokens.get(ACCESS_TOKEN),
-                tokens.get(REFRESH_TOKEN)
-        );
+        userService.enableUser(verifiedEmail);
+        log.info("Compte vérifié avec succès pour: {}", verifiedEmail);
     }
 
     public void resendVerificationEmail(String email) {
