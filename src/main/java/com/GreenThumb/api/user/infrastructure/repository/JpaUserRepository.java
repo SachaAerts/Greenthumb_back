@@ -155,6 +155,21 @@ public class JpaUserRepository implements UserRepository {
         jpaRepo.save(userEntity);
     }
 
+    @Override
+    public long count() {
+        return jpaRepo.count();
+    }
+
+    @Override
+    public UserEntity save(UserEntity user) {
+        return jpaRepo.save(user);
+    }
+
+    @Override
+    public long getIdByUsername(String username) {
+        return jpaRepo.findIdByUsername(username);
+    }
+
     private void checkMailAndPhone(String mail, String phone) {
         if (jpaRepo.existsByMail(mail)) {
             throw new EmailAlreadyUsedException("Le mail est déjà utilisé pour un compte");
@@ -167,16 +182,6 @@ public class JpaUserRepository implements UserRepository {
 
     private String saveAvatar(String avatar) {
         return avatarStorageService.storeUserImage(avatar);
-    }
-
-    @Override
-    public long count() {
-        return jpaRepo.count();
-    }
-
-    @Override
-    public UserEntity save(UserEntity user) {
-        return jpaRepo.save(user);
     }
 
     private void checkPassword(String password, UserEntity userEntity) {

@@ -44,7 +44,7 @@ public class ModulePlantFacade implements PlantFacade {
         return plantService.findAllByUser_username(username, pageable);
     }
 
-    public long countTask() {
-        return plantService.countTask();
+    public long countTask(Long userId) {
+        return plantService.countTask(userId);
     }
 }

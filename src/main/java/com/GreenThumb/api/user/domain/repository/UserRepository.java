@@ -25,4 +25,6 @@ public interface UserRepository {
     UserEntity save(UserEntity user);
 
     void postUserRegistration(UserRegister user);
+
+    long getIdByUsername(String username);
 }

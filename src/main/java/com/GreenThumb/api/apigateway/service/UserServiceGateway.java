@@ -54,6 +54,10 @@ public class UserServiceGateway {
                 : getUserInBdAndSaveInCache(username);
     }
 
+    public long getIdByUsername(String username) {
+        return userService.getIdByUsername(username);
+    }
+
     private UserDto getUserInBdAndSaveInCache(String username) throws JsonProcessingException {
         UserDto user = userService.getUserByUsername(username);
 
