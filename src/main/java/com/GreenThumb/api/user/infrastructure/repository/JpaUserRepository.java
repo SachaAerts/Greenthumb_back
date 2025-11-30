@@ -196,8 +196,8 @@ public class JpaUserRepository implements UserRepository {
         UserEntity user = jpaRepo.findByUsername(oldUsername)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        checkMailPhone(userEdit.email(), userEdit.phoneNumber());
-        if (!oldUsername.equals(userEdit.username())) {
+        if (!oldUsername.equals(userEdit.username()) && !userEdit.email().equals(user.getMail()) && !userEdit.phoneNumber().equals(user.getPhoneNumber())) {
+            checkMailPhone(userEdit.email(), userEdit.phoneNumber());
             checkUsername(userEdit.username());
         }
 
