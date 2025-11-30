@@ -21,7 +21,7 @@ public class JpaTaskRepository implements TaskRepository {
                 .toList();
     }
 
-    public long countTask() {
-        return springDataTaskRepository.count();
+    public long countTask(Long userId) {
+        return springDataTaskRepository.countByPlantUserId(userId);
     }
 }

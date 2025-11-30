@@ -37,8 +37,8 @@ public class PlantModuleService {
         return toDto(plants);
     }
 
-    public long countTask() {
-        return taskRepository.countTask();
+    public long countTask(Long  userId) {
+        return taskRepository.countTask(userId);
     }
 
     private List<PlantDto> toDto(List<Plant> plantsDomain) {

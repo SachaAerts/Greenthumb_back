@@ -2,8 +2,7 @@ package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.dto.Message;
 import com.GreenThumb.api.apigateway.service.MessageService;
-import com.GreenThumb.api.user.domain.exception.NoFoundException;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/messages")
 public class ForumController {
@@ -22,20 +22,17 @@ public class ForumController {
     }
 
     @GetMapping("/top3like")
-    public ResponseEntity<?> getTop3Like() {
-        ResponseEntity<?> response = null;
-        List<Message> messages = messageService.getTop3Message();
-        try {
-            if (messages.isEmpty()) {
-                response = ResponseEntity.noContent().build();
-            }
+    public ResponseEntity<List<Message>> getTop3Like() {
+        log.debug("Fetching top 3 most liked messages");
 
-            response = ResponseEntity.ok(messages);
-        } catch (NoFoundException e) {
-            System.out.println(e.getMessage());
-            response = ResponseEntity.ok(e.getMessage());
+        List<Message> messages = messageService.getTop3Message();
+
+        if (messages.isEmpty()) {
+            log.debug("No messages found, returning empty list");
+            return ResponseEntity.ok(messages);
         }
 
-        return response;
+        log.debug("Found {} messages", messages.size());
+        return ResponseEntity.ok(messages);
     }
 }

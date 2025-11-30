@@ -1,6 +1,7 @@
 package com.GreenThumb.api.apigateway.controller.advice;
 
 import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
+import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.exception.UserAlreadyVerifiedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
@@ -19,12 +20,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException exception) {
+        log.warn("Validation error: {}", exception.getMessage());
         Map<String, String> errors = new HashMap<>();
         exception.getBindingResult().getFieldErrors().forEach(error ->
             errors.put(error.getField(), error.getDefaultMessage())
         );
 
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(NoFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNoFoundException(NoFoundException exception) {
+        log.warn("Resource not found: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
     }
 
     @ExceptionHandler(InvalidTokenException.class)
@@ -43,9 +53,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException exception) {
+        log.warn("Invalid argument: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<Map<String, String>> handleJsonProcessingException(JsonProcessingException exception) {
-        log.error("Erreur de serialisation JSON lors de la mise en cache");
+        log.error("Erreur de serialisation JSON lors de la mise en cache", exception);
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "Erreur de serialisation JSON lors de la mise en cache");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
@@ -53,9 +71,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception exception) {
-        log.warn(exception.getMessage(), exception);
+        log.error("Unexpected error occurred", exception);
         Map<String, String> errors = new HashMap<>();
         errors.put("error", exception.getMessage());
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
     }
 }
