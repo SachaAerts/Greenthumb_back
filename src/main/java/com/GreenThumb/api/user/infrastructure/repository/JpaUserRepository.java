@@ -232,6 +232,6 @@ public class JpaUserRepository implements UserRepository {
 
     private void editPassword(Passwords passwords, UserEntity user) {
         String hashPassword = hash(passwords.password());
-        if(hashPassword != null) {user.setPassword(passwords.password());}
+        if(hashPassword != null) {user.setPassword(hashPassword);}
     }
 }

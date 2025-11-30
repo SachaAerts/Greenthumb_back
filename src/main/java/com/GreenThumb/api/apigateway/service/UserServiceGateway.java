@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -102,10 +101,12 @@ public class UserServiceGateway {
 
     public void editUser(UserEdit user, String oldUsername) throws JsonProcessingException {
         userService.editUser(user, oldUsername);
+        redisService.delete(oldUsername);
     }
 
     public void editPassword(Passwords passwords, String oldUsername) throws JsonProcessingException {
         userService.editPassword(passwords, oldUsername);
+        redisService.delete(oldUsername);
     }
 
     private String buildAvatarUrl(String storedPath) {

@@ -1,6 +1,5 @@
 package com.GreenThumb.api.apigateway.utils;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,23 +10,14 @@ import java.nio.file.Paths;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${greenthumb.upload.dir:./uploads/users}")
-    private String uploadDir;
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Servir directement /users/** depuis ./uploads/users
-        Path usersDir = Paths.get(uploadDir);
-        String usersLocation = "file:" + usersDir.toAbsolutePath().toString() + "/";
-        registry.addResourceHandler("/users/**")
-                .addResourceLocations(usersLocation, "classpath:/static/users/")
-                .setCachePeriod(3600);
+        // Servir /users/** depuis src/main/resources/static/users/ (développement) et classpath (production)
+        Path staticUsersDir = Paths.get("src/main/resources/static/users").toAbsolutePath().normalize();
+        String fileLocation = "file:" + staticUsersDir.toString() + "/";
 
-        // (optionnel) garder /uploads/** pour compatibilité si nécessaire
-        Path uploadsRoot = usersDir.getParent() != null ? usersDir.getParent() : usersDir;
-        String uploadsLocation = "file:" + uploadsRoot.toAbsolutePath().toString() + "/";
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations(uploadsLocation, "classpath:/static/")
+        registry.addResourceHandler("/users/**")
+                .addResourceLocations(fileLocation, "classpath:/static/users/")
                 .setCachePeriod(3600);
     }
 }

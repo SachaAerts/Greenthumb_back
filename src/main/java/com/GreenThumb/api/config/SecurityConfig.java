@@ -60,6 +60,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/users/**").permitAll() // Images statiques
                         .requestMatchers(
                                 "/api/users/count",
                                 "/api/messages/top3like",
