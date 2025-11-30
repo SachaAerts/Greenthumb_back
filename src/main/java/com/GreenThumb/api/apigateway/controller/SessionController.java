@@ -100,6 +100,7 @@ public class SessionController {
 
     @PostMapping("/sessions/verify/resend")
     public ResponseEntity<?> resendVerificationEmail(@Valid @RequestBody ResendVerificationEmailRequest request) {
+        log.info("Resend verification email request received for: {}", request.email());
         sessionService.resendVerificationEmail(request.email());
 
         return ResponseEntity.ok()

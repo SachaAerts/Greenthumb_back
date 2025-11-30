@@ -64,11 +64,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
-        log.error("Erreur de désérialisation JSON: {}", exception.getMessage());
+        log.error("Erreur de désérialisation JSON", exception);
+
+        String detailedMessage = exception.getMostSpecificCause().getMessage();
+        log.error("Détails de l'erreur: {}", detailedMessage);
+
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "Données JSON invalides");
         errors.put("message", "Le format des données envoyées est incorrect. Veuillez vérifier votre requête.");
-        errors.put("details", exception.getMostSpecificCause().getMessage());
+        errors.put("details", detailedMessage);
+        errors.put("hint", "Format attendu: {\"email\":\"exemple@domaine.com\"}");
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
