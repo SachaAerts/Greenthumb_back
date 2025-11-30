@@ -60,7 +60,7 @@ public class UserServiceGateway {
 
     private UserDto getUserInBdAndSaveInCache(String username) throws JsonProcessingException {
         UserDto user = userService.getUserByUsername(username);
-
+        user = normalizeAvatar(user); // transforme le chemin avant cache / retour
         String userJson = objectMapper.writeValueAsString(user);
         redisService.saveJson(username, userJson);
         redisService.expiry(username, 5, TimeUnit.MINUTES);
@@ -96,5 +96,31 @@ public class UserServiceGateway {
     private Page<PlantDto> getPlantsInCache(String key) throws JsonProcessingException {
         String plantJson = redisService.get(key);
         return objectMapper.readValue(plantJson, new TypeReference<>() {});
+    }
+
+    private String buildAvatarUrl(String storedPath) {
+        if (storedPath == null || storedPath.isBlank()) {
+            return "/uploads/users/default.png";
+        }
+        String lower = storedPath.toLowerCase();
+        if (lower.startsWith("http://") || lower.startsWith("https://") || storedPath.startsWith("/")) {
+            return storedPath;
+        }
+        return storedPath; // storedPath attendu comme "users/uuid.png"
+    }
+
+    private UserDto normalizeAvatar(UserDto user) {
+        if (user == null) return null;
+        String avatarUrl = buildAvatarUrl(user.avatar());
+        return new UserDto(
+                user.username(),
+                user.fullName(),
+                user.email(),
+                user.phoneNumber(),
+                user.biography(),
+                user.isPrivate(),
+                user.role(),
+                avatarUrl
+        );
     }
 }
