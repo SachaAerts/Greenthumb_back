@@ -3,6 +3,7 @@ package com.GreenThumb.api.apigateway.service;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
 
+import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.service.UserService;
@@ -103,6 +104,10 @@ public class UserServiceGateway {
         userService.editUser(user, oldUsername);
     }
 
+    public void editPassword(Passwords passwords, String oldUsername) throws JsonProcessingException {
+        userService.editPassword(passwords, oldUsername);
+    }
+
     private String buildAvatarUrl(String storedPath) {
         if (storedPath == null || storedPath.isBlank()) {
             return "/uploads/users/default.png";
@@ -119,7 +124,8 @@ public class UserServiceGateway {
         String avatarUrl = buildAvatarUrl(user.avatar());
         return new UserDto(
                 user.username(),
-                user.fullName(),
+                user.firstname(),
+                user.lastname(),
                 user.email(),
                 user.phoneNumber(),
                 user.biography(),

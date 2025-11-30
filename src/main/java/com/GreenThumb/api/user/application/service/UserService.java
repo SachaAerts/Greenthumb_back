@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.application.service;
 
+import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
@@ -55,6 +56,10 @@ public class UserService {
 
     public void editUser(UserEdit user,  String oldUsername) throws JsonProcessingException {
         userRepository.editUser(user, oldUsername);
+    }
+
+    public void editPassword(Passwords passwords, String oldPassword) throws JsonProcessingException {
+        userRepository.editPassword(passwords, oldPassword);
     }
 
     public long getIdByUsername(String username) throws NoFoundException {

@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.infrastructure.repository;
 
+import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
@@ -145,16 +146,10 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public UserEntity save(UserEntity user) {
-        return jpaRepo.save(user);
-    }
-
-    @Override
     public long getIdByUsername(String username) {
         return jpaRepo.findIdByUsername(username);
     }
 
-    private void checkMailAndPhone(String mail, String phone) {
     private void checkMailPhone(String mail, String phone) {
         if (jpaRepo.existsByMail(mail)) {
             throw new EmailAlreadyUsedException("Le mail est déjà utilisé pour un compte");
@@ -208,5 +203,21 @@ public class JpaUserRepository implements UserRepository {
         AvatarStorageService avatarStorageService = new AvatarStorageService();
         String newAvatar = avatarStorageService.replaceUserImage(user.getAvatar(), userEdit.avatar());
         if (newAvatar != null) {user.setAvatar(newAvatar);}
+    }
+
+    @Override
+    @Transactional
+    public void editPassword(Passwords passwords, String oldUsername) {
+        UserEntity user = jpaRepo.findByUsername(oldUsername)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        editPassword(passwords, user);
+
+        jpaRepo.save(user);
+    }
+
+    private void editPassword(Passwords passwords, UserEntity user) {
+        String hashPassword = hash(passwords.password());
+        if(hashPassword != null) {user.setPassword(passwords.password());}
     }
 }

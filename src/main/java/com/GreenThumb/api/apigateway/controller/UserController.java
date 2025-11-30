@@ -1,6 +1,7 @@
 package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.service.TokenExtractor;
+import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.apigateway.service.UserServiceGateway;
 import com.GreenThumb.api.apigateway.validation.PaginationValidator;
@@ -11,6 +12,7 @@ import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
@@ -143,7 +145,6 @@ public class UserController {
     @PatchMapping("/{oldUsername}")
     public ResponseEntity<?> editUser(@PathVariable String oldUsername, @RequestBody UserEdit user) {
         try {
-            System.out.println(user.avatar());
             userService.editUser(user, oldUsername);
             return ResponseEntity.ok(Map.of("message", "Profil mis à jour avec succès"));
         } catch (Exception e) {
@@ -151,6 +152,18 @@ public class UserController {
                     .body(Map.of("message", e.getMessage()));
         }
     }
+
+    @PatchMapping("/{oldUsername}/password")
+    public ResponseEntity<?> changeUserPassword(@PathVariable String oldUsername, @RequestBody Passwords passwords) {
+        try {
+            userService.editPassword(passwords, oldUsername);
+            return ResponseEntity.ok(Map.of("message", "Mot de passe mis à jour avec succès"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
     /**
      * Fetches plants for a user with proper exception handling.
      * Wraps exceptions with contextual information about the user.

@@ -1,10 +1,9 @@
 package com.GreenThumb.api.user.domain.repository;
 
+import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
-import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface UserRepository {
 
@@ -27,6 +26,8 @@ public interface UserRepository {
     void postUserRegistration(UserRegister user);
 
     void editUser(UserEdit user,  String oldUsername);
+
+    void editPassword(Passwords passwords, String oldUsername);
 
     long getIdByUsername(String username);
 }

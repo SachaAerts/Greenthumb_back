@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
         Path usersDir = Paths.get(uploadDir);
         String usersLocation = "file:" + usersDir.toAbsolutePath().toString() + "/";
         registry.addResourceHandler("/users/**")
-                .addResourceLocations(usersLocation, "classpath:/static/uploads/users/")
+                .addResourceLocations(usersLocation, "classpath:/static/users/")
                 .setCachePeriod(3600);
 
         // (optionnel) garder /uploads/** pour compatibilité si nécessaire
