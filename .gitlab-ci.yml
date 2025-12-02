@@ -1,6 +1,30 @@
 stages:
+  - test
   - build
 
+test-backend:
+  stage: test
+  tags:
+    - ue25
+  image: eclipse-temurin:21-jdk-jammy
+  
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .gradle/wrapper
+      - .gradle/caches
+      
+  before_script:
+    - chmod +x gradlew
+    
+  script:
+    - ./gradlew test --no-daemon
+
+  artifacts:
+    when: always
+    reports:
+      junit: build/test-results/test/**/TEST-*.xml
+  
 build-backend:
   stage: build
   tags:
@@ -13,5 +37,6 @@ build-backend:
   script:
     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -t $CI_REGISTRY_IMAGE:latest .
     - docker push --all-tags $CI_REGISTRY_IMAGE
+  
   only:
     - main
