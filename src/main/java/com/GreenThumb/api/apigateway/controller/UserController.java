@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
+import com.GreenThumb.api.apigateway.dto.user.ResetCodeRequest;
 import com.GreenThumb.api.apigateway.service.TokenExtractor;
 import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserEdit;
@@ -9,6 +10,7 @@ import com.GreenThumb.api.apigateway.validation.UsernameValidator;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
 import com.GreenThumb.api.user.application.dto.UserDto;
+import com.GreenThumb.api.user.domain.exception.EmailAlreadyUsedException;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -162,6 +164,18 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("message", e.getMessage()));
         }
+    }
+
+    @PostMapping("/reset_codes")
+    public ResponseEntity<?> resetCode(@RequestBody ResetCodeRequest request) {
+        try {
+            userService.resetCode(request.email());
+        } catch (EmailAlreadyUsedException ex) {
+            return ResponseEntity.noContent().build();
+        }
+
+
+        return ResponseEntity.noContent().build();
     }
 
     /**

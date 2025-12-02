@@ -164,7 +164,17 @@ public class JpaUserRepository implements UserRepository {
         return jpaRepo.findIdByUsername(username);
     }
 
+    @Override
+    public boolean existUser(String email) {
+        return jpaRepo.existsByMail(email);
+    }
+
     private void checkMailPhone(String mail, String phone) {
+
+    }
+
+
+    private void checkMailAndPhone(String mail, String phone) {
         if (jpaRepo.existsByMail(mail)) {
             throw new EmailAlreadyUsedException("Le mail est déjà utilisé pour un compte");
         }
@@ -234,4 +244,5 @@ public class JpaUserRepository implements UserRepository {
         String hashPassword = hash(passwords.password());
         if(hashPassword != null) {user.setPassword(hashPassword);}
     }
+
 }

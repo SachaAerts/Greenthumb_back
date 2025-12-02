@@ -14,8 +14,11 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private final EmailResetCodeService emailResetCodeService;
+
+    public UserService(UserRepository userRepository,  EmailResetCodeService emailResetCodeService) {
         this.userRepository = userRepository;
+        this.emailResetCodeService = emailResetCodeService;
     }
 
     public long countUsers() {
@@ -64,6 +67,14 @@ public class UserService {
 
     public long getIdByUsername(String username) throws NoFoundException {
         return  userRepository.getIdByUsername(username);
+    }
+
+    public boolean existeUser(String email) throws NoFoundException {
+        return userRepository.existUser(email);
+    }
+
+    public void sendEmailResetCode(String email) {
+        emailResetCodeService.sendResetCodeMail(email);
     }
 
 }

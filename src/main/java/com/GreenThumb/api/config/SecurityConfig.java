@@ -69,7 +69,8 @@ public class SecurityConfig {
                                 "/api/sessions/refresh",
                                 "/api/sessions/verify",
                                 "/api/sessions/verify/resend",
-                                "/api/register"
+                                "/api/register",
+                                "/api/users/reset_codes"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );

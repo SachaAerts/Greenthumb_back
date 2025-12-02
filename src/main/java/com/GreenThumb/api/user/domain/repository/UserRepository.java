@@ -30,4 +30,6 @@ public interface UserRepository {
     void editPassword(Passwords passwords, String oldUsername);
 
     long getIdByUsername(String username);
+
+    boolean existUser(String email);
 }
