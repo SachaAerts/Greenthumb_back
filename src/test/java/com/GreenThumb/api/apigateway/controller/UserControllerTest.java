@@ -242,8 +242,17 @@ class UserControllerTest {
     @DisplayName("GET /api/users/me - Doit retourner les informations de l'utilisateur connecté")
     void getMe_shouldReturnCurrentUserInfo() throws Exception {
         // Given
-        UserDto userDto = new UserDto("testuser", "Test User", "test@example.com",
-                                      "0123456789", "My bio", false, "USER");
+        UserDto userDto = new UserDto(
+                "testuser",
+                "Test",
+                "User",
+                "test@example.com",
+                "0123456789",
+                "My bio",
+                false,
+                "USER",
+                "default-avatar.png"
+        );
 
         when(tokenExtractor.extractToken("Bearer valid-token-123")).thenReturn("valid-token-123");
         when(userService.getMe("valid-token-123")).thenReturn(userDto);
@@ -254,7 +263,8 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("testuser"))
                 .andExpect(jsonPath("$.email").value("test@example.com"))
-                .andExpect(jsonPath("$.fullName").value("Test User"));
+                .andExpect(jsonPath("$.firstname").value("Test"))
+                .andExpect(jsonPath("$.lastname").value("User"));
     }
 
     @Test
@@ -361,8 +371,17 @@ class UserControllerTest {
     @DisplayName("GET /api/users/me - Doit retourner un utilisateur avec le rôle ADMIN")
     void getMe_shouldReturnAdminUser() throws Exception {
         // Given
-        UserDto adminDto = new UserDto("adminuser", "Admin User", "admin@example.com",
-                                       "0123456789", "Admin bio", false, "ADMIN");
+        UserDto adminDto = new UserDto(
+                "adminuser",
+                "Admin",
+                "User",
+                "admin@example.com",
+                "0123456789",
+                "Admin bio",
+                false,
+                "ADMIN",
+                "admin-avatar.png"
+        );
 
         when(tokenExtractor.extractToken("Bearer admin-token")).thenReturn("admin-token");
         when(userService.getMe("admin-token")).thenReturn(adminDto);
@@ -379,8 +398,17 @@ class UserControllerTest {
     @DisplayName("GET /api/users/me - Doit retourner un compte privé")
     void getMe_shouldReturnPrivateUser() throws Exception {
         // Given
-        UserDto privateUserDto = new UserDto("privateuser", "Private User", "private@example.com",
-                                             "0123456789", "Bio", true, "USER");
+        UserDto privateUserDto = new UserDto(
+                "privateuser",
+                "Private",
+                "User",
+                "private@example.com",
+                "0123456789",
+                "Bio",
+                true,
+                "USER",
+                "private-avatar.png"
+        );
 
         when(tokenExtractor.extractToken("Bearer token")).thenReturn("token");
         when(userService.getMe("token")).thenReturn(privateUserDto);

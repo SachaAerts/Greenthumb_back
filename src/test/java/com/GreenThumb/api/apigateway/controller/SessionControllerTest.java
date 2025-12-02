@@ -185,28 +185,22 @@ class SessionControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/sessions/verify - Doit vérifier l'email et créer une session")
-    void verifyEmail_shouldVerifyEmailAndCreateSession() throws Exception {
-        // Given
-        VerifyEmailRequest request = new VerifyEmailRequest("verification-token-123");
-        UserResponse userResponse = new UserResponse(
-            "testuser", "Test", "User", "test@example.com",
-            "0123456789", "Bio", false, "USER"
-        );
-        Session session = new Session(userResponse, "access-token-123", "refresh-token-456");
+    @DisplayName("POST /api/sessions/verify - Doit vérifier l'email avec le code")
+    void verifyEmail_shouldVerifyEmail() throws Exception {
+        String email = "test@example.com";
+        String code = "123456";
+        VerifyEmailRequest request = new VerifyEmailRequest(email, code);
 
-        when(sessionService.verifyEmailAndCreateSession(anyString())).thenReturn(session);
+        doNothing().when(sessionService).verifyEmailWithCode(anyString(), anyString());
 
-        // When & Then
         mockMvc.perform(post("/api/sessions/verify")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("access-token-123"))
-                .andExpect(header().exists("Set-Cookie"))
-                .andExpect(header().string("Set-Cookie", org.hamcrest.Matchers.containsString("refresh_cookie=refresh-token-456")));
+                .andExpect(jsonPath("$.message").value("Votre compte a été vérifié avec succès. Vous pouvez maintenant vous connecter."))
+                .andExpect(jsonPath("$.verified").value(true));
 
-        verify(sessionService, times(1)).verifyEmailAndCreateSession("verification-token-123");
+        verify(sessionService, times(1)).verifyEmailWithCode(email, code);
     }
 
     @Test

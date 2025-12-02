@@ -56,12 +56,14 @@ class UserServiceGatewayTest {
     void setUp() {
         testUser = new UserDto(
                 "testuser",
-                "Test User",
+                "Test",
+                "User",
                 "test@example.com",
                 "0123456789",
                 "Test bio",
                 false,
-                "USER"
+                "USER",
+                "default-avatar.png"
         );
 
         testPlant = new PlantDto(
