@@ -70,7 +70,9 @@ public class SecurityConfig {
                                 "/api/sessions/verify",
                                 "/api/sessions/verify/resend",
                                 "/api/register",
-                                "/api/users/reset_codes"
+                                "/api/codes",
+                                "/api/users/verification",
+                                "/api/users/*/resetPassword"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );

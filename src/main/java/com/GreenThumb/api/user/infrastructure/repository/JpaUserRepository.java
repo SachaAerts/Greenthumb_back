@@ -146,7 +146,7 @@ public class JpaUserRepository implements UserRepository {
             throw new NoFoundException("Le rôle n'existe pas !");
         }
 
-        checkMailPhone(user.email(), user.phoneNumber());
+        checkMailAndPhone(user.email(), user.phoneNumber());
         checkUsername(user.username());
 
         String avatarPath = saveAvatar(user.avatar());
@@ -168,11 +168,6 @@ public class JpaUserRepository implements UserRepository {
     public boolean existUser(String email) {
         return jpaRepo.existsByMail(email);
     }
-
-    private void checkMailPhone(String mail, String phone) {
-
-    }
-
 
     private void checkMailAndPhone(String mail, String phone) {
         if (jpaRepo.existsByMail(mail)) {
@@ -207,7 +202,7 @@ public class JpaUserRepository implements UserRepository {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!oldUsername.equals(userEdit.username()) && !userEdit.email().equals(user.getMail()) && !userEdit.phoneNumber().equals(user.getPhoneNumber())) {
-            checkMailPhone(userEdit.email(), userEdit.phoneNumber());
+            checkMailAndPhone(userEdit.email(), userEdit.phoneNumber());
             checkUsername(userEdit.username());
         }
 
@@ -234,6 +229,17 @@ public class JpaUserRepository implements UserRepository {
     public void editPassword(Passwords passwords, String oldUsername) {
         UserEntity user = jpaRepo.findByUsername(oldUsername)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        editPassword(passwords, user);
+
+        jpaRepo.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void editPasswordByMail(Passwords passwords, String email) {
+        UserEntity user = jpaRepo.findByMail(email)
+                .orElseThrow(() -> new NoFoundException("User not found"));
 
         editPassword(passwords, user);
 
