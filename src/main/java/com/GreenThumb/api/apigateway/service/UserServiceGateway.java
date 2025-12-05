@@ -62,16 +62,12 @@ public class UserServiceGateway {
         return userService.getIdByUsername(username);
     }
 
-    public void resetCode(String email) throws NoFoundException, EmailAlreadyUsedException {
-        if (userService.existeUser(email)) {
-            throw new EmailAlreadyUsedException("L'email existe déjà");
-        }
-
+    public void resetCode(String email){
         userService.sendEmailResetCode(email);
     }
 
     public boolean checkResetCode(String code, String email) {
-        String codeRedis = redisService.get(email);
+        String codeRedis = redisService.get(email.toLowerCase());
 
         return code.equals(codeRedis);
     }

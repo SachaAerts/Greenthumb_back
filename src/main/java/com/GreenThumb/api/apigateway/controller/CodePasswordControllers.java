@@ -21,12 +21,7 @@ public class CodePasswordControllers {
 
     @PostMapping("")
     public ResponseEntity<?> resetCode(@RequestBody ResetCodeRequest request) {
-        try {
-            userService.resetCode(request.email());
-        } catch (EmailAlreadyUsedException ex) {
-            return ResponseEntity.noContent().build();
-        }
-
+        userService.resetCode(request.email());
 
         return ResponseEntity.noContent().build();
     }
