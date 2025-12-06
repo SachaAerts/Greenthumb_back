@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.application.service;
 
+import com.GreenThumb.api.user.application.dto.AdminUserDto;
 import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.dto.UserEdit;
@@ -7,6 +8,8 @@ import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -66,4 +69,39 @@ public class UserService {
         return  userRepository.getIdByUsername(username);
     }
 
+    public Page<AdminUserDto> findAllUsers(Pageable pageable) {
+        return userRepository.findAllUsers(pageable);
+    }
+
+    public Page<AdminUserDto> findActiveUsers(Pageable pageable) {
+        return userRepository.findActiveUsers(pageable);
+    }
+
+    public Page<AdminUserDto> findDeletedUsers(Pageable pageable) {
+        return userRepository.findDeletedUsers(pageable);
+    }
+
+    public AdminUserDto findByUsernameForAdmin(String username) throws NoFoundException {
+        return userRepository.findByUsernameForAdmin(username);
+    }
+
+    public void setUserEnabled(String username, boolean enabled) throws NoFoundException {
+        userRepository.setUserEnabled(username, enabled);
+    }
+
+    public void softDeleteUserByUsername(String username) throws NoFoundException {
+        userRepository.softDeleteUserByUsername(username);
+    }
+
+    public void hardDeleteUserByUsername(String username) throws NoFoundException {
+        userRepository.hardDeleteUserByUsername(username);
+    }
+
+    public void restoreUserByUsername(String username) throws NoFoundException {
+        userRepository.restoreUserByUsername(username);
+    }
+
+    public boolean isAdmin(String username) {
+        return userRepository.isAdmin(username);
+    }
 }

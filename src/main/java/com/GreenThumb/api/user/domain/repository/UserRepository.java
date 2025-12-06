@@ -1,9 +1,12 @@
 package com.GreenThumb.api.user.domain.repository;
 
+import com.GreenThumb.api.user.application.dto.AdminUserDto;
 import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.domain.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserRepository {
 
@@ -30,4 +33,22 @@ public interface UserRepository {
     void editPassword(Passwords passwords, String oldUsername);
 
     long getIdByUsername(String username);
+    
+    Page<AdminUserDto> findAllUsers(Pageable pageable);
+
+    Page<AdminUserDto> findActiveUsers(Pageable pageable);
+
+    Page<AdminUserDto> findDeletedUsers(Pageable pageable);
+
+    AdminUserDto findByUsernameForAdmin(String username);
+
+    void setUserEnabled(String username, boolean enabled);
+
+    void softDeleteUserByUsername(String username);
+
+    void hardDeleteUserByUsername(String username);
+
+    void restoreUserByUsername(String username);
+
+    boolean isAdmin(String username);
 }

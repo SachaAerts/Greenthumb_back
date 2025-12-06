@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-06-add-deleted-at-to-users
+      author: mustafa
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: deleted_at
+                  type: timestamp
+                  constraints:
+                    nullable: true

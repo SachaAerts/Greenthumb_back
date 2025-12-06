@@ -2,6 +2,7 @@ package com.GreenThumb.api.user.infrastructure.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -52,5 +53,8 @@ public class UserEntity {
 
     @Column(name = "avatar", nullable = false)
     private String avatar;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
 }

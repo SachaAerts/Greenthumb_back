@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.infrastructure.repository;
 
+import com.GreenThumb.api.user.application.dto.AdminUserDto;
 import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
@@ -13,9 +14,11 @@ import com.GreenThumb.api.user.infrastructure.entity.RoleEntity;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import com.GreenThumb.api.user.infrastructure.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.LocalDateTime;
 import static com.GreenThumb.api.user.domain.service.PasswordService.hash;
 
 @Slf4j
@@ -233,5 +236,75 @@ public class JpaUserRepository implements UserRepository {
     private void editPassword(Passwords passwords, UserEntity user) {
         String hashPassword = hash(passwords.password());
         if(hashPassword != null) {user.setPassword(hashPassword);}
+    }
+
+    @Override
+    public Page<AdminUserDto> findAllUsers(Pageable pageable) {
+        return jpaRepo.findAll(pageable).map(AdminUserDto::fromEntity);
+    }
+
+    @Override
+    public Page<AdminUserDto> findActiveUsers(Pageable pageable) {
+        return jpaRepo.findByDeletedAtIsNull(pageable).map(AdminUserDto::fromEntity);
+    }
+
+    @Override
+    public Page<AdminUserDto> findDeletedUsers(Pageable pageable) {
+        return jpaRepo.findByDeletedAtIsNotNull(pageable).map(AdminUserDto::fromEntity);
+    }
+
+    @Override
+    public AdminUserDto findByUsernameForAdmin(String username) {
+        return jpaRepo.findByUsername(username)
+                .map(AdminUserDto::fromEntity)
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+    }
+
+    @Override
+    @Transactional
+    public void setUserEnabled(String username, boolean enabled) {
+        int updated = jpaRepo.updateEnabledByUsername(username, enabled);
+        if (updated == 0) {
+            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void softDeleteUserByUsername(String username) {
+        if (!jpaRepo.existsByUsername(username)) {
+            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
+        }
+        int updated = jpaRepo.softDeleteByUsername(username, LocalDateTime.now());
+        if (updated == 0) {
+            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void hardDeleteUserByUsername(String username) {
+        if (!jpaRepo.existsByUsername(username)) {
+            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
+        }
+        jpaRepo.deleteByUsername(username);
+    }
+
+    @Override
+    @Transactional
+    public void restoreUserByUsername(String username) {
+        if (!jpaRepo.existsByUsername(username)) {
+            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
+        }
+        int updated = jpaRepo.restoreByUsername(username);
+        if (updated == 0) {
+            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
+        }
+    }
+
+    @Override
+    public boolean isAdmin(String username) {
+        String role = jpaRepo.findRoleByUsername(username);
+        return role != null && role.equalsIgnoreCase("ADMIN");
     }
 }
