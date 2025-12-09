@@ -56,12 +56,14 @@ class SessionServiceTest {
     void setUp() {
         testUser = new UserDto(
                 "testuser",
-                "Test User",
+                "Test",
+                "User",
                 "test@example.com",
                 "0123456789",
                 "Test bio",
                 false,
-                "USER"
+                "USER",
+                null
         );
 
         frontendUrl = "http://localhost:3000";
@@ -198,64 +200,58 @@ class SessionServiceTest {
     }
 
     @Test
-    @DisplayName("verifyEmailAndCreateSession - Doit vérifier l'email et créer une session")
-    void verifyEmailAndCreateSession_shouldVerifyEmailAndCreateSession() {
+    @DisplayName("verifyEmailWithCode - Doit vérifier l'email avec le code")
+    void verifyEmailWithCode_shouldVerifyEmail() {
         // Given
-        setupTokenMocks();
-        String token = "verification-token";
         String email = "test@example.com";
+        String code = "123456";
 
-        when(emailVerificationService.consumeToken(token)).thenReturn(Optional.of(email));
+        when(emailVerificationService.verifyAndConsumeCode(email, code)).thenReturn(Optional.of(email));
         when(userService.isUserEnabled(email)).thenReturn(false);
-        when(userService.findByEmail(email)).thenReturn(testUser);
 
         // When
-        Session session = sessionService.verifyEmailAndCreateSession(token);
+        sessionService.verifyEmailWithCode(email, code);
 
         // Then
-        assertThat(session).isNotNull();
-        assertThat(session.accessToken()).isEqualTo("access-token");
-        assertThat(session.refreshToken()).isEqualTo("refresh-token");
-
-        verify(emailVerificationService, times(1)).consumeToken(token);
+        verify(emailVerificationService, times(1)).verifyAndConsumeCode(email, code);
         verify(userService, times(1)).isUserEnabled(email);
         verify(userService, times(1)).enableUser(email);
-        verify(userService, times(1)).findByEmail(email);
     }
 
     @Test
-    @DisplayName("verifyEmailAndCreateSession - Doit rejeter un token invalide")
-    void verifyEmailAndCreateSession_shouldRejectInvalidToken() {
+    @DisplayName("verifyEmailWithCode - Doit rejeter un code invalide")
+    void verifyEmailWithCode_shouldRejectInvalidCode() {
         // Given
-        String token = "invalid-token";
+        String email = "test@example.com";
+        String code = "000000";
 
-        when(emailVerificationService.consumeToken(token)).thenReturn(Optional.empty());
+        when(emailVerificationService.verifyAndConsumeCode(email, code)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> sessionService.verifyEmailAndCreateSession(token))
+        assertThatThrownBy(() -> sessionService.verifyEmailWithCode(email, code))
                 .isInstanceOf(InvalidTokenException.class)
-                .hasMessage("Token de vérification invalide ou expiré");
+                .hasMessage("Code de vérification invalide, expiré ou nombre maximum de tentatives dépassé");
 
-        verify(emailVerificationService, times(1)).consumeToken(token);
+        verify(emailVerificationService, times(1)).verifyAndConsumeCode(email, code);
         verify(userService, never()).enableUser(anyString());
     }
 
     @Test
-    @DisplayName("verifyEmailAndCreateSession - Doit rejeter si l'utilisateur est déjà vérifié")
-    void verifyEmailAndCreateSession_shouldRejectIfUserAlreadyVerified() {
+    @DisplayName("verifyEmailWithCode - Doit rejeter si l'utilisateur est déjà vérifié")
+    void verifyEmailWithCode_shouldRejectIfUserAlreadyVerified() {
         // Given
-        String token = "verification-token";
         String email = "test@example.com";
+        String code = "123456";
 
-        when(emailVerificationService.consumeToken(token)).thenReturn(Optional.of(email));
+        when(emailVerificationService.verifyAndConsumeCode(email, code)).thenReturn(Optional.of(email));
         when(userService.isUserEnabled(email)).thenReturn(true);
 
         // When & Then
-        assertThatThrownBy(() -> sessionService.verifyEmailAndCreateSession(token))
+        assertThatThrownBy(() -> sessionService.verifyEmailWithCode(email, code))
                 .isInstanceOf(UserAlreadyVerifiedException.class)
                 .hasMessage("Votre compte est déjà vérifié. Vous pouvez vous connecter normalement.");
 
-        verify(emailVerificationService, times(1)).consumeToken(token);
+        verify(emailVerificationService, times(1)).verifyAndConsumeCode(email, code);
         verify(userService, times(1)).isUserEnabled(email);
         verify(userService, never()).enableUser(anyString());
     }

@@ -56,12 +56,14 @@ class UserServiceGatewayTest {
     void setUp() {
         testUser = new UserDto(
                 "testuser",
-                "Test User",
+                "Test",
+                "User",
                 "test@example.com",
                 "0123456789",
                 "Test bio",
                 false,
-                "USER"
+                "USER",
+                null
         );
 
         testPlant = new PlantDto(
@@ -179,7 +181,7 @@ class UserServiceGatewayTest {
         when(tokenService.extractUsername(token)).thenReturn(username);
         when(redisService.checkKey(username)).thenReturn(false);
         when(userService.getUserByUsername(username)).thenReturn(testUser);
-        when(objectMapper.writeValueAsString(testUser)).thenReturn(userJson);
+        when(objectMapper.writeValueAsString(any(UserDto.class))).thenReturn(userJson);
 
         // When
         UserDto result = userServiceGateway.getMe(token);
@@ -204,7 +206,7 @@ class UserServiceGatewayTest {
         when(tokenService.extractUsername(token)).thenReturn(username);
         when(redisService.checkKey(username)).thenReturn(false);
         when(userService.getUserByUsername(username)).thenReturn(testUser);
-        when(objectMapper.writeValueAsString(testUser)).thenThrow(new JsonProcessingException("JSON error") {});
+        when(objectMapper.writeValueAsString(any(UserDto.class))).thenThrow(new JsonProcessingException("JSON error") {});
 
         // When & Then
         assertThatThrownBy(() -> userServiceGateway.getMe(token))

@@ -67,6 +67,7 @@ public class JpaUserRepositoryTest {
         UserEntity userEntity = new UserEntity();
         userEntity.setMail(email);
         userEntity.setPassword(password);
+        userEntity.setEnabled(true);
 
         User expectedUser = mock(User.class);
 
@@ -103,6 +104,7 @@ public class JpaUserRepositoryTest {
         UserEntity userEntity = new UserEntity();
         userEntity.setMail(email);
         userEntity.setPassword(password);
+        userEntity.setEnabled(true);
 
         mockStatic(UserMapper.class);
         mockStatic(PasswordService.class);
