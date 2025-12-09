@@ -1,6 +1,6 @@
 package com.GreenThumb.api.user.application.dto;
 
-import com.GreenThumb.api.user.application.service.PasswordMatch;
+import com.GreenThumb.api.user.application.utils.tags.PasswordMatch;
 import jakarta.validation.constraints.*;
 
 @PasswordMatch(

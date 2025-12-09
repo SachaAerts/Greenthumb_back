@@ -1,4 +1,4 @@
-package com.GreenThumb.api.user.application.service;
+package com.GreenThumb.api.user.application.utils.tags;
 
 import com.GreenThumb.api.user.domain.service.PasswordMatchValidator;
 import jakarta.validation.Constraint;

@@ -1,5 +1,6 @@
-package com.GreenThumb.api.user.application.service;
+package com.GreenThumb.api.user.application.utils.tags;
 
+import com.GreenThumb.api.user.application.utils.BiographySizeValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

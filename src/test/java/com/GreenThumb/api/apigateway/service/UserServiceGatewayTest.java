@@ -63,7 +63,7 @@ class UserServiceGatewayTest {
                 "Test bio",
                 false,
                 "USER",
-                null
+                "default-avatar.png"
         );
 
         testPlant = new PlantDto(

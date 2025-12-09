@@ -186,13 +186,13 @@ class SessionControllerTest {
 
     @Test
     @DisplayName("POST /api/sessions/verify - Doit vérifier l'email avec le code")
-    void verifyEmail_shouldVerifyEmailWithCode() throws Exception {
-        // Given
-        VerifyEmailRequest request = new VerifyEmailRequest("test@example.com", "123456");
+    void verifyEmail_shouldVerifyEmail() throws Exception {
+        String email = "test@example.com";
+        String code = "123456";
+        VerifyEmailRequest request = new VerifyEmailRequest(email, code);
 
         doNothing().when(sessionService).verifyEmailWithCode(anyString(), anyString());
 
-        // When & Then
         mockMvc.perform(post("/api/sessions/verify")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -200,7 +200,7 @@ class SessionControllerTest {
                 .andExpect(jsonPath("$.message").value("Votre compte a été vérifié avec succès. Vous pouvez maintenant vous connecter."))
                 .andExpect(jsonPath("$.verified").value(true));
 
-        verify(sessionService, times(1)).verifyEmailWithCode("test@example.com", "123456");
+        verify(sessionService, times(1)).verifyEmailWithCode(email, code);
     }
 
     @Test

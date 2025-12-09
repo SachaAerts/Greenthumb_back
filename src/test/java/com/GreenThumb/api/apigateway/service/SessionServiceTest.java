@@ -7,7 +7,6 @@ import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.service.EmailVerificationService;
 import com.GreenThumb.api.user.application.service.UserService;
 import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
-import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.exception.UserAlreadyVerifiedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,7 +62,7 @@ class SessionServiceTest {
                 "Test bio",
                 false,
                 "USER",
-                null
+                "default-avatar.png"
         );
 
         frontendUrl = "http://localhost:3000";
@@ -216,6 +215,7 @@ class SessionServiceTest {
         verify(emailVerificationService, times(1)).verifyAndConsumeCode(email, code);
         verify(userService, times(1)).isUserEnabled(email);
         verify(userService, times(1)).enableUser(email);
+        verify(userService, times(1)).findByEmail(email);
     }
 
     @Test
