@@ -1,6 +1,5 @@
-package com.GreenThumb.api.apigateway.utils;
+package com.GreenThumb.api.user.application.service;
 
-import com.GreenThumb.api.apigateway.utils.tags.MaxWords;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

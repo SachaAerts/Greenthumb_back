@@ -1,6 +1,6 @@
 package com.GreenThumb.api.user.application.dto;
 
-import com.GreenThumb.api.apigateway.utils.tags.MaxWords;
+import com.GreenThumb.api.user.application.service.MaxWords;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
