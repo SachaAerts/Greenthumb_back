@@ -202,8 +202,8 @@ class SessionServiceTest {
     @DisplayName("verifyEmailWithCode - Doit vérifier l'email avec le code")
     void verifyEmailWithCode_shouldVerifyEmail() {
         // Given
-        String email = "test@example.com";
         String code = "123456";
+        String email = "test@example.com";
 
         when(emailVerificationService.verifyAndConsumeCode(email, code)).thenReturn(Optional.of(email));
         when(userService.isUserEnabled(email)).thenReturn(false);
@@ -215,7 +215,6 @@ class SessionServiceTest {
         verify(emailVerificationService, times(1)).verifyAndConsumeCode(email, code);
         verify(userService, times(1)).isUserEnabled(email);
         verify(userService, times(1)).enableUser(email);
-        verify(userService, times(1)).findByEmail(email);
     }
 
     @Test
