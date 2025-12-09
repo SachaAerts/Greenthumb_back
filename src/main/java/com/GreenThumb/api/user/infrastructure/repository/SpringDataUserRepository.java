@@ -1,8 +1,6 @@
 package com.GreenThumb.api.user.infrastructure.repository;
 
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long> {
+
     Optional<UserEntity> findByMail(String mail);
 
     Optional<UserEntity> findByUsername(String username);
@@ -23,8 +22,6 @@ public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long
 
     @Query("SELECT u.id FROM UserEntity u WHERE u.username = :username")
     Long findIdByUsername(String username);
-
-    Page<UserEntity> findAll(Pageable pageable);
 
     @Modifying
     @Query("UPDATE UserEntity u SET u.enabled = :enabled WHERE u.username = :username")
@@ -42,8 +39,4 @@ public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long
     @Modifying
     @Query("UPDATE UserEntity u SET u.deletedAt = null WHERE u.username = :username")
     int restoreByUsername(@Param("username") String username);
-
-    Page<UserEntity> findByDeletedAtIsNull(Pageable pageable);
-
-    Page<UserEntity> findByDeletedAtIsNotNull(Pageable pageable);
 }

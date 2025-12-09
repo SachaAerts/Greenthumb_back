@@ -1,12 +1,10 @@
 package com.GreenThumb.api.apigateway.controller;
 
+import com.GreenThumb.api.user.application.dto.PageResponse;
 import com.GreenThumb.api.user.application.dto.AdminUserDto;
 import com.GreenThumb.api.user.application.service.UserService;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,25 +24,22 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<Page<AdminUserDto>> getAllUsers(
+    @GetMapping("/search")
+    public ResponseEntity<PageResponse<AdminUserDto>> searchUsers(
+            @RequestParam(required = false) String q,
+            @RequestParam(defaultValue = "all") String status,
+            @RequestParam(required = false) Boolean enabled,
+            @RequestParam(required = false) String role,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "all") String filter
+            @RequestParam(defaultValue = "20") int size
     ) {
-        log.debug("Admin fetching users - page: {}, size: {}, filter: {}", page, size, filter);
+        log.debug("Admin searching users - query: '{}', status: {}, enabled: {}, role: {}, page: {}, size: {}",
+                q, status, enabled, role, page, size);
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<AdminUserDto> users;
+        PageResponse<AdminUserDto> result = userService.searchUsers(q, status, enabled, role, page, size);
 
-        switch (filter.toLowerCase()) {
-            case "active" -> users = userService.findActiveUsers(pageable);
-            case "deleted" -> users = userService.findDeletedUsers(pageable);
-            default -> users = userService.findAllUsers(pageable);
-        }
-
-        log.debug("Found {} users total", users.getTotalElements());
-        return ResponseEntity.ok(users);
+        log.debug("Found {} users total", result.totalElements());
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{username}")
