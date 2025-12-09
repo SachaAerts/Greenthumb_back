@@ -2,6 +2,7 @@ package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.dto.Resource;
 import com.GreenThumb.api.apigateway.service.ResourceServiceApi;
+import com.GreenThumb.api.resources.application.dto.ResourceDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,16 +24,13 @@ public class ResourceController {
 
     @GetMapping("/three-resources")
     public ResponseEntity<List<Resource>> getThreeResource() {
-        log.debug("Fetching three resources");
-
         List<Resource> resources = resourceService.getThreeResource();
 
-        if (resources.isEmpty()) {
-            log.debug("No resources found, returning empty list");
-            return ResponseEntity.ok(resources);
-        }
-
-        log.debug("Found {} resources", resources.size());
         return ResponseEntity.ok(resources);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<ResourceDto>> getAllResource() {
+        return ResponseEntity.ok(resourceService.getAllResource());
     }
 }

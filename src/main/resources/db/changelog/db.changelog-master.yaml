@@ -10,19 +10,7 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/2025-10-22-creat-user-indexes.yaml
   - include:
-      file: db/changelog/seeds/2025-10-23-roles-seeder.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-23-categorie-seeder.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-25-users-seeder.yaml
-  - include:
       file: db/changelog/changes/2025-10-26-add-date-message.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-25-message-seeder.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-25-messages-3-seeder.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-25-resources-seeder.yaml
   - include:
       file: db/changelog/changes/2025-11-10-add-enabled-to-users.yaml
   - include:
@@ -39,3 +27,17 @@ databaseChangeLog:
       file: db/changelog/changes/2025-11-28-create-event-publication-table.yaml
   - include:
       file: db/changelog/changes/2025-11-28-fix-plants-schema-data-type.yaml
+  - include:
+      file: db/changelog/changes/2025-12-09-modif-argument-like.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-25-message-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-25-messages-3-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-25-resources-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-23-roles-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-23-categorie-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-25-users-seeder.yaml

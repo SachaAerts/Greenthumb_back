@@ -6,7 +6,13 @@ import com.GreenThumb.api.resources.infrastructure.entity.ResourceEntity;
 public class ResourceMapper {
 
     public static Resource toDomain(ResourceEntity resourceEntity) {
-        return new Resource(resourceEntity.getTitle(), resourceEntity.getLight(), resourceEntity.getPictureUrl(),
-                resourceEntity.getDescription(), resourceEntity.getCreationDate());
+        return new Resource(
+                resourceEntity.getTitle(),
+                resourceEntity.getLike(),
+                resourceEntity.getPictureUrl(),
+                resourceEntity.getDescription(),
+                resourceEntity.getCreationDate(),
+                resourceEntity.getUser().getUsername()
+                );
     }
 }

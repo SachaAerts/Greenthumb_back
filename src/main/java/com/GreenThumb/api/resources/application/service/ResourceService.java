@@ -1,5 +1,6 @@
-package com.GreenThumb.api.resources.application;
+package com.GreenThumb.api.resources.application.service;
 
+import com.GreenThumb.api.resources.application.dto.ResourceDto;
 import com.GreenThumb.api.resources.domain.entity.Resource;
 import com.GreenThumb.api.resources.domain.repository.ResourceRepository;
 import org.springframework.stereotype.Service;
@@ -16,5 +17,13 @@ public class ResourceService {
 
     public List<Resource> get3Resources() {
         return resourceRepository.getThreeResource();
+    }
+
+    public List<ResourceDto> getAllResource() {
+        List<Resource> resources = resourceRepository.getAllResource();
+
+        return resources.stream()
+                .map((ResourceDto::to))
+                .toList();
     }
 }

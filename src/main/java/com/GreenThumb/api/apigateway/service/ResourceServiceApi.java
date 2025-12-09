@@ -2,7 +2,8 @@ package com.GreenThumb.api.apigateway.service;
 
 import com.GreenThumb.api.apigateway.mapper.ResourceMapper;
 import com.GreenThumb.api.apigateway.dto.Resource;
-import com.GreenThumb.api.resources.application.ResourceService;
+import com.GreenThumb.api.resources.application.dto.ResourceDto;
+import com.GreenThumb.api.resources.application.service.ResourceService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,5 +21,9 @@ public class ResourceServiceApi {
         return resourceService.get3Resources().stream()
                 .map(ResourceMapper::toDto)
                 .toList();
+    }
+
+    public List<ResourceDto> getAllResource() {
+        return resourceService.getAllResource();
     }
 }

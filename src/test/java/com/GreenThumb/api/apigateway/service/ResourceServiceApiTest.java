@@ -1,7 +1,7 @@
 package com.GreenThumb.api.apigateway.service;
 
 import com.GreenThumb.api.apigateway.dto.Resource;
-import com.GreenThumb.api.resources.application.ResourceService;
+import com.GreenThumb.api.resources.application.service.ResourceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class ResourceServiceApiTest {
     void setUp() {
         testResource1 = new com.GreenThumb.api.resources.domain.entity.Resource(
                 "Resource 1",
-                "Light 1",
+                1,
                 "https://example.com/resource1",
                 "Text 1",
                 new java.util.Date()
@@ -42,7 +42,7 @@ class ResourceServiceApiTest {
 
         testResource2 = new com.GreenThumb.api.resources.domain.entity.Resource(
                 "Resource 2",
-                "Light 2",
+                2,
                 "https://example.com/resource2",
                 "Text 2",
                 new java.util.Date()
@@ -50,7 +50,7 @@ class ResourceServiceApiTest {
 
         testResource3 = new com.GreenThumb.api.resources.domain.entity.Resource(
                 "Resource 3",
-                "Light 3",
+                3,
                 "https://example.com/resource3",
                 "Text 3",
                 new java.util.Date()

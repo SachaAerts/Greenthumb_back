@@ -21,4 +21,11 @@ public class JpaResourceRepository implements ResourceRepository {
                 .map(ResourceMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public List<Resource> getAllResource() {
+        return resourceRepository.findAll().stream()
+                .map(ResourceMapper::toDomain)
+                .toList();
+    }
 }

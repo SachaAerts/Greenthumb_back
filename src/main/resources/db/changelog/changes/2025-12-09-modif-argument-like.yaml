@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-09-rename-light-to-like
+      author: jason engels
+      changes:
+        - renameColumn:
+            tableName: ressources
+            oldColumnName: light
+            newColumnName: like
+            columnDataType: INT

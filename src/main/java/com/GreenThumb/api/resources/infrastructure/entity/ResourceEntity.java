@@ -23,8 +23,8 @@ public class ResourceEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "light")
-    private String light;
+    @Column(name = "like")
+    private int like;
 
     @Column(name = "picture")
     private String pictureUrl;

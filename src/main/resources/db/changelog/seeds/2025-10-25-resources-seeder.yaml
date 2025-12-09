@@ -10,7 +10,7 @@ databaseChangeLog:
                   name: title
                   value: Comment arroser une plante
               - column:
-                  name: light
+                  name: like
                   value: "5"
               - column:
                   name: picture
@@ -32,7 +32,7 @@ databaseChangeLog:
                   name: title
                   value: Comment se faire obéir par c'est collégue
               - column:
-                  name: light
+                  name: like
                   value: "5"
               - column:
                   name: picture
@@ -54,7 +54,7 @@ databaseChangeLog:
                   name: title
                   value: Ce n'est pas un tuto
               - column:
-                  name: light
+                  name: like
                   value: "5"
               - column:
                   name: picture
