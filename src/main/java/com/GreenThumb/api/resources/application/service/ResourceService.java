@@ -32,4 +32,8 @@ public class ResourceService {
         return resourceRepository.getResourceBySlug(slug)
                 .map(ResourceDto::to);
     }
+
+    public boolean existsBySlug(String slug) {
+        return resourceRepository.existsBySlug(slug);
+    }
 }

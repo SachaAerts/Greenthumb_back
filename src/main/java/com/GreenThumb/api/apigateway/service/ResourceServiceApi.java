@@ -33,4 +33,8 @@ public class ResourceServiceApi {
     public Optional<ResourceDto> getResourceBySlug(String slug) {
         return resourceService.getResourceBySlug(slug);
     }
+
+    public boolean existBySlug(String slug) {
+        return resourceService.existsBySlug(slug);
+    }
 }

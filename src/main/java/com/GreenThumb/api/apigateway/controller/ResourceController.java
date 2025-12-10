@@ -3,6 +3,7 @@ package com.GreenThumb.api.apigateway.controller;
 import com.GreenThumb.api.apigateway.dto.Resource;
 import com.GreenThumb.api.apigateway.service.ResourceServiceApi;
 import com.GreenThumb.api.resources.application.dto.ResourceDto;
+import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,5 +41,14 @@ public class ResourceController {
         return resourceService.getResourceBySlug(slug)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/exist/{slug}")
+    public ResponseEntity<?> getExistSlug(@PathVariable String slug) {
+        if (resourceService.existBySlug(slug)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            throw new NoFoundException("Slug incorrect");
+        }
     }
 }

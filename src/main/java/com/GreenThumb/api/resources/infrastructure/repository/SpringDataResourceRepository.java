@@ -11,4 +11,6 @@ public interface SpringDataResourceRepository extends JpaRepository<ResourceEnti
     List<ResourceEntity> findTop3ByOrderByCreationDateDesc();
 
     Optional<ResourceEntity> findBySlug(String slug);
+
+    boolean existsBySlug(String slug);
 }

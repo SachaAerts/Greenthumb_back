@@ -36,4 +36,9 @@ public class JpaResourceRepository implements ResourceRepository {
         return resourceRepository.findBySlug(slug)
                 .map(ResourceMapper::toDomain);
     }
+
+    @Override
+    public boolean existsBySlug(String slug) {
+        return resourceRepository.existsBySlug(slug);
+    }
 }

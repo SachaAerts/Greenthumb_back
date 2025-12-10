@@ -9,4 +9,6 @@ public interface ResourceRepository {
     List<Resource> getThreeResource();
     List<Resource> getAllResource();
     Optional<Resource> getResourceBySlug(String slug);
+
+    boolean existsBySlug(String slug);
 }
