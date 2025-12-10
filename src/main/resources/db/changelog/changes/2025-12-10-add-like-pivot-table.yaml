@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-10-add-like-pivot-table
+      author: jason engels
+      changes:
+        - createTable:
+            tableName: liked
+            columns:
+              - column:
+                  name: id_user
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: id_resource
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: liked
+            columnNames: id_user, id_resource
+            constraintName: pk_user_resource_likes
+
+        - addForeignKeyConstraint:
+            baseTableName: liked
+            baseColumnNames: id_user
+            referencedTableName: users
+            referencedColumnNames: id_user
+            constraintName: fk_likes_user
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: liked
+            baseColumnNames: id_resource
+            referencedTableName: ressources
+            referencedColumnNames: id_resource
+            constraintName: fk_likes_resource
+            onDelete: CASCADE
