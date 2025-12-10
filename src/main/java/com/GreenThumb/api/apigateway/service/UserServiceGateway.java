@@ -139,7 +139,7 @@ public class UserServiceGateway {
 
     private UserDto getUserInBdAndSaveInCache(String username) throws JsonProcessingException {
         UserDto user = userService.getUserByUsername(username);
-        user = normalizeAvatar(user); // transforme le chemin avant cache / retour
+        user = normalizeAvatar(user);
         String userJson = objectMapper.writeValueAsString(user);
         redisService.saveJson(username, userJson);
         redisService.expiry(username, 5, TimeUnit.MINUTES);

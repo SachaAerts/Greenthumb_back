@@ -24,6 +24,8 @@ public class ResourceServiceApi {
     }
 
     public List<ResourceDto> getAllResource() {
-        return resourceService.getAllResource();
+        List<ResourceDto> resources =  resourceService.getAllResource();
+
+        return resources;
     }
 }

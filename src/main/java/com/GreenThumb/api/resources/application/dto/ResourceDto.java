@@ -14,13 +14,22 @@ public record ResourceDto(
 ) {
 
     public static ResourceDto to(Resource resource) {
+        String articleUrl = buildArticleUrl(resource.urlPicture());
         return new ResourceDto(
                 resource.title(),
                 resource.like(),
-                resource.urlPicture(),
+                articleUrl,
                 resource.text(),
                 resource.creationDate(),
                 resource.username()
         );
+    }
+
+    private static String buildArticleUrl(String storedPath) {
+        if (storedPath == null || storedPath.isBlank()) {
+            return "/articles/default.png";
+        }
+
+        return storedPath.toLowerCase();
     }
 }
