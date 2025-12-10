@@ -20,11 +20,17 @@ public class ResourceEntity {
     @Column(name = "id_resource")
     private Long id;
 
+    @Column(name = "slug", unique = true, nullable = false)
+    private String slug;
+
     @Column(name = "title")
     private String title;
 
     @Column(name = "like")
     private int like;
+
+    @Column(name = "summary")
+    private String summary;
 
     @Column(name = "picture")
     private String pictureUrl;

@@ -7,6 +7,7 @@ import com.GreenThumb.api.resources.application.service.ResourceService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ResourceServiceApi {
@@ -27,5 +28,9 @@ public class ResourceServiceApi {
         List<ResourceDto> resources =  resourceService.getAllResource();
 
         return resources;
+    }
+
+    public Optional<ResourceDto> getResourceBySlug(String slug) {
+        return resourceService.getResourceBySlug(slug);
     }
 }

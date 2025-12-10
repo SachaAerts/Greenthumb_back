@@ -6,6 +6,8 @@ import com.GreenThumb.api.resources.infrastructure.mapper.ResourceMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public class JpaResourceRepository implements ResourceRepository {
 
@@ -27,5 +29,11 @@ public class JpaResourceRepository implements ResourceRepository {
         return resourceRepository.findAll().stream()
                 .map(ResourceMapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<Resource> getResourceBySlug(String slug) {
+        return resourceRepository.findBySlug(slug)
+                .map(ResourceMapper::toDomain);
     }
 }

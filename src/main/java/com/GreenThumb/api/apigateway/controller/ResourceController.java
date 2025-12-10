@@ -6,6 +6,7 @@ import com.GreenThumb.api.resources.application.dto.ResourceDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,5 +33,12 @@ public class ResourceController {
     @GetMapping("")
     public ResponseEntity<List<ResourceDto>> getAllResource() {
         return ResponseEntity.ok(resourceService.getAllResource());
+    }
+
+    @GetMapping("/{slug}")
+    public ResponseEntity<ResourceDto> getResourceBySlug(@PathVariable String slug) {
+        return resourceService.getResourceBySlug(slug)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

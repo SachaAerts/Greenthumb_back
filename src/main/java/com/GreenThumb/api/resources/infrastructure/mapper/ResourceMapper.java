@@ -7,7 +7,9 @@ public class ResourceMapper {
 
     public static Resource toDomain(ResourceEntity resourceEntity) {
         return new Resource(
+                resourceEntity.getSlug(),
                 resourceEntity.getTitle(),
+                resourceEntity.getSummary(),
                 resourceEntity.getLike(),
                 resourceEntity.getPictureUrl(),
                 resourceEntity.getDescription(),

@@ -14,7 +14,7 @@ databaseChangeLog:
                   value: "5"
               - column:
                   name: picture
-                  value: arrosage.png
+                  value: articles/arrosage.png
               - column:
                   name: text
                   value: Arroser une plante semble simple, mais c’est un art qui demande observation et équilibre. Trop d’eau et les racines s’asphyxient ; pas assez et la plante se dessèche. Le secret réside dans la régularité et la justesse.
@@ -24,6 +24,9 @@ databaseChangeLog:
               - column:
                   name: id_user
                   value: "1"
+              - column:
+                  name: slug
+                  value: comment-arroser-une-plante
 
         - insert:
             tableName: ressources
@@ -36,7 +39,7 @@ databaseChangeLog:
                   value: "5"
               - column:
                   name: picture
-                  value: arrosage.png
+                  value: articles/arrosage.png
               - column:
                   name: text
                   value: donne des bonbons
@@ -46,6 +49,9 @@ databaseChangeLog:
               - column:
                   name: id_user
                   value: "1"
+              - column:
+                  name: slug
+                  value: comment-se-faire-obeir-par-c-est-collegue
 
         - insert:
             tableName: ressources
@@ -58,7 +64,7 @@ databaseChangeLog:
                   value: "5"
               - column:
                   name: picture
-                  value: arrosage.png
+                  value: articles/arrosage.png
               - column:
                   name: text
                   value: en revoir
@@ -68,3 +74,6 @@ databaseChangeLog:
               - column:
                   name: id_user
                   value: "1"
+              - column:
+                  name: slug
+                  value: ce-n-est-pas-un-tuto
