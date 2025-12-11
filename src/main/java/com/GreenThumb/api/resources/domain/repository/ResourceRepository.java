@@ -18,4 +18,6 @@ public interface ResourceRepository {
     void incrementLikeCount(Long resourceId);
 
     void decrementLikeCount(Long resourceId);
+
+    int getLikeById(Long resourceId);
 }

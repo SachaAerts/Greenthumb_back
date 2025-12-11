@@ -23,10 +23,13 @@ public interface SpringDataResourceRepository extends JpaRepository<ResourceEnti
 
     @Modifying
     @Query("UPDATE ResourceEntity r SET r.like = r.like + 1 WHERE r.id = :id")
-    void incrementLikeCount(@Param("id_resource") Long id);
+    void incrementLikeCount(@Param("id") Long id);
 
     @Modifying
     @Query("UPDATE ResourceEntity r SET r.like = r.like - 1 WHERE r.id = :id")
-    void decrementLikeCount(@Param("id_resource") Long id);
+    void decrementLikeCount(@Param("id") Long id);
+
+    @Query("SELECT r.like FROM ResourceEntity r WHERE r.id = :id")
+    int getLikeById(@Param("id") Long id);
 
 }

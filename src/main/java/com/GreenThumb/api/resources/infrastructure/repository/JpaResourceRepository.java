@@ -58,4 +58,9 @@ public class JpaResourceRepository implements ResourceRepository {
     public void decrementLikeCount(Long resourceId) {
         resourceRepository.decrementLikeCount(resourceId);
     }
+
+    @Override
+    public int getLikeById(Long resourceId) {
+        return resourceRepository.getLikeById(resourceId);
+    }
 }

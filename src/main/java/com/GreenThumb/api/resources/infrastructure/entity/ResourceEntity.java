@@ -26,7 +26,7 @@ public class ResourceEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "like")
+    @Column(name = "like_count")
     private int like;
 
     @Column(name = "summary")
