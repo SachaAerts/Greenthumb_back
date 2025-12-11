@@ -3,6 +3,7 @@ package com.GreenThumb.api.resources.infrastructure.repository;
 import com.GreenThumb.api.resources.domain.entity.Resource;
 import com.GreenThumb.api.resources.domain.repository.ResourceRepository;
 import com.GreenThumb.api.resources.infrastructure.mapper.ResourceMapper;
+import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -40,5 +41,21 @@ public class JpaResourceRepository implements ResourceRepository {
     @Override
     public boolean existsBySlug(String slug) {
         return resourceRepository.existsBySlug(slug);
+    }
+
+    @Override
+    public Long findIdBySlug(String slug) throws NoFoundException {
+        return resourceRepository.findIdBySlug(slug)
+                .orElseThrow(() -> new NoFoundException("L'articles n'existe pas"));
+    }
+
+    @Override
+    public void incrementLikeCount(Long resourceId) {
+        resourceRepository.incrementLikeCount(resourceId);
+    }
+
+    @Override
+    public void decrementLikeCount(Long resourceId) {
+        resourceRepository.decrementLikeCount(resourceId);
     }
 }
