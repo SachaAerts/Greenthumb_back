@@ -53,18 +53,12 @@ public class PlantMapper {
         }
 
         return new PlantApiDto(
-                data.getId(),
+                data.getSlug(),
                 data.getCommonName() != null && !data.getCommonName().isBlank()
                     ? data.getCommonName()
                     : "Unknown",
                 data.getScientificName() != null && !data.getScientificName().isBlank()
                     ? data.getScientificName()
-                    : "Unknown",
-                data.getFamily() != null && !data.getFamily().isBlank()
-                    ? data.getFamily()
-                    : "Unknown",
-                data.getFamilyCommonName() != null && !data.getFamilyCommonName().isBlank()
-                    ? data.getFamilyCommonName()
                     : "Unknown",
                 data.getImageUrl() != null && !data.getImageUrl().isBlank()
                     ? data.getImageUrl()

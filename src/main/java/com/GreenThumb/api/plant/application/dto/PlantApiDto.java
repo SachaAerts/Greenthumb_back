@@ -8,10 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlantApiDto {
-    private Long id;
+    private String slug;
     private String commonName;
     private String scientificName;
-    private String family;
-    private String familyCommonName;
     private String imageUrl;
 }
