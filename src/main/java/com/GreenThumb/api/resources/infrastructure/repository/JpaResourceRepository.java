@@ -7,6 +7,7 @@ import com.GreenThumb.api.resources.infrastructure.mapper.ResourceMapper;
 import com.GreenThumb.api.user.application.service.UserService;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -98,6 +99,7 @@ public class JpaResourceRepository implements ResourceRepository {
     }
 
     @Override
+    @Transactional
     public void deleteBySlug(String slug) {
         resourceRepository.deleteBySlug(slug);
     }
