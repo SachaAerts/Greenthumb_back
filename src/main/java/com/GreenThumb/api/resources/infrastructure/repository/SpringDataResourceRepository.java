@@ -32,4 +32,6 @@ public interface SpringDataResourceRepository extends JpaRepository<ResourceEnti
     @Query("SELECT r.like FROM ResourceEntity r WHERE r.id = :id")
     int getLikeById(@Param("id") Long id);
 
+    void deleteBySlug(String slug);
+
 }

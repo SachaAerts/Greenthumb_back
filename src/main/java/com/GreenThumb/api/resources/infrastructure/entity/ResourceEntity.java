@@ -4,6 +4,7 @@ import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -39,7 +40,7 @@ public class ResourceEntity {
     private String description;
 
     @Column(name = "creation_date")
-    private Date creationDate;
+    private LocalDate creationDate;
 
     @ManyToOne
     @JoinColumn(name = "id_user")

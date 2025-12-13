@@ -4,6 +4,7 @@ import com.GreenThumb.api.apigateway.mapper.ResourceMapper;
 import com.GreenThumb.api.apigateway.dto.Resource;
 import com.GreenThumb.api.resources.application.dto.LikedDto;
 import com.GreenThumb.api.resources.application.dto.ResourceDto;
+import com.GreenThumb.api.resources.application.dto.ResourceRequest;
 import com.GreenThumb.api.resources.application.service.LikedService;
 import com.GreenThumb.api.resources.application.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +51,17 @@ public class ResourceServiceApi {
 
     public LikedDto addLike(String token, String resourceSlug) {
         String username = tokenService.extractUsername(token);
-        log.debug("[Username] => " + username);
+
         return likedService.addLike(resourceSlug, username);
+    }
+
+    public void addResource(String token, ResourceRequest resourceRequest) {
+        String username = tokenService.extractUsername(token);
+
+        resourceService.addResource(username, resourceRequest);
+    }
+
+    public void deleteResource(String slug) {
+        resourceService.deleteResource(slug);
     }
 }

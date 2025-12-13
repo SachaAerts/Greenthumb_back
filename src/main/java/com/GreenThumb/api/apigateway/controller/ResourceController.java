@@ -5,10 +5,12 @@ import com.GreenThumb.api.apigateway.service.ResourceServiceApi;
 import com.GreenThumb.api.apigateway.service.TokenExtractor;
 import com.GreenThumb.api.resources.application.dto.LikedDto;
 import com.GreenThumb.api.resources.application.dto.ResourceDto;
+import com.GreenThumb.api.resources.application.dto.ResourceRequest;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,6 +59,19 @@ public class ResourceController {
         }
     }
 
+    @PostMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> addResource(
+            @RequestBody ResourceRequest request,
+            @RequestHeader(value = AUTHORIZATION_HEADER, required = false) String authorizationHeader
+    ) {
+        String token = tokenExtractor.extractToken(authorizationHeader);
+
+        resourceService.addResource(token, request);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @PatchMapping("/{slug}/like")
     public ResponseEntity<LikedDto> addLike(
             @PathVariable String slug,
@@ -66,5 +81,12 @@ public class ResourceController {
         LikedDto like = resourceService.addLike(token, slug);
 
         return ResponseEntity.ok(like);
+    }
+
+    @DeleteMapping("/{slug}")
+    public ResponseEntity<?> deleteResource(@PathVariable String slug) {
+        resourceService.deleteResource(slug);
+
+        return ResponseEntity.ok(slug);
     }
 }

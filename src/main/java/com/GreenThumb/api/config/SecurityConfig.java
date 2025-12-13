@@ -1,7 +1,6 @@
 package com.GreenThumb.api.config;
 
 import com.GreenThumb.api.apigateway.service.TokenService;
-import feign.Body;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -61,7 +60,6 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/users/**").permitAll()
                         .requestMatchers("/articles/**").permitAll()

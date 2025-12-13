@@ -2,6 +2,7 @@ package com.GreenThumb.api.resources.application.dto;
 
 import com.GreenThumb.api.resources.domain.entity.Resource;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public record ResourceDto(
@@ -11,7 +12,7 @@ public record ResourceDto(
         int like,
         String pictureUrl,
         String description,
-        Date creationDate,
+        LocalDate creationDate,
         String username
 ) {
 

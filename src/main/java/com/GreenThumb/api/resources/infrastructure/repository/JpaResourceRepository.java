@@ -2,10 +2,14 @@ package com.GreenThumb.api.resources.infrastructure.repository;
 
 import com.GreenThumb.api.resources.domain.entity.Resource;
 import com.GreenThumb.api.resources.domain.repository.ResourceRepository;
+import com.GreenThumb.api.resources.infrastructure.entity.ResourceEntity;
 import com.GreenThumb.api.resources.infrastructure.mapper.ResourceMapper;
+import com.GreenThumb.api.user.application.service.UserService;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
+import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +17,11 @@ import java.util.Optional;
 public class JpaResourceRepository implements ResourceRepository {
 
     private final SpringDataResourceRepository resourceRepository;
+    private final UserService userService;
 
-    public JpaResourceRepository(SpringDataResourceRepository resourceRepository) {
+    public JpaResourceRepository(SpringDataResourceRepository resourceRepository, UserService userService) {
         this.resourceRepository = resourceRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -36,6 +42,13 @@ public class JpaResourceRepository implements ResourceRepository {
     public Optional<Resource> getResourceBySlug(String slug) {
         return resourceRepository.findBySlug(slug)
                 .map(ResourceMapper::toDomain);
+    }
+
+    @Override
+    public Resource getResource(String slug) {
+        return resourceRepository.findBySlug(slug)
+                .map(ResourceMapper::toDomain)
+                .orElseThrow(() -> new NoFoundException("Article non trouvé"));
     }
 
     @Override
@@ -62,5 +75,30 @@ public class JpaResourceRepository implements ResourceRepository {
     @Override
     public int getLikeById(Long resourceId) {
         return resourceRepository.getLikeById(resourceId);
+    }
+
+    @Override
+    public void save(Resource resource) {
+        Long userId = userService.getIdByUsername(resource.username());
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userId);
+
+        ResourceEntity entity = ResourceEntity.builder()
+                .slug(resource.slug())
+                .title(resource.title())
+                .summary(resource.summary())
+                .like(resource.like())
+                .pictureUrl(resource.urlPicture())
+                .description(resource.text())
+                .creationDate(resource.creationDate())
+                .user(userEntity)
+                .build();
+
+        resourceRepository.save(entity);
+    }
+
+    @Override
+    public void deleteBySlug(String slug) {
+        resourceRepository.deleteBySlug(slug);
     }
 }

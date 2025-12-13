@@ -14,10 +14,16 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Servir /users/** depuis src/main/resources/static/users/ (développement) et classpath (production)
         Path staticUsersDir = Paths.get("src/main/resources/static/users").toAbsolutePath().normalize();
-        String fileLocation = "file:" + staticUsersDir.toString() + "/";
+        Path staticResourceDir = Paths.get("src/main/resources/static/articles").toAbsolutePath().normalize();
+        String fileLocationUser = "file:" + staticUsersDir.toString() + "/";
+        String  fileLocationResource = "file:" + staticResourceDir.toString() + "/";
 
         registry.addResourceHandler("/users/**")
-                .addResourceLocations(fileLocation, "classpath:/static/users/")
+                .addResourceLocations(fileLocationUser, "classpath:/static/users/")
+                .setCachePeriod(3600);
+
+        registry.addResourceHandler("/articles/**")
+                .addResourceLocations(fileLocationResource,  "classpath:/static/articles/")
                 .setCachePeriod(3600);
     }
 }

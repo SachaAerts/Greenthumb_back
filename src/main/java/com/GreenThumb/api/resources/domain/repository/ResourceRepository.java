@@ -11,6 +11,8 @@ public interface ResourceRepository {
     List<Resource> getAllResource();
     Optional<Resource> getResourceBySlug(String slug);
 
+    Resource getResource(String slug);
+
     boolean existsBySlug(String slug);
 
     Long findIdBySlug(String slug) throws NoFoundException;
@@ -20,4 +22,8 @@ public interface ResourceRepository {
     void decrementLikeCount(Long resourceId);
 
     int getLikeById(Long resourceId);
+
+    void save(Resource resource);
+
+    void deleteBySlug(String slug);
 }
