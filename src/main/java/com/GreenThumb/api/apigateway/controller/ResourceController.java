@@ -7,6 +7,7 @@ import com.GreenThumb.api.resources.application.dto.LikedDto;
 import com.GreenThumb.api.resources.application.dto.ResourceDto;
 import com.GreenThumb.api.resources.application.dto.ResourceRequest;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
+import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +82,16 @@ public class ResourceController {
         LikedDto like = resourceService.addLike(token, slug);
 
         return ResponseEntity.ok(like);
+    }
+
+    @PatchMapping("/{slug}")
+    public ResponseEntity<?> editResource(
+            @PathVariable String slug,
+            @RequestBody ResourceRequest request
+    ) {
+        resourceService.editResource(slug, request);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{slug}")

@@ -9,9 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
-import java.util.UUID;@Slf4j
+import java.util.UUID;
 
 
+@Slf4j
 @Service
 public class ResourceStorageService {
     private static final String DEFAULT_IMAGE = "articles/default.png";
@@ -43,8 +44,29 @@ public class ResourceStorageService {
         return RESOURCE_FOLDER + filename;
     }
 
+    public String replaceUserImage(String oldImagePath, String newImage) {
+        if (newImage == null || newImage.isEmpty()) {
+            deleteImage(oldImagePath);
+            return DEFAULT_IMAGE;
+        }
+
+        if (newImage.equals(oldImagePath)) {
+            return newImage;
+        }
+
+        byte[] imageBytes = decodeBase64Image(newImage);
+        String extension = extractImageExtension(newImage);
+        String filename = generateFilename(extension);
+
+        saveImageToFile(imageBytes, filename);
+
+        deleteImage(oldImagePath);
+
+        return RESOURCE_FOLDER + filename;
+    }
+
     public void deleteImage(String path) {
-        if (path == null) {
+        if (path == null || path.equals(DEFAULT_IMAGE)) {
             return;
         }
 

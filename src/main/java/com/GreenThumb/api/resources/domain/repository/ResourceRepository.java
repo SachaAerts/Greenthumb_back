@@ -1,5 +1,6 @@
 package com.GreenThumb.api.resources.domain.repository;
 
+import com.GreenThumb.api.resources.application.dto.ResourceRequest;
 import com.GreenThumb.api.resources.domain.entity.Resource;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 
@@ -26,4 +27,6 @@ public interface ResourceRepository {
     void save(Resource resource);
 
     void deleteBySlug(String slug);
+
+    void editResource(String oldSlug, ResourceRequest request);
 }

@@ -6,6 +6,8 @@ import com.GreenThumb.api.resources.domain.entity.Resource;
 import com.GreenThumb.api.resources.domain.repository.ResourceRepository;
 import com.GreenThumb.api.resources.domain.service.ResourceStorageService;
 import com.GreenThumb.api.resources.domain.utils.SlugGenerator;
+import com.GreenThumb.api.resources.infrastructure.entity.ResourceEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -55,6 +57,10 @@ public class ResourceService {
         storageService.deleteImage(resource.urlPicture());
 
         resourceRepository.deleteBySlug(slug);
+    }
+
+    public void editResource(String slug, ResourceRequest request) {
+        resourceRepository.editResource(slug, request);
     }
 
     private Resource toDomain(String username, ResourceRequest request) {

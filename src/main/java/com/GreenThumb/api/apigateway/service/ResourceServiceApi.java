@@ -61,6 +61,10 @@ public class ResourceServiceApi {
         resourceService.addResource(username, resourceRequest);
     }
 
+    public void editResource(String slug, ResourceRequest request) {
+        resourceService.editResource(slug, request);
+    }
+
     public void deleteResource(String slug) {
         resourceService.deleteResource(slug);
     }
