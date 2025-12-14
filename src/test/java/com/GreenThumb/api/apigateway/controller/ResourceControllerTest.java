@@ -39,6 +39,9 @@ class ResourceControllerTest {
     @MockitoBean
     private ResourceServiceApi resourceService;
 
+    @MockitoBean
+    private com.GreenThumb.api.apigateway.service.TokenExtractor tokenExtractor;
+
     @Test
     @DisplayName("GET /api/resources/three-resources - Doit retourner trois ressources")
     void getThreeResource_shouldReturnThreeResources() throws Exception {

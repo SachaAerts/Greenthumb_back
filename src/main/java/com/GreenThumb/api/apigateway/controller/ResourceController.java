@@ -85,6 +85,7 @@ public class ResourceController {
     }
 
     @PatchMapping("/{slug}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> editResource(
             @PathVariable String slug,
             @RequestBody ResourceRequest request
@@ -95,6 +96,7 @@ public class ResourceController {
     }
 
     @DeleteMapping("/{slug}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteResource(@PathVariable String slug) {
         resourceService.deleteResource(slug);
 

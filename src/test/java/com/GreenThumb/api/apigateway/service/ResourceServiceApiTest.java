@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,27 +34,36 @@ class ResourceServiceApiTest {
     @BeforeEach
     void setUp() {
         testResource1 = new com.GreenThumb.api.resources.domain.entity.Resource(
+                "resource-1",
                 "Resource 1",
+                "Summary 1",
                 1,
                 "https://example.com/resource1",
                 "Text 1",
-                new java.util.Date()
+                LocalDate.now(),
+                "testuser"
         );
 
         testResource2 = new com.GreenThumb.api.resources.domain.entity.Resource(
+                "resource-2",
                 "Resource 2",
+                "Summary 2",
                 2,
                 "https://example.com/resource2",
                 "Text 2",
-                new java.util.Date()
+                LocalDate.now(),
+                "testuser"
         );
 
         testResource3 = new com.GreenThumb.api.resources.domain.entity.Resource(
+                "resource-3",
                 "Resource 3",
+                "Summary 3",
                 3,
                 "https://example.com/resource3",
                 "Text 3",
-                new java.util.Date()
+                LocalDate.now(),
+                "testuser"
         );
     }
 
