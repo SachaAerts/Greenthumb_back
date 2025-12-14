@@ -25,12 +25,15 @@ public class PlantService {
     private final IPlantApiService plantApiService;
     private final PlantRepository plantRepository;
     private final PlantApiRepository plantApiRepo;
+    private final RedisService redisService;
     private static final int RESULTS_PER_PAGE = 20;
 
-    public PlantService(IPlantApiService plantApiService, PlantRepository plantRepository, PlantApiRepository plantApiRepo) {
+    public PlantService(IPlantApiService plantApiService, PlantRepository plantRepository,
+                        PlantApiRepository plantApiRepo, RedisService redisService) {
         this.plantApiService = plantApiService;
         this.plantRepository = plantRepository;
         this.plantApiRepo = plantApiRepo;
+        this.redisService = redisService;
     }
 
     public Page<PlantApiDto> searchPlants(String query, int page) {
@@ -58,6 +61,7 @@ public class PlantService {
 
     public void createPlant(PlantRegister plantRegister) {
         plantRepository.createPlant(plantRegister);
+        redisService.delete(plantRegister.username());
     }
 
     public void createPlantApi(PlantApiDto plantApiDto) {

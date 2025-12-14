@@ -43,5 +43,7 @@ public record PlantRegister(
 
         Boolean indoorFriendly,
 
-        String description
+        String description,
+
+        String username
 ) {}

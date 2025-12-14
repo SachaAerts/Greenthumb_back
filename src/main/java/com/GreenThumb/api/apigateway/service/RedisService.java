@@ -1,6 +1,5 @@
 package com.GreenThumb.api.apigateway.service;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
