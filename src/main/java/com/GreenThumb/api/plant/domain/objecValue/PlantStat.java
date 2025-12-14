@@ -4,10 +4,10 @@ import java.util.Map;
 
 public record PlantStat (
     String duration,
-    Integer lightLevel,
+    String lightLevel,
     PhStat phStat,
     TemperatureStat temperatureStat,
-    Integer humidityNeed,
+    Boolean humidityNeed,
     Toxic toxic,
     Boolean indoorFriendly
 ) {

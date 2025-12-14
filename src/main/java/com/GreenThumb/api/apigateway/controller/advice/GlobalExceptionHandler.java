@@ -1,10 +1,13 @@
 package com.GreenThumb.api.apigateway.controller.advice;
 
+import com.GreenThumb.api.plant.domain.exceptions.PlantNotFoundException;
+import com.GreenThumb.api.plant.domain.exceptions.TrefleApiException;
 import com.GreenThumb.api.user.domain.exception.AccountNotVerifiedException;
 import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.exception.UserAlreadyVerifiedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -93,6 +97,36 @@ public class GlobalExceptionHandler {
         errors.put("details", detailedMessage);
         errors.put("hint", "Format attendu: {\"email\":\"exemple@domaine.com\"}");
 
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(PlantNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handlePlantNotFoundException(PlantNotFoundException exception) {
+        log.warn("Plant not found: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Plant not found");
+        errors.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+    }
+
+    @ExceptionHandler(TrefleApiException.class)
+    public ResponseEntity<Map<String, String>> handleTrefleApiException(TrefleApiException exception) {
+        log.error("Trefle API error: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "External API error");
+        errors.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errors);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException exception) {
+        log.warn("Constraint violation: {}", exception.getMessage());
+        Map<String, String> errors = exception.getConstraintViolations()
+                .stream()
+                .collect(Collectors.toMap(
+                        violation -> violation.getPropertyPath().toString(),
+                        violation -> violation.getMessage()
+                ));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
