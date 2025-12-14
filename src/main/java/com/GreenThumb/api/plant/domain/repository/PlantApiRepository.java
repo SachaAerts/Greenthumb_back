@@ -1,7 +1,7 @@
 package com.GreenThumb.api.plant.domain.repository;
 
-import com.GreenThumb.api.plant.infrastructure.entity.api.TreflePlantResponse;
+import com.GreenThumb.api.plant.application.dto.PlantApiDto;
 
 public interface PlantApiRepository {
-    TreflePlantResponse searchPlants(String query, int page);
+    void createPlantApi(PlantApiDto newPlantApi);
 }

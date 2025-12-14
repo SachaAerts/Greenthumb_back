@@ -1,17 +1,16 @@
 package com.GreenThumb.api.plant.infrastructure.mapper;
 
 import com.GreenThumb.api.plant.application.dto.PlantApiDto;
+import com.GreenThumb.api.plant.application.dto.PlantRegister;
 import com.GreenThumb.api.plant.domain.entity.Plant;
-import com.GreenThumb.api.plant.domain.entity.Task;
 import com.GreenThumb.api.plant.domain.objecValue.PhStat;
 import com.GreenThumb.api.plant.domain.objecValue.PlantStat;
 import com.GreenThumb.api.plant.domain.objecValue.TemperatureStat;
 import com.GreenThumb.api.plant.domain.objecValue.Toxic;
+import com.GreenThumb.api.plant.infrastructure.entity.PlantApiEntity;
 import com.GreenThumb.api.plant.infrastructure.entity.PlantEntity;
-import com.GreenThumb.api.plant.infrastructure.entity.TaskEntity;
 import com.GreenThumb.api.plant.infrastructure.entity.api.TreflePlantData;
-
-import java.util.List;
+import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 
 public class PlantMapper {
 
@@ -64,5 +63,38 @@ public class PlantMapper {
                     ? data.getImageUrl()
                     : null
         );
+    }
+
+    public static PlantEntity toEntity(PlantRegister plantRegister, UserEntity user, String processedImageUrl) {
+        return PlantEntity.builder()
+                .slug(plantRegister.slug())
+                .scientificName(plantRegister.scientificName())
+                .commonName(plantRegister.commonName())
+                .duration(plantRegister.lifeCycle())
+                .waterNeed(plantRegister.waterNeed())
+                .lightLevel(plantRegister.lightLevel())
+                .soilType(plantRegister.soilType())
+                .soilPhMin(plantRegister.soilPhMin())
+                .soilPhMax(plantRegister.soilPhMax())
+                .temperatureMin(plantRegister.temperatureMin())
+                .temperatureMax(plantRegister.temperatureMax())
+                .humidityNeed(plantRegister.humidityNeed())
+                .bloomMonths(plantRegister.bloomMonthStart() + "-" + plantRegister.bloomMonthEnd())
+                .petToxic(plantRegister.petToxic())
+                .humanToxic(plantRegister.humanToxic())
+                .indoorFriendly(plantRegister.indoorFriendly())
+                .imageUrl(processedImageUrl)
+                .description(plantRegister.description())
+                .user(user)
+                .build();
+    }
+
+    public static PlantApiEntity toPlantApiEntity(PlantApiDto plantApiDto) {
+        return PlantApiEntity.builder()
+                .slug(plantApiDto.getSlug())
+                .scientificName(plantApiDto.getScientificName())
+                .commonName(plantApiDto.getCommonName())
+                .imageUrl(plantApiDto.getImageUrl())
+                .build();
     }
 }

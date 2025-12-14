@@ -1,5 +1,6 @@
 package com.GreenThumb.api.plant.domain.repository;
 
+import com.GreenThumb.api.plant.application.dto.PlantRegister;
 import com.GreenThumb.api.plant.domain.entity.Plant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,4 +13,6 @@ public interface PlantRepository {
     Page<Plant> findAllByUser_username(String username, Pageable pageable);
 
     Long findIdBySlug(String slug);
+
+    void createPlant(PlantRegister plant);
 }

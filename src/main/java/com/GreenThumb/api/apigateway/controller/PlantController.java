@@ -3,15 +3,13 @@ package com.GreenThumb.api.apigateway.controller;
 import com.GreenThumb.api.apigateway.dto.PlantSearchRequest;
 import com.GreenThumb.api.apigateway.service.PlantService;
 import com.GreenThumb.api.plant.application.dto.PlantApiDto;
+import com.GreenThumb.api.plant.application.dto.PlantRegister;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Validated
@@ -33,5 +31,17 @@ public class PlantController {
 
         Page<PlantApiDto> response = plantService.searchPlants(request.getTrimmedQuery(), request.page());
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createPlant(@Valid @RequestBody PlantRegister request) {
+        plantService.createPlant(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/api")
+    public ResponseEntity<?> createPlantApi(@Valid @RequestBody PlantApiDto request) {
+        plantService.createPlantApi(request);
+        return ResponseEntity.ok().build();
     }
 }

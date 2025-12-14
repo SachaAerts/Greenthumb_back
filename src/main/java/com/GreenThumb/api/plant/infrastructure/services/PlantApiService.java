@@ -1,7 +1,7 @@
 package com.GreenThumb.api.plant.infrastructure.services;
 
 import com.GreenThumb.api.plant.domain.exceptions.TrefleApiException;
-import com.GreenThumb.api.plant.domain.repository.PlantApiRepository;
+import com.GreenThumb.api.plant.domain.repository.IPlantApiService;
 import com.GreenThumb.api.plant.infrastructure.config.TrefleApiProperties;
 import com.GreenThumb.api.plant.infrastructure.entity.api.TreflePlantResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.time.Duration;
 
 @Slf4j
 @Service
-public class PlantApiService implements PlantApiRepository {
+public class PlantApiService implements IPlantApiService {
     private final WebClient webClient;
     private final TrefleApiProperties properties;
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);

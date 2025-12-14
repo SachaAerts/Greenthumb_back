@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-14-modify-plant-columns
+      author: Sacha Aerts
+      changes:
+        - modifyDataType:
+            tableName: plants
+            columnName: humidity_need
+            newDataType: BOOLEAN
+
+        - modifyDataType:
+            tableName: plants
+            columnName: light
+            newDataType: VARCHAR(100)

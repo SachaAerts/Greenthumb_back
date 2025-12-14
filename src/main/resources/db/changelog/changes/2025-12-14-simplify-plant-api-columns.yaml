@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-14-simplify-plant-api-columns
+      author: Sacha Aerts
+      changes:
+        - dropColumn:
+            tableName: plants_api
+            columnName: life_cycle
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: water_need
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: soil_type
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: soil_ph_min
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: soil_ph_max
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: temperature_min
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: temperature_max
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: bloom_months
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: pet_toxic
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: human_toxic
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: indoor_friendly
+
+        - dropColumn:
+            tableName: plants_api
+            columnName: description
