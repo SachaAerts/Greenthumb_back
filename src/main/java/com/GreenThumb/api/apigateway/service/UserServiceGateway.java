@@ -39,7 +39,8 @@ public class UserServiceGateway {
     }
 
     public Page<PlantDto> getAllPlantsByUsername(String username, int page, int size) {
-        return getPlantsPageInDBAndSaveInCache(username, page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        return plantModule.getAllPlantsByUsername(username, pageable);
     }
 
     public UserDto getMe(String token) throws JsonProcessingException {
@@ -68,12 +69,6 @@ public class UserServiceGateway {
         String userJson = redisService.get(username);
 
         return objectMapper.readValue(userJson, UserDto.class);
-    }
-
-    private Page<PlantDto> getPlantsPageInDBAndSaveInCache(String username, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-
-        return plantModule.getAllPlantsByUsername(username, pageable);
     }
 
     public void editUser(UserEdit user, String oldUsername) throws JsonProcessingException {
