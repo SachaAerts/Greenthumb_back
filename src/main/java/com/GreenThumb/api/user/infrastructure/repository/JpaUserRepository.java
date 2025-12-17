@@ -42,89 +42,6 @@ public class JpaUserRepository implements UserRepository {
         this.avatarStorageService = avatarStorageService;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public PageResponse<AdminUserDto> searchUsers(UserSearchFilters filters, int page, int size) {
-        int offset = page * size;
-
-        StringBuilder baseQuery = new StringBuilder();
-        StringBuilder countQuery = new StringBuilder();
-        List<Object> params = new ArrayList<>();
-        int paramIndex = 1;
-
-        baseQuery.append("SELECT u.* FROM users u ");
-        baseQuery.append("LEFT JOIN roles r ON u.id_role = r.id_role ");
-        countQuery.append("SELECT COUNT(*) FROM users u ");
-        countQuery.append("LEFT JOIN roles r ON u.id_role = r.id_role ");
-
-        StringBuilder whereClause = new StringBuilder();
-        List<String> conditions = new ArrayList<>();
-
-        if (filters.hasQuery()) {
-            String sanitizedQuery = sanitizeSearchQuery(filters.query());
-            conditions.add("to_tsvector('french', coalesce(u.username, '') || ' ' || coalesce(u.mail, '') || ' ' || coalesce(u.firstname, '') || ' ' || coalesce(u.lastname, '')) @@ plainto_tsquery('french', ?" + paramIndex + ")");
-            params.add(sanitizedQuery);
-            paramIndex++;
-        }
-
-        if (filters.isActiveOnly()) {
-            conditions.add("u.deleted_at IS NULL");
-        } else if (filters.isDeletedOnly()) {
-            conditions.add("u.deleted_at IS NOT NULL");
-        }
-
-        if (filters.hasEnabledFilter()) {
-            conditions.add("u.enabled = ?" + paramIndex);
-            params.add(filters.enabled());
-            paramIndex++;
-        }
-
-        if (filters.hasRoleFilter()) {
-            conditions.add("UPPER(r.label) = UPPER(?" + paramIndex + ")");
-            params.add(filters.role());
-            paramIndex++;
-        }
-
-        if (!conditions.isEmpty()) {
-            whereClause.append("WHERE ").append(String.join(" AND ", conditions)).append(" ");
-        }
-
-        baseQuery.append(whereClause);
-        countQuery.append(whereClause);
-
-        if (filters.hasQuery()) {
-            String sanitizedQuery = sanitizeSearchQuery(filters.query());
-            baseQuery.append("ORDER BY ts_rank(to_tsvector('french', coalesce(u.username, '') || ' ' || coalesce(u.mail, '') || ' ' || coalesce(u.firstname, '') || ' ' || coalesce(u.lastname, '')), plainto_tsquery('french', ?").append(paramIndex).append(")) DESC ");
-            params.add(sanitizedQuery);
-            paramIndex++;
-        } else {
-            baseQuery.append("ORDER BY u.id_user DESC ");
-        }
-
-        baseQuery.append("LIMIT ").append(size).append(" OFFSET ").append(offset);
-
-        Query nativeQuery = entityManager.createNativeQuery(baseQuery.toString(), UserEntity.class);
-        Query nativeCountQuery = entityManager.createNativeQuery(countQuery.toString());
-
-        int mainParamCount = filters.hasQuery() ? params.size() : params.size();
-        for (int i = 0; i < params.size(); i++) {
-            nativeQuery.setParameter(i + 1, params.get(i));
-            // Count query has fewer params (no ORDER BY param)
-            if (i < params.size() - (filters.hasQuery() ? 1 : 0)) {
-                nativeCountQuery.setParameter(i + 1, params.get(i));
-            }
-        }
-
-        List<UserEntity> users = nativeQuery.getResultList();
-        long totalElements = ((Number) nativeCountQuery.getSingleResult()).longValue();
-
-        List<AdminUserDto> content = users.stream()
-                .map(AdminUserDto::fromEntity)
-                .toList();
-
-        return PageResponse.of(content, totalElements, page, size);
-    }
-
     private String sanitizeSearchQuery(String query) {
         if (query == null) {
             return "";
@@ -392,5 +309,85 @@ public class JpaUserRepository implements UserRepository {
     public boolean isAdmin(String username) {
         String role = jpaRepo.findRoleByUsername(username);
         return role != null && role.equalsIgnoreCase("ADMIN");
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public PageResponse<AdminUserDto> searchUsers(UserSearchFilters filters, int page, int size) {
+        int offset = page * size;
+
+        StringBuilder baseQuery = new StringBuilder();
+        StringBuilder countQuery = new StringBuilder();
+        List<Object> params = new ArrayList<>();
+        int paramIndex = 1;
+
+        baseQuery.append("SELECT u.* FROM users u ");
+        baseQuery.append("LEFT JOIN roles r ON u.id_role = r.id_role ");
+        countQuery.append("SELECT COUNT(*) FROM users u ");
+        countQuery.append("LEFT JOIN roles r ON u.id_role = r.id_role ");
+
+        StringBuilder whereClause = new StringBuilder();
+        List<String> conditions = new ArrayList<>();
+
+        if (filters.hasQuery()) {
+            String sanitizedQuery = sanitizeSearchQuery(filters.query());
+            conditions.add("to_tsvector('french', coalesce(u.username, '') || ' ' || coalesce(u.mail, '') || ' ' || coalesce(u.firstname, '') || ' ' || coalesce(u.lastname, '')) @@ plainto_tsquery('french', ?" + paramIndex + ")");
+            params.add(sanitizedQuery);
+            paramIndex++;
+        }
+
+        if (filters.isActiveOnly()) {
+            conditions.add("u.deleted_at IS NULL");
+        } else if (filters.isDeletedOnly()) {
+            conditions.add("u.deleted_at IS NOT NULL");
+        }
+
+        if (filters.hasEnabledFilter()) {
+            conditions.add("u.enabled = ?" + paramIndex);
+            params.add(filters.enabled());
+            paramIndex++;
+        }
+
+        if (filters.hasRoleFilter()) {
+            conditions.add("UPPER(r.label) = UPPER(?" + paramIndex + ")");
+            params.add(filters.role());
+            paramIndex++;
+        }
+
+        if (!conditions.isEmpty()) {
+            whereClause.append("WHERE ").append(String.join(" AND ", conditions)).append(" ");
+        }
+
+        baseQuery.append(whereClause);
+        countQuery.append(whereClause);
+
+        if (filters.hasQuery()) {
+            String sanitizedQuery = sanitizeSearchQuery(filters.query());
+            baseQuery.append("ORDER BY ts_rank(to_tsvector('french', coalesce(u.username, '') || ' ' || coalesce(u.mail, '') || ' ' || coalesce(u.firstname, '') || ' ' || coalesce(u.lastname, '')), plainto_tsquery('french', ?").append(paramIndex).append(")) DESC ");
+            params.add(sanitizedQuery);
+        } else {
+            baseQuery.append("ORDER BY u.id_user DESC ");
+        }
+
+        baseQuery.append("LIMIT ").append(size).append(" OFFSET ").append(offset);
+
+        Query nativeQuery = entityManager.createNativeQuery(baseQuery.toString(), UserEntity.class);
+        Query nativeCountQuery = entityManager.createNativeQuery(countQuery.toString());
+
+        for (int i = 0; i < params.size(); i++) {
+            nativeQuery.setParameter(i + 1, params.get(i));
+            if (i < params.size() - (filters.hasQuery() ? 1 : 0)) {
+                nativeCountQuery.setParameter(i + 1, params.get(i));
+            }
+        }
+
+        List<UserEntity> users = nativeQuery.getResultList();
+        long totalElements = ((Number) nativeCountQuery.getSingleResult()).longValue();
+
+        List<AdminUserDto> content = users.stream()
+                .map(AdminUserDto::fromEntity)
+                .toList();
+
+        return PageResponse.of(content, totalElements, page, size);
     }
 }
