@@ -14,8 +14,11 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private final EmailResetCodeService emailResetCodeService;
+
+    public UserService(UserRepository userRepository,  EmailResetCodeService emailResetCodeService) {
         this.userRepository = userRepository;
+        this.emailResetCodeService = emailResetCodeService;
     }
 
     public long countUsers() {
@@ -58,12 +61,24 @@ public class UserService {
         userRepository.editUser(user, oldUsername);
     }
 
-    public void editPassword(Passwords passwords, String oldPassword) throws JsonProcessingException {
-        userRepository.editPassword(passwords, oldPassword);
+    public void editPassword(Passwords passwords, String oldUsername) throws JsonProcessingException {
+        userRepository.editPassword(passwords, oldUsername);
+    }
+
+    public void resetPassword(Passwords passwords, String email) {
+        userRepository.editPasswordByMail(passwords, email);
     }
 
     public long getIdByUsername(String username) throws NoFoundException {
         return  userRepository.getIdByUsername(username);
+    }
+
+    public boolean existeUser(String email) throws NoFoundException {
+        return userRepository.existUser(email);
+    }
+
+    public void sendEmailResetCode(String email) {
+        emailResetCodeService.sendResetCodeMail(email);
     }
 
 }

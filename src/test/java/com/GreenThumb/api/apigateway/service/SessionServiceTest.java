@@ -199,8 +199,8 @@ class SessionServiceTest {
     }
 
     @Test
-    @DisplayName("verifyEmailWithCode - Doit vérifier l'email et activer l'utilisateur")
-    void verifyEmailWithCode_shouldVerifyEmailAndEnableUser() {
+    @DisplayName("verifyEmailWithCode - Doit vérifier l'email avec le code")
+    void verifyEmailWithCode_shouldVerifyEmail() {
         // Given
         String code = "123456";
         String email = "test@example.com";
@@ -221,8 +221,8 @@ class SessionServiceTest {
     @DisplayName("verifyEmailWithCode - Doit rejeter un code invalide")
     void verifyEmailWithCode_shouldRejectInvalidCode() {
         // Given
-        String code = "wrong-code";
         String email = "test@example.com";
+        String code = "000000";
 
         when(emailVerificationService.verifyAndConsumeCode(email, code)).thenReturn(Optional.empty());
 
@@ -239,8 +239,8 @@ class SessionServiceTest {
     @DisplayName("verifyEmailWithCode - Doit rejeter si l'utilisateur est déjà vérifié")
     void verifyEmailWithCode_shouldRejectIfUserAlreadyVerified() {
         // Given
-        String code = "123456";
         String email = "test@example.com";
+        String code = "123456";
 
         when(emailVerificationService.verifyAndConsumeCode(email, code)).thenReturn(Optional.of(email));
         when(userService.isUserEnabled(email)).thenReturn(true);

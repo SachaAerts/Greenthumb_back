@@ -7,6 +7,8 @@ import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.service.UserService;
+import com.GreenThumb.api.user.domain.exception.EmailAlreadyUsedException;
+import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -59,20 +62,14 @@ public class UserServiceGateway {
         return userService.getIdByUsername(username);
     }
 
-    private UserDto getUserInBdAndSaveInCache(String username) throws JsonProcessingException {
-        UserDto user = userService.getUserByUsername(username);
-        user = normalizeAvatar(user); // transforme le chemin avant cache / retour
-        String userJson = objectMapper.writeValueAsString(user);
-        redisService.saveJson(username, userJson);
-        redisService.expiry(username, 5, TimeUnit.MINUTES);
-
-        return user;
+    public void resetCode(String email){
+        userService.sendEmailResetCode(email);
     }
 
-    private UserDto getUserInCache(String username) throws JsonProcessingException {
-        String userJson = redisService.get(username);
+    public boolean checkResetCode(String code, String email) {
+        String codeRedis = redisService.get(email.toLowerCase());
 
-        return objectMapper.readValue(userJson, UserDto.class);
+        return code.equals(codeRedis);
     }
 
     private Page<PlantDto> getPlantsPageInDBAndSaveInCache(
@@ -109,6 +106,10 @@ public class UserServiceGateway {
         redisService.delete(oldUsername);
     }
 
+    public void resetPassword(Passwords passwords, String email) {
+        userService.resetPassword(passwords, email);
+    }
+
     private String buildAvatarUrl(String storedPath) {
         if (storedPath == null || storedPath.isBlank()) {
             return "/uploads/users/default.png";
@@ -134,5 +135,21 @@ public class UserServiceGateway {
                 user.role(),
                 avatarUrl
         );
+    }
+
+    private UserDto getUserInBdAndSaveInCache(String username) throws JsonProcessingException {
+        UserDto user = userService.getUserByUsername(username);
+        user = normalizeAvatar(user);
+        String userJson = objectMapper.writeValueAsString(user);
+        redisService.saveJson(username, userJson);
+        redisService.expiry(username, 5, TimeUnit.MINUTES);
+
+        return user;
+    }
+
+    private UserDto getUserInCache(String username) throws JsonProcessingException {
+        String userJson = redisService.get(username);
+
+        return objectMapper.readValue(userJson, UserDto.class);
     }
 }

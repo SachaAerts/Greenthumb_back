@@ -29,5 +29,9 @@ public interface UserRepository {
 
     void editPassword(Passwords passwords, String oldUsername);
 
+    void editPasswordByMail(Passwords passwords, String email);
+
     long getIdByUsername(String username);
+
+    boolean existUser(String email);
 }

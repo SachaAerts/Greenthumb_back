@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
+import com.GreenThumb.api.apigateway.dto.user.CodeRequest;
 import com.GreenThumb.api.apigateway.service.TokenExtractor;
 import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserEdit;
@@ -10,6 +11,7 @@ import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -162,6 +164,29 @@ public class UserController {
                     .body(Map.of("message", e.getMessage()));
         }
     }
+
+    @PostMapping("/verification")
+    public ResponseEntity<?> checkCode(@RequestBody CodeRequest request) {
+        if (request == null || request.code() == null || request.code().isBlank()
+                || request.email() == null || request.email().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Code et email obligatoires"));
+        }
+
+        return userService.checkResetCode(request.code(), request.email())
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.badRequest().body(Map.of("error", "Code incorrect"));
+    }
+
+    @PatchMapping("/{email}/resetPassword")
+    public ResponseEntity<?> changePassword(
+            @PathVariable String email,
+            @Valid @RequestBody Passwords passwords
+    ) {
+        userService.resetPassword(passwords, email);
+
+        return  ResponseEntity.ok().body(Map.of("sucess", "Mot de passe modifier avec succes"));
+    }
+
 
     /**
      * Fetches plants for a user with proper exception handling.

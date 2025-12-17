@@ -1,3 +1,4 @@
+
 databaseChangeLog:
   - changeSet:
       id: 2025-10-23-roles-seeder

@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-10-add-summarise-resource
+      author: jason engels
+      changes:
+        - addColumn:
+            tableName: ressources
+            columns:
+              - column:
+                  name: summary
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
