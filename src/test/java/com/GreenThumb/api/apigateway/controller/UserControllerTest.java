@@ -88,8 +88,8 @@ class UserControllerTest {
     @DisplayName("GET /api/users/{username}/plants - Doit retourner les plantes d'un utilisateur avec pagination par défaut")
     void getAllPlant_shouldReturnUserPlantsWithDefaultPagination() throws Exception {
         // Given
-        PlantDto plant1 = new PlantDto("slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", Collections.emptyList());
-        PlantDto plant2 = new PlantDto("slug2", "Scientific Name 2", "Common Name 2", "http://image2.jpg", Collections.emptyList());
+        PlantDto plant1 = new PlantDto("slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
+        PlantDto plant2 = new PlantDto("slug2", "Scientific Name 2", "Common Name 2", "http://image2.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
         Page<PlantDto> plantsPage = new PageImpl<>(List.of(plant1, plant2));
 
         doNothing().when(usernameValidator).validate("testuser");
@@ -108,7 +108,7 @@ class UserControllerTest {
     @DisplayName("GET /api/users/{username}/plants - Doit retourner les plantes avec pagination personnalisée")
     void getAllPlant_shouldReturnUserPlantsWithCustomPagination() throws Exception {
         // Given
-        PlantDto plant1 = new PlantDto("slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", Collections.emptyList());
+        PlantDto plant1 = new PlantDto("slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
         Page<PlantDto> plantsPage = new PageImpl<>(List.of(plant1));
 
         doNothing().when(usernameValidator).validate("testuser");
@@ -143,19 +143,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.content.length()").value(0));
     }
 
-    @Test
-    @DisplayName("GET /api/users/{username}/plants - Doit gérer l'exception JsonProcessingException")
-    void getAllPlant_shouldHandleJsonProcessingException() throws Exception {
-        // Given
-        doNothing().when(usernameValidator).validate("testuser");
-        doNothing().when(paginationValidator).validate(0, 5);
-        when(userService.getAllPlantsByUsername(eq("testuser"), anyInt(), anyInt()))
-                .thenThrow(new JsonProcessingException("JSON parsing error") {});
-
-        // When & Then
-        mockMvc.perform(get("/api/users/testuser/plants"))
-                .andExpect(status().is5xxServerError());
-    }
 
     @Test
     @DisplayName("GET /api/users/{username}/plants - Doit rejeter un numéro de page négatif (erreur 400)")

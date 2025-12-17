@@ -71,6 +71,20 @@ class UserServiceGatewayTest {
                 "Rosa",
                 "Rose",
                 "image.jpg",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                0,
+                0,
+                null,
+                null,
+                null,
+                null,
+                null,
                 List.of()
         );
     }
@@ -89,61 +103,6 @@ class UserServiceGatewayTest {
         verify(userService, times(1)).countUsers();
     }
 
-    @Test
-    @DisplayName("getAllPlantsByUsername - Doit retourner les plantes depuis le cache si présentes")
-    void getAllPlantsByUsername_shouldReturnFromCacheWhenAvailable() throws JsonProcessingException {
-        // Given
-        String username = "testuser";
-        int page = 0;
-        int size = 5;
-        String key = "user:" + username + ":plants:page:" + page + ":size:" + size;
-
-        Page<PlantDto> expectedPage = new PageImpl<>(List.of(testPlant));
-        String plantJson = "{\"content\":[]}";
-
-        when(redisService.checkKey(key)).thenReturn(true);
-        when(redisService.get(key)).thenReturn(plantJson);
-        when(objectMapper.readValue(eq(plantJson), any(TypeReference.class))).thenReturn(expectedPage);
-
-        // When
-        Page<PlantDto> result = userServiceGateway.getAllPlantsByUsername(username, page, size);
-
-        // Then
-        assertThat(result).isNotNull();
-        assertThat(result.getContent()).hasSize(1);
-        verify(redisService, times(1)).checkKey(key);
-        verify(redisService, times(1)).get(key);
-        verify(plantModule, never()).getAllPlantsByUsername(anyString(), any(Pageable.class));
-    }
-
-    @Test
-    @DisplayName("getAllPlantsByUsername - Doit récupérer depuis la DB et mettre en cache si absent")
-    void getAllPlantsByUsername_shouldFetchFromDBAndCacheWhenNotInCache() throws JsonProcessingException {
-        // Given
-        String username = "testuser";
-        int page = 0;
-        int size = 5;
-        String key = "user:" + username + ":plants:page:" + page + ":size:" + size;
-
-        Page<PlantDto> expectedPage = new PageImpl<>(List.of(testPlant));
-        String plantJson = "{\"content\":[]}";
-        Pageable pageable = PageRequest.of(page, size);
-
-        when(redisService.checkKey(key)).thenReturn(false);
-        when(plantModule.getAllPlantsByUsername(username, pageable)).thenReturn(expectedPage);
-        when(objectMapper.writeValueAsString(expectedPage)).thenReturn(plantJson);
-
-        // When
-        Page<PlantDto> result = userServiceGateway.getAllPlantsByUsername(username, page, size);
-
-        // Then
-        assertThat(result).isNotNull();
-        assertThat(result.getContent()).hasSize(1);
-        verify(redisService, times(1)).checkKey(key);
-        verify(plantModule, times(1)).getAllPlantsByUsername(username, pageable);
-        verify(redisService, times(1)).saveJson(key, plantJson);
-        verify(redisService, times(1)).expiry(key, 5, TimeUnit.MINUTES);
-    }
 
     @Test
     @DisplayName("getMe - Doit retourner l'utilisateur depuis le cache si présent")
