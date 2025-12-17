@@ -1,0 +1,96 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-17-seed-resource-categories
+      author: jason engels
+      context: seed
+      changes:
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Jardinage
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Plantes d'intérieur
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Plantes d'extérieur
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Potager
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Arrosage
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Engrais
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Maladies et parasites
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Bouturage
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Semis
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Taille et entretien
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Succulentes et cactus
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Plantes aromatiques
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Fleurs
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Arbres et arbustes
+        - insert:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: label
+                  value: Permaculture
