@@ -2,8 +2,8 @@ package com.GreenThumb.api.notification.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -11,12 +11,15 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class MailService {
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.primary.username}")
     private String fromEmail;
+
+    public MailService(@Qualifier("primarySender") JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     public void send(String to, String subject, String body) {
         try {
