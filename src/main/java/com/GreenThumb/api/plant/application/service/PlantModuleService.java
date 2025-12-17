@@ -69,6 +69,19 @@ public class PlantModuleService {
                     plant.scientificName(),
                     plant.commonName(),
                     plant.imageUrl(),
+                    plant.description(),
+                    plant.lifeCycle(),
+                    plant.lightLevel(),
+                    plant.soilType(),
+                    plant.soilPhMin(),
+                    plant.soilPhMax(),
+                    plant.temperatureMin(),
+                    plant.temperatureMax(),
+                    plant.humidityNeed(),
+                    plant.bloomMonth(),
+                    plant.petToxic(),
+                    plant.humanToxic(),
+                    plant.indoorFriendly(),
                     tasksDto
             );
         };
