@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ressources")
@@ -45,4 +47,16 @@ public class ResourceEntity {
     @ManyToOne
     @JoinColumn(name = "id_user")
     private UserEntity user;
+
+    @ManyToMany
+    @JoinTable(
+            name = "categorise",
+            joinColumns = @JoinColumn(name = "id_resource"),
+            indexes = {
+                    @Index(name = "idx_pca_project", columnList = "id_resource"),
+                    @Index(name = "idx_pca_category", columnList = "id_resource_categories")
+            }
+    )
+    @Builder.Default
+    private Set<CategoryEntity> categories = new HashSet<>();
 }
