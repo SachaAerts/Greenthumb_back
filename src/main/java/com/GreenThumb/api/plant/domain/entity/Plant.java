@@ -9,6 +9,7 @@ public record Plant(
     String imageUrl,
     String description,
     String lifeCycle,
+    String waterNeed,
     String lightLevel,
     String soilType,
     Double soilPhMin,

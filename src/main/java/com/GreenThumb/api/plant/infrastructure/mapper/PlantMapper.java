@@ -22,6 +22,7 @@ public class PlantMapper {
                 plantEntity.getImageUrl(),
                 plantEntity.getDescription(),
                 plantEntity.getDuration(),
+                plantEntity.getWaterNeed(),
                 plantEntity.getLightLevel(),
                 plantEntity.getSoilType(),
                 plantEntity.getSoilPhMin(),

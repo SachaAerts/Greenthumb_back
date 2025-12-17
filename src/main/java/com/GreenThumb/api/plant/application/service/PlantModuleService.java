@@ -71,6 +71,7 @@ public class PlantModuleService {
                     plant.imageUrl(),
                     plant.description(),
                     plant.lifeCycle(),
+                    plant.waterNeed(),
                     plant.lightLevel(),
                     plant.soilType(),
                     plant.soilPhMin(),
