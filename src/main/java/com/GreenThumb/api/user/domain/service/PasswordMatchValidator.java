@@ -1,5 +1,6 @@
 package com.GreenThumb.api.user.domain.service;
 
+import com.GreenThumb.api.user.application.utils.tags.PasswordMatch;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.BeanWrapper;

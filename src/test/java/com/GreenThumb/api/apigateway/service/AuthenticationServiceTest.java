@@ -55,8 +55,8 @@ class AuthenticationServiceTest {
         // Given
         doNothing().when(userService).postUserRegistration(testUserRegister);
         when(emailVerificationService.sendVerificationEmail(
-                eq(testUserRegister.email()),
-                eq(frontendUrl)
+                anyString(),
+                anyString()
         )).thenReturn("token123");
 
         // When
@@ -65,8 +65,8 @@ class AuthenticationServiceTest {
         // Then
         verify(userService, times(1)).postUserRegistration(testUserRegister);
         verify(emailVerificationService, times(1)).sendVerificationEmail(
-                testUserRegister.email(),
-                frontendUrl
+                eq(testUserRegister.email()),
+                eq(frontendUrl)
         );
     }
 
@@ -124,8 +124,8 @@ class AuthenticationServiceTest {
 
         // Then
         verify(emailVerificationService, times(1)).sendVerificationEmail(
-                testUserRegister.email(),
-                customUrl
+                eq(testUserRegister.email()),
+                eq(customUrl)
         );
     }
 }

@@ -234,7 +234,7 @@ class TokenServiceTest {
 
         // When
         String token1 = tokenService.generateAccessToken(username, claims);
-        Thread.sleep(1100); // Ensure different timestamp (JWT uses seconds, not milliseconds)
+        Thread.sleep(2000); // Ensure different timestamp (JWT uses seconds, not milliseconds)
         String token2 = tokenService.generateAccessToken(username, claims);
 
         // Then

@@ -34,6 +34,8 @@ public interface UserRepository {
 
     void editPassword(Passwords passwords, String oldUsername);
 
+    void editPasswordByMail(Passwords passwords, String email);
+
     long getIdByUsername(String username);
 
     AdminUserDto findByUsernameForAdmin(String username);
@@ -47,4 +49,6 @@ public interface UserRepository {
     void restoreUserByUsername(String username);
 
     boolean isAdmin(String username);
+
+    boolean existUser(String email);
 }

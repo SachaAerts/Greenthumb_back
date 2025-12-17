@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-10-add-slug-resource
+      author: jason engels
+      changes:
+        - addColumn:
+            tableName: ressources
+            columns:
+              - column:
+                  name: slug
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+
+        - addNotNullConstraint:
+            tableName: ressources
+            columnName: slug
+            columnDataType: varchar(255)
+
+        - addUniqueConstraint:
+            tableName: ressources
+            columnNames: slug
+            constraintName: uk_resource_slug

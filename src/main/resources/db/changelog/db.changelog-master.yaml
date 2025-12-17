@@ -10,19 +10,7 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/2025-10-22-creat-user-indexes.yaml
   - include:
-      file: db/changelog/seeds/2025-10-23-roles-seeder.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-23-categorie-seeder.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-25-users-seeder.yaml
-  - include:
       file: db/changelog/changes/2025-10-26-add-date-message.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-25-message-seeder.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-25-messages-3-seeder.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-25-resources-seeder.yaml
   - include:
       file: db/changelog/changes/2025-11-10-add-enabled-to-users.yaml
   - include:
@@ -42,8 +30,26 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/2025-12-06-add-deleted-at-to-users.yaml
   - include:
-      file: db/changelog/seeds/2025-12-09-users-2-seeder.yaml
+      file: db/changelog/changes/2025-12-09-modif-argument-like.yaml
+  - include:
+      file: db/changelog/changes/2025-12-10-add-summarise-resource.yaml
+  - include:
+      file: db/changelog/changes/2025-12-10-add-slug-resource.yaml
+  - include:
+      file: db/changelog/changes/2025-12-10-add-like-pivot-table.yaml
+  - include:
+      file: db/changelog/changes/2025-12-11-fix-length-description.yaml
   - include:
       file: db/changelog/changes/2025-12-14-modify-plant-columns.yaml
   - include:
       file: db/changelog/changes/2025-12-14-simplify-plant-api-columns.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-23-categorie-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-23-roles-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-25-users-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-12-09-users-2-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-10-25-messages-3-seeder.yaml

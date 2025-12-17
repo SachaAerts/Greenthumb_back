@@ -4,6 +4,7 @@ import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -20,11 +21,17 @@ public class ResourceEntity {
     @Column(name = "id_resource")
     private Long id;
 
+    @Column(name = "slug", unique = true, nullable = false)
+    private String slug;
+
     @Column(name = "title")
     private String title;
 
-    @Column(name = "light")
-    private String light;
+    @Column(name = "like_count")
+    private int like;
+
+    @Column(name = "summary")
+    private String summary;
 
     @Column(name = "picture")
     private String pictureUrl;
@@ -33,7 +40,7 @@ public class ResourceEntity {
     private String description;
 
     @Column(name = "creation_date")
-    private Date creationDate;
+    private LocalDate creationDate;
 
     @ManyToOne
     @JoinColumn(name = "id_user")
