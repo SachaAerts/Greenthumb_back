@@ -34,7 +34,7 @@ public class PlantEntity {
     private String waterNeed;
 
     @Column(name = "light")
-    private int lightLevel;
+    private String lightLevel;
 
     @Column(name = "soil_type", length = 100)
     private String soilType;
@@ -52,7 +52,7 @@ public class PlantEntity {
     private Integer temperatureMax;
 
     @Column(name = "humidity_need", length = 100)
-    private Integer humidityNeed;
+    private Boolean humidityNeed;
 
     @Column(name = "bloom_months", length = 100)
     private String bloomMonths;
