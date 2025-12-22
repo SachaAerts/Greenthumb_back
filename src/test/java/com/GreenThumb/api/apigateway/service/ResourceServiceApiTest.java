@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -41,7 +42,8 @@ class ResourceServiceApiTest {
                 "https://example.com/resource1",
                 "Text 1",
                 LocalDate.now(),
-                "testuser"
+                "testuser",
+                Set.of()
         );
 
         testResource2 = new com.GreenThumb.api.resources.domain.entity.Resource(
@@ -52,7 +54,8 @@ class ResourceServiceApiTest {
                 "https://example.com/resource2",
                 "Text 2",
                 LocalDate.now(),
-                "testuser"
+                "testuser",
+                Set.of()
         );
 
         testResource3 = new com.GreenThumb.api.resources.domain.entity.Resource(
@@ -63,7 +66,8 @@ class ResourceServiceApiTest {
                 "https://example.com/resource3",
                 "Text 3",
                 LocalDate.now(),
-                "testuser"
+                "testuser",
+                Set.of()
         );
     }
 
