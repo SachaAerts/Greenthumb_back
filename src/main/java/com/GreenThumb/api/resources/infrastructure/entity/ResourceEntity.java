@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,11 +51,12 @@ public class ResourceEntity {
     @JoinTable(
             name = "categorise",
             joinColumns = @JoinColumn(name = "id_resource"),
+            inverseJoinColumns = @JoinColumn(name = "id_resource_categories"),
             indexes = {
                     @Index(name = "idx_pca_project", columnList = "id_resource"),
                     @Index(name = "idx_pca_category", columnList = "id_resource_categories")
             }
     )
     @Builder.Default
-    private Set<CategoryEntity> categories = new HashSet<>();
+    private Set<ResourceCategoryEntity> categories = new HashSet<>();
 }

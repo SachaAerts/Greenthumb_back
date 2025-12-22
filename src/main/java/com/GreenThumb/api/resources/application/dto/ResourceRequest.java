@@ -1,7 +1,11 @@
 package com.GreenThumb.api.resources.application.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public record ResourceRequest(
         @NotBlank(message = "Le titre est obligatoire")
@@ -15,6 +19,9 @@ public record ResourceRequest(
         @NotBlank(message = "Le contenu est obligatoire")
         String content,
 
-        String picture
+        String picture,
+
+        @Valid
+        List<String> categories
 ) {
 }

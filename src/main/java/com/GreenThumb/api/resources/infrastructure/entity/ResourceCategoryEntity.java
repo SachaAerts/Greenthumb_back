@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryEntity {
+public class ResourceCategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

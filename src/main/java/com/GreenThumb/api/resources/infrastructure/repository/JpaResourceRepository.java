@@ -2,9 +2,11 @@ package com.GreenThumb.api.resources.infrastructure.repository;
 
 import com.GreenThumb.api.resources.application.dto.ResourceRequest;
 import com.GreenThumb.api.resources.domain.entity.Resource;
+import com.GreenThumb.api.resources.domain.repository.ResourceCategoryRepository;
 import com.GreenThumb.api.resources.domain.repository.ResourceRepository;
 import com.GreenThumb.api.resources.domain.service.ResourceStorageService;
 import com.GreenThumb.api.resources.domain.utils.SlugGenerator;
+import com.GreenThumb.api.resources.infrastructure.entity.ResourceCategoryEntity;
 import com.GreenThumb.api.resources.infrastructure.entity.ResourceEntity;
 import com.GreenThumb.api.resources.infrastructure.mapper.ResourceMapper;
 import com.GreenThumb.api.user.application.service.UserService;
@@ -15,16 +17,25 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 public class JpaResourceRepository implements ResourceRepository {
 
     private final SpringDataResourceRepository resourceRepository;
+
+    private final ResourceCategoryRepository categoryRepository;
     private final UserService userService;
 
-    public JpaResourceRepository(SpringDataResourceRepository resourceRepository, UserService userService) {
+    public JpaResourceRepository(
+            SpringDataResourceRepository resourceRepository,
+            UserService userService,
+            ResourceCategoryRepository resourceCategoryRepository
+    ) {
         this.resourceRepository = resourceRepository;
         this.userService = userService;
+        this.categoryRepository = resourceCategoryRepository;
     }
 
     @Override
@@ -86,6 +97,10 @@ public class JpaResourceRepository implements ResourceRepository {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(userId);
 
+        Set<ResourceCategoryEntity> categoryEntities = resource.categories().stream()
+                .map(categoryRepository::toEntityAndCreateNewCategory)
+                .collect(Collectors.toSet());
+
         ResourceEntity entity = ResourceEntity.builder()
                 .slug(resource.slug())
                 .title(resource.title())
@@ -95,6 +110,7 @@ public class JpaResourceRepository implements ResourceRepository {
                 .description(resource.text())
                 .creationDate(resource.creationDate())
                 .user(userEntity)
+                .categories(categoryEntities)
                 .build();
 
         resourceRepository.save(entity);
@@ -130,6 +146,16 @@ public class JpaResourceRepository implements ResourceRepository {
 
         if (request.content() != null) {
             resource.setDescription(request.content());
+        }
+
+        if (request.categories() != null && !request.categories().isEmpty()) {
+            resource.getCategories().clear();
+
+            Set<ResourceCategoryEntity> newCategories = request.categories().stream()
+                    .map(categoryRepository::toEntityAndCreateNewCategory)
+                    .collect(Collectors.toSet());
+
+            resource.getCategories().addAll(newCategories);
         }
 
         ResourceStorageService storageService = new ResourceStorageService();
