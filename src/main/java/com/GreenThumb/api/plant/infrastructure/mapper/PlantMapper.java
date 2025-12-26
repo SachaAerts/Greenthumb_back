@@ -21,6 +21,20 @@ public class PlantMapper {
                 plantEntity.getCommonName(),
                 plantEntity.getImageUrl(),
                 plantEntity.getDescription(),
+                plantEntity.getDuration(),
+                plantEntity.getWaterNeed(),
+                plantEntity.getLightLevel(),
+                plantEntity.getSoilType(),
+                plantEntity.getSoilPhMin(),
+                plantEntity.getSoilPhMax(),
+                plantEntity.getTemperatureMin(),
+                plantEntity.getTemperatureMax(),
+                plantEntity.getHumidityNeed(),
+                plantEntity.getBloomMonths(),
+                plantEntity.getPetToxic(),
+                plantEntity.getHumanToxic(),
+                plantEntity.getIndoorFriendly(),
+
                 statToDomain(plantEntity)
         );
     }
