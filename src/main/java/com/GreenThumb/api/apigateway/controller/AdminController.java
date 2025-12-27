@@ -1,7 +1,7 @@
 package com.GreenThumb.api.apigateway.controller;
 
-import com.GreenThumb.api.user.application.dto.BulkEmailRequest;
-import com.GreenThumb.api.user.application.dto.BulkEmailResponse;
+import com.GreenThumb.api.notification.dto.BulkEmailRequest;
+import com.GreenThumb.api.notification.dto.BulkEmailResponse;
 import com.GreenThumb.api.user.application.dto.PageResponse;
 import com.GreenThumb.api.user.application.dto.AdminUserDto;
 import com.GreenThumb.api.user.application.service.UserService;

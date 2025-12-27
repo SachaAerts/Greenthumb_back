@@ -1,7 +1,7 @@
 package com.GreenThumb.api.user.application.service;
 
-import com.GreenThumb.api.user.application.dto.BulkEmailRequest;
-import com.GreenThumb.api.user.application.dto.BulkEmailResponse;
+import com.GreenThumb.api.notification.dto.BulkEmailRequest;
+import com.GreenThumb.api.notification.dto.BulkEmailResponse;
 import com.GreenThumb.api.notification.dto.EmailRecipient;
 import com.GreenThumb.api.notification.service.CommunicationMailService;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
