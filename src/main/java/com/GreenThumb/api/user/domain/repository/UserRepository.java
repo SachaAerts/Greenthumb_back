@@ -1,11 +1,16 @@
 package com.GreenThumb.api.user.domain.repository;
 
+import com.GreenThumb.api.user.application.dto.PageResponse;
+import com.GreenThumb.api.user.application.dto.AdminUserDto;
 import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
+import com.GreenThumb.api.user.application.dto.UserSearchFilters;
 import com.GreenThumb.api.user.domain.entity.User;
 
 public interface UserRepository {
+
+    PageResponse<AdminUserDto> searchUsers(UserSearchFilters filters, int page, int size);
 
     String getUsername(Long id_user);
 
@@ -32,6 +37,18 @@ public interface UserRepository {
     void editPasswordByMail(Passwords passwords, String email);
 
     long getIdByUsername(String username);
+
+    AdminUserDto findByUsernameForAdmin(String username);
+
+    void setUserEnabled(String username, boolean enabled);
+
+    void softDeleteUserByUsername(String username);
+
+    void hardDeleteUserByUsername(String username);
+
+    void restoreUserByUsername(String username);
+
+    boolean isAdmin(String username);
 
     boolean existUser(String email);
 }
