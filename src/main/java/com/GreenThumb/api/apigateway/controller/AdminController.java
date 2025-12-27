@@ -205,27 +205,41 @@ public class AdminController {
         Authentication authentication
     ) {
         String adminUsername = authentication.getName();
-        log.info("Admin {} initiating bulk email. Subject: '{}', sendToAll: {}",
-            adminUsername, request.subject(), request.sendToAll());
+        log.info("Admin {} initiating bulk email. Subject: '{}', recipientType: {}",
+            adminUsername, request.subject(), request.recipientType());
 
         try {
             List<UserEntity> recipients;
-            if (request.sendToAll()) {
-                recipients = userRepository.findEligibleUsersForBulkEmail();
-                log.debug("Found {} eligible users for bulk email", recipients.size());
-            } else {
-                recipients = userRepository.findByUsernamesForBulkEmail(request.recipientUsernames());
-                log.debug("Found {} users from provided username list", recipients.size());
 
-                if (recipients.isEmpty()) {
+            switch (request.recipientType()) {
+                case ALL_USERS -> {
+                    recipients = userRepository.findEligibleUsersForBulkEmail();
+                    log.debug("Found {} eligible standard users for bulk email", recipients.size());
+                }
+                case STAFF_ONLY -> {
+                    recipients = userRepository.findStaffUsersForBulkEmail();
+                    log.debug("Found {} staff members (admins + moderators) for bulk email", recipients.size());
+                }
+                case SPECIFIC_USERS -> {
+                    if (request.recipientUsernames() == null || request.recipientUsernames().isEmpty()) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(Map.of("message", "La liste de destinataires ne peut pas être vide pour un envoi ciblé"));
+                    }
+                    recipients = userRepository.findByUsernamesForBulkEmail(request.recipientUsernames());
+                    log.debug("Found {} users from provided username list", recipients.size());
+                }
+                default -> {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(Map.of("message", "Aucun destinataire éligible trouvé"));
+                        .body(Map.of("message", "Type de destinataires invalide: " + request.recipientType()));
                 }
             }
 
             if (recipients.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("message", "Aucun utilisateur éligible pour l'envoi groupé"));
+                    .body(Map.of(
+                        "message",
+                        "Aucun utilisateur éligible trouvé pour le type: " + request.recipientType()
+                    ));
             }
 
             CommunicationMailService.BulkEmailResult result =
@@ -235,8 +249,9 @@ public class AdminController {
                     request.content()
                 );
 
-            log.info("Admin {} completed bulk email. Total: {}, Success: {}, Failed: {}",
-                adminUsername, result.totalRecipients(), result.successCount(), result.failureCount());
+            log.info("Admin {} completed bulk email to {}. Total: {}, Success: {}, Failed: {}",
+                adminUsername, request.recipientType(),
+                result.totalRecipients(), result.successCount(), result.failureCount());
 
             BulkEmailResponse response = BulkEmailResponse.of(
                 result.failureCount() == 0

@@ -48,4 +48,7 @@ public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long
 
     @Query("SELECT u FROM UserEntity u WHERE u.username IN :usernames AND u.enabled = true AND u.deletedAt IS NULL")
     List<UserEntity> findByUsernamesForBulkEmail(@Param("usernames") List<String> usernames);
+
+    @Query("SELECT u FROM UserEntity u WHERE u.enabled = true AND u.deletedAt IS NULL AND u.role.label IN ('ADMIN', 'MODERATEUR') ORDER BY u.role.label DESC, u.username ASC")
+    List<UserEntity> findStaffUsersForBulkEmail();
 }
