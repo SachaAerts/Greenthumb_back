@@ -2,6 +2,7 @@ package com.GreenThumb.api.resources.application.service;
 
 import com.GreenThumb.api.resources.application.dto.ResourceDto;
 import com.GreenThumb.api.resources.application.dto.ResourceRequest;
+import com.GreenThumb.api.resources.domain.entity.Category;
 import com.GreenThumb.api.resources.domain.entity.Resource;
 import com.GreenThumb.api.resources.domain.repository.ResourceRepository;
 import com.GreenThumb.api.resources.domain.service.ResourceStorageService;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ResourceService {
@@ -76,7 +79,10 @@ public class ResourceService {
                 pathImage,
                 request.content(),
                 date,
-                username
+                username,
+                request.categories().stream()
+                        .map(Category::new)
+                        .collect(Collectors.toSet())
         );
     }
 

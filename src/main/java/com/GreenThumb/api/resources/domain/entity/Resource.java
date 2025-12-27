@@ -1,6 +1,7 @@
 package com.GreenThumb.api.resources.domain.entity;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 public record Resource(
         String slug,
@@ -10,6 +11,7 @@ public record Resource(
         String urlPicture,
         String text,
         LocalDate creationDate,
-        String username
+        String username,
+        Set<Category> categories
         ) {
 }

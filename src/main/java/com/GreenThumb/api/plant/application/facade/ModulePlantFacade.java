@@ -1,8 +1,8 @@
 package com.GreenThumb.api.plant.application.facade;
 
+import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.service.PlantModuleService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +40,7 @@ public class ModulePlantFacade implements PlantFacade {
         return plantService.findAll();
     }
 
-    public Page<PlantDto> getAllPlantsByUsername(String username, Pageable pageable) {
+    public PageResponse<PlantDto> getAllPlantsByUsername(String username, Pageable pageable) {
         return plantService.findAllByUser_username(username, pageable);
     }
 

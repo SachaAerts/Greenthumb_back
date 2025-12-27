@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-17-add-category-resource
+      author: jason engels
+      changes:
+        - createTable:
+            tableName: resource_categories
+            columns:
+              - column:
+                  name: id_resource_categories
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: label
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+  - changeSet:
+      id: 2025-12-17-add-category-resource-pivot
+      author: jason engels
+      changes:
+        - createTable:
+            tableName: categorise
+            columns:
+              - column:
+                  name: id_resource
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: id_resource_categories
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: categorise
+            columnNames: id_resource, id_resource_categories
+            constraintName: pk_project_category_assignments
+
+  - changeSet:
+      id: 2025-12-17-add-category-resource-key
+      author: jason engels
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: categorise
+            baseColumnNames: id_resource
+            referencedTableName: ressources
+            referencedColumnNames: id_resource
+            constraintName: fk_pca_project
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: categorise
+            baseColumnNames: id_resource_categories
+            referencedTableName: resource_categories
+            referencedColumnNames: id_resource_categories
+            constraintName: fk_pca_category
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 2025-12-17-add-category-resource-index
+      author: developer
+      changes:
+        - createIndex:
+            tableName: categorise
+            indexName: idx_pca_project
+            columns:
+              - column:
+                  name: id_resource
+        - createIndex:
+            tableName: categorise
+            indexName: idx_pca_category
+            columns:
+              - column:
+                  name: id_resource_categories

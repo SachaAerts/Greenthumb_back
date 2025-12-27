@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
+import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.apigateway.dto.user.CodeRequest;
 import com.GreenThumb.api.apigateway.service.TokenExtractor;
 import com.GreenThumb.api.user.application.dto.Passwords;
@@ -14,6 +15,8 @@ import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -88,20 +91,18 @@ public class UserController {
      * @throws IllegalArgumentException if validation fails
      */
     @GetMapping("/{username}/plants")
-    public ResponseEntity<Page<PlantDto>> getAllPlants(
+    public ResponseEntity<PageResponse<PlantDto>> getAllPlants(
             @PathVariable String username,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     ) {
-        log.debug("Fetching plants for user '{}' - page: {}, size: {}", username, page, size);
-
         usernameValidator.validate(username);
         paginationValidator.validate(page, size);
 
-        Page<PlantDto> plants = fetchUserPlants(username, page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        PageResponse<PlantDto> response = userService.getAllPlantsByUsername(username, pageable);
 
-        log.debug("Found {} plants for user '{}'", plants.getTotalElements(), username);
-        return ResponseEntity.ok(plants);
+        return ResponseEntity.ok(response);
     }
 
 
@@ -185,25 +186,5 @@ public class UserController {
         userService.resetPassword(passwords, email);
 
         return  ResponseEntity.ok().body(Map.of("sucess", "Mot de passe modifier avec succes"));
-    }
-
-
-    /**
-     * Fetches plants for a user with proper exception handling.
-     * Wraps exceptions with contextual information about the user.
-     *
-     * @param username the username
-     * @param page the page number
-     * @param size the page size
-     * @return the page of plants
-     * @throws RuntimeException if fetching plants fails
-     */
-    private Page<PlantDto> fetchUserPlants(String username, int page, int size) {
-        try {
-            return userService.getAllPlantsByUsername(username, page, size);
-        } catch (Exception e) {
-            log.error("Error fetching plants for user '{}'", username, e);
-            throw new RuntimeException("Failed to fetch plants for user: " + username, e);
-        }
     }
 }

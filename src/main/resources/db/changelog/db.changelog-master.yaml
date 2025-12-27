@@ -44,6 +44,12 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/2025-12-14-simplify-plant-api-columns.yaml
   - include:
+      file: db/changelog/changes/2025-12-17-add-category-resource.yaml
+  - include:
+      file: db/changelog/changes/2025-12-26-create-task-templates-table.yaml
+  - include:
+      file: db/changelog/changes/2025-12-26-alter-tasks-table.yaml
+  - include:
       file: db/changelog/seeds/2025-10-23-categorie-seeder.yaml
   - include:
       file: db/changelog/seeds/2025-10-23-roles-seeder.yaml
@@ -53,3 +59,7 @@ databaseChangeLog:
       file: db/changelog/seeds/2025-12-09-users-2-seeder.yaml
   - include:
       file: db/changelog/seeds/2025-10-25-messages-3-seeder.yaml
+  - include:
+      file: db/changelog/seeds/2025-12-17-category-resource-seed.yaml
+  - include:
+      file: db/changelog/seeds/2025-12-26-seed-task-templates.yaml

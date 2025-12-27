@@ -1,0 +1,171 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-26-alter-tasks-table
+      author: Jason Engels
+      changes:
+
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: task_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                  defaultValue: 'ARROSAGE'
+
+
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+                  defaultValue: 'PENDING'
+
+
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: is_recurrent
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: recurrence_frequency
+                  type: INT
+                  remarks: "Fréquence en jours pour les tâches récurrentes"
+
+
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: completed_date
+                  type: DATE
+                  remarks: "Date de complétion de la tâche"
+
+
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: id_template
+                  type: BIGINT
+                  remarks: "Référence au template utilisé pour créer la tâche"
+
+
+        - addForeignKeyConstraint:
+            baseTableName: tasks
+            baseColumnNames: id_template
+            constraintName: fk_tasks_template
+            referencedTableName: task_templates
+            referencedColumnNames: id_template
+            onDelete: SET NULL
+
+
+        - addNotNullConstraint:
+            tableName: tasks
+            columnName: end_date
+            columnDataType: DATE
+
+
+        - createIndex:
+            indexName: idx_tasks_status
+            tableName: tasks
+            columns:
+              - column:
+                  name: status
+
+        - createIndex:
+            indexName: idx_tasks_end_date
+            tableName: tasks
+            columns:
+              - column:
+                  name: end_date
+
+        - createIndex:
+            indexName: idx_tasks_type
+            tableName: tasks
+            columns:
+              - column:
+                  name: task_type
+
+        - createIndex:
+            indexName: idx_tasks_plant_status
+            tableName: tasks
+            columns:
+              - column:
+                  name: id_plant
+              - column:
+                  name: status
+
+        - createIndex:
+            indexName: idx_tasks_status_end_date
+            tableName: tasks
+            columns:
+              - column:
+                  name: status
+              - column:
+                  name: end_date
+
+      rollback:
+        - dropIndex:
+            indexName: idx_tasks_status_end_date
+            tableName: tasks
+        - dropIndex:
+            indexName: idx_tasks_plant_status
+            tableName: tasks
+        - dropIndex:
+            indexName: idx_tasks_type
+            tableName: tasks
+        - dropIndex:
+            indexName: idx_tasks_end_date
+            tableName: tasks
+        - dropIndex:
+            indexName: idx_tasks_status
+            tableName: tasks
+        - dropForeignKeyConstraint:
+            baseTableName: tasks
+            constraintName: fk_tasks_template
+        - dropColumn:
+            tableName: tasks
+            columnName: id_template
+        - dropColumn:
+            tableName: tasks
+            columnName: created_at
+        - dropColumn:
+            tableName: tasks
+            columnName: completed_date
+        - dropColumn:
+            tableName: tasks
+            columnName: recurrence_frequency
+        - dropColumn:
+            tableName: tasks
+            columnName: is_recurrent
+        - dropColumn:
+            tableName: tasks
+            columnName: status
+        - dropColumn:
+            tableName: tasks
+            columnName: task_type

@@ -2,9 +2,11 @@ package com.GreenThumb.api.apigateway.service;
 
 import com.GreenThumb.api.apigateway.mapper.ResourceMapper;
 import com.GreenThumb.api.apigateway.dto.Resource;
+import com.GreenThumb.api.resources.application.dto.CategoryDto;
 import com.GreenThumb.api.resources.application.dto.LikedDto;
 import com.GreenThumb.api.resources.application.dto.ResourceDto;
 import com.GreenThumb.api.resources.application.dto.ResourceRequest;
+import com.GreenThumb.api.resources.application.service.CategoryService;
 import com.GreenThumb.api.resources.application.service.LikedService;
 import com.GreenThumb.api.resources.application.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +23,20 @@ public class ResourceServiceApi {
 
     private final LikedService likedService;
 
+    private final CategoryService categoryService;
+
     private final TokenService tokenService;
 
-    public ResourceServiceApi(ResourceService resourceService, LikedService likedService, TokenService tokenService) {
+    public ResourceServiceApi(
+            ResourceService resourceService,
+            LikedService likedService,
+            TokenService tokenService,
+            CategoryService categoryService
+    ) {
         this.resourceService = resourceService;
         this.likedService = likedService;
         this.tokenService = tokenService;
+        this.categoryService = categoryService;
     }
 
     public List<Resource> getThreeResource() {
@@ -36,9 +46,7 @@ public class ResourceServiceApi {
     }
 
     public List<ResourceDto> getAllResource() {
-        List<ResourceDto> resources =  resourceService.getAllResource();
-
-        return resources;
+        return resourceService.getAllResource();
     }
 
     public Optional<ResourceDto> getResourceBySlug(String slug) {
@@ -67,5 +75,9 @@ public class ResourceServiceApi {
 
     public void deleteResource(String slug) {
         resourceService.deleteResource(slug);
+    }
+
+    public List<CategoryDto> getAllCategory() {
+        return  categoryService.getAllCategory();
     }
 }

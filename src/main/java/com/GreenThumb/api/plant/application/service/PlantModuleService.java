@@ -1,18 +1,20 @@
 package com.GreenThumb.api.plant.application.service;
 
+import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.dto.TaskDto;
 import com.GreenThumb.api.plant.domain.entity.Plant;
-import com.GreenThumb.api.plant.domain.entity.Task;
 import com.GreenThumb.api.plant.domain.repository.PlantRepository;
 import com.GreenThumb.api.plant.domain.repository.TaskRepository;
-import org.h2.table.Plan;
+import com.GreenThumb.api.plant.infrastructure.mapper.PlantMapper;
+import com.GreenThumb.api.plant.infrastructure.mapper.TaskMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class PlantModuleService {
@@ -27,64 +29,53 @@ public class PlantModuleService {
 
     public List<PlantDto> findAll() {
         List<Plant> plantsDomain = plantRepository.findAll();
-
-        return toDto(plantsDomain);
+        return toDtoOptimized(plantsDomain);
     }
 
-    public Page<PlantDto> findAllByUser_username(String username, Pageable pageable) {
-        Page<Plant> plants = plantRepository.findAllByUser_username(username, pageable);
+    public PageResponse<PlantDto> findAllByUser_username(String username, Pageable pageable) {
+        Page<Plant> plantsPage = plantRepository.findAllByUser_username(username, pageable);
 
-        return toDto(plants);
+        if (plantsPage.isEmpty()) {
+            return PageResponse.of(plantsPage, List.of());
+        }
+
+        List<PlantDto> plantDtos = toDtoOptimized(plantsPage.getContent());
+
+        return PageResponse.of(plantsPage, plantDtos);
     }
 
     public long countTask(Long  userId) {
         return taskRepository.countTask(userId);
     }
 
-    private List<PlantDto> toDto(List<Plant> plantsDomain) {
-        return plantsDomain.stream()
-                .map(createPlantDto())
+    public long countPendingTasks(Long userId) {
+        return taskRepository.countPendingTasks(userId);
+    }
+
+    private List<PlantDto> toDtoOptimized(List<Plant> plants) {
+        if (plants.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> plantIds = plants.stream()
+                .map(plant -> plantRepository.findIdBySlug(plant.slug()))
                 .toList();
-    }
 
-    private Page<PlantDto> toDto(Page<Plant> plantsDomain) {
-        return plantsDomain.map(createPlantDto());
-    }
+        Map<Long, List<TaskDto>> tasksByPlantId = plantIds.stream()
+                .collect(Collectors.toMap(
+                        plantId -> plantId,
+                        plantId -> taskRepository.findByPlantId(plantId).stream()
+                                .map(TaskMapper::toDto)
+                                .toList()
+                ));
 
-    private Function<Plant, PlantDto> createPlantDto() {
-        return plant -> {
-            Long plantId = plantRepository.findIdBySlug(plant.slug());
 
-            List<TaskDto> tasksDto = taskRepository.findByPlantId(plantId).stream()
-                    .map(task -> new TaskDto(
-                            task.title(),
-                            task.description(),
-                            task.endDate().toString(),
-                            task.color()
-                    ))
-                    .toList();
-
-            return new PlantDto(
-                    plant.slug(),
-                    plant.scientificName(),
-                    plant.commonName(),
-                    plant.imageUrl(),
-                    plant.description(),
-                    plant.lifeCycle(),
-                    plant.waterNeed(),
-                    plant.lightLevel(),
-                    plant.soilType(),
-                    plant.soilPhMin(),
-                    plant.soilPhMax(),
-                    plant.temperatureMin(),
-                    plant.temperatureMax(),
-                    plant.humidityNeed(),
-                    plant.bloomMonth(),
-                    plant.petToxic(),
-                    plant.humanToxic(),
-                    plant.indoorFriendly(),
-                    tasksDto
-            );
-        };
+        return plants.stream()
+                .map(plant -> {
+                    Long plantId = plantRepository.findIdBySlug(plant.slug());
+                    List<TaskDto> tasksDto = tasksByPlantId.getOrDefault(plantId, List.of());
+                    return PlantMapper.toDto(plant, tasksDto);
+                })
+                .toList();
     }
 }

@@ -4,6 +4,7 @@ import com.GreenThumb.api.apigateway.service.TokenExtractor;
 import com.GreenThumb.api.apigateway.service.UserServiceGateway;
 import com.GreenThumb.api.apigateway.validation.PaginationValidator;
 import com.GreenThumb.api.apigateway.validation.UsernameValidator;
+import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
 import com.GreenThumb.api.user.application.dto.UserDto;
@@ -94,8 +95,8 @@ class UserControllerTest {
 
         doNothing().when(usernameValidator).validate("testuser");
         doNothing().when(paginationValidator).validate(0, 5);
-        when(userService.getAllPlantsByUsername(eq("testuser"), eq(0), eq(5)))
-                .thenReturn(plantsPage);
+        when(userService.getAllPlantsByUsername(eq("testuser"), any()))
+                .thenReturn(PageResponse.of(plantsPage));
 
         // When & Then
         mockMvc.perform(get("/api/users/testuser/plants"))
@@ -113,8 +114,8 @@ class UserControllerTest {
 
         doNothing().when(usernameValidator).validate("testuser");
         doNothing().when(paginationValidator).validate(1, 10);
-        when(userService.getAllPlantsByUsername(eq("testuser"), eq(1), eq(10)))
-                .thenReturn(plantsPage);
+        when(userService.getAllPlantsByUsername(eq("testuser"), any()))
+                .thenReturn(PageResponse.of(plantsPage));
 
         // When & Then
         mockMvc.perform(get("/api/users/testuser/plants")
@@ -133,8 +134,8 @@ class UserControllerTest {
 
         doNothing().when(usernameValidator).validate("testuser");
         doNothing().when(paginationValidator).validate(0, 5);
-        when(userService.getAllPlantsByUsername(eq("testuser"), anyInt(), anyInt()))
-                .thenReturn(emptyPage);
+        when(userService.getAllPlantsByUsername(eq("testuser"), any()))
+                .thenReturn(PageResponse.of(emptyPage));
 
         // When & Then
         mockMvc.perform(get("/api/users/testuser/plants"))
@@ -215,8 +216,8 @@ class UserControllerTest {
         Page<PlantDto> plantsPage = new PageImpl<>(Collections.emptyList());
         doNothing().when(usernameValidator).validate("testuser");
         doNothing().when(paginationValidator).validate(0, 100);
-        when(userService.getAllPlantsByUsername(eq("testuser"), eq(0), eq(100)))
-                .thenReturn(plantsPage);
+        when(userService.getAllPlantsByUsername(eq("testuser"), any()))
+                .thenReturn(PageResponse.of(plantsPage));
 
         // When & Then
         mockMvc.perform(get("/api/users/testuser/plants")

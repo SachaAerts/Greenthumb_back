@@ -2,6 +2,7 @@ package com.GreenThumb.api.plant.infrastructure.repository;
 
 import com.GreenThumb.api.plant.application.dto.PlantApiDto;
 import com.GreenThumb.api.plant.application.dto.PlantRegister;
+import com.GreenThumb.api.plant.application.events.PlantEventPublisher;
 import com.GreenThumb.api.plant.domain.entity.Plant;
 import com.GreenThumb.api.plant.domain.repository.PlantRepository;
 import com.GreenThumb.api.plant.domain.services.PlantImageStorageService;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JpaPlantRepository implements PlantRepository {
@@ -26,12 +28,18 @@ public class JpaPlantRepository implements PlantRepository {
     private final SpringDataUserRepository userRepository;
     private final PlantImageStorageService plantImageStorageService;
 
-    public JpaPlantRepository(SpringDataPlantRepository plantRepository,
-                              SpringDataUserRepository userRepository,
-                              PlantImageStorageService plantImageStorageService) {
+    private final PlantEventPublisher eventPublisher;
+
+    public JpaPlantRepository(
+            SpringDataPlantRepository plantRepository,
+            SpringDataUserRepository userRepository,
+            PlantImageStorageService plantImageStorageService,
+            PlantEventPublisher eventPublisher
+    ) {
         this.plantRepository = plantRepository;
         this.userRepository = userRepository;
         this.plantImageStorageService = plantImageStorageService;
+        this.eventPublisher = eventPublisher;
     }
 
     public List<Plant> findAll() {
@@ -51,7 +59,21 @@ public class JpaPlantRepository implements PlantRepository {
         UserEntity user = getUserAuthenticated();
         String processedImageUrl = plantImageStorageService.processPlantImage(newPlant.imageUrl());
         PlantEntity plantEntity = PlantMapper.toEntity(newPlant, user, processedImageUrl);
-        plantRepository.save(plantEntity);
+
+        PlantEntity savedPlant = plantRepository.save(plantEntity);
+
+        eventPublisher.publishPlantCreated(
+                savedPlant.getId(),
+                user.getId(),
+                savedPlant.getSlug(),
+                savedPlant.getScientificName(),
+                savedPlant.getCommonName(),
+                savedPlant.getWaterNeed(),
+                savedPlant.getDuration(),
+                savedPlant.getLightLevel(),
+                savedPlant.getHumidityNeed(),
+                savedPlant.getIndoorFriendly()
+        );
     }
 
     private UserEntity getUserAuthenticated() {
@@ -64,5 +86,10 @@ public class JpaPlantRepository implements PlantRepository {
 
     public Long findIdBySlug(String slug) {
         return plantRepository.findIdBySlug(slug);
+    }
+
+    @Override
+    public Optional<PlantEntity> findbyId(Long id) {
+        return plantRepository.findById(id);
     }
 }

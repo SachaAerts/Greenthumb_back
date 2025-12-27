@@ -1,7 +1,9 @@
 package com.GreenThumb.api.plant.infrastructure.mapper;
 
 import com.GreenThumb.api.plant.application.dto.PlantApiDto;
+import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.dto.PlantRegister;
+import com.GreenThumb.api.plant.application.dto.TaskDto;
 import com.GreenThumb.api.plant.domain.entity.Plant;
 import com.GreenThumb.api.plant.domain.objecValue.PhStat;
 import com.GreenThumb.api.plant.domain.objecValue.PlantStat;
@@ -11,6 +13,8 @@ import com.GreenThumb.api.plant.infrastructure.entity.PlantApiEntity;
 import com.GreenThumb.api.plant.infrastructure.entity.PlantEntity;
 import com.GreenThumb.api.plant.infrastructure.entity.api.TreflePlantData;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
+
+import java.util.List;
 
 public class PlantMapper {
 
@@ -78,6 +82,32 @@ public class PlantMapper {
                     : null
         );
     }
+
+    public static PlantDto toDto(Plant plant, List<TaskDto> tasksDto) {
+        return new PlantDto(
+                plant.slug(),
+                plant.scientificName(),
+                plant.commonName(),
+                plant.imageUrl(),
+                plant.description(),
+                plant.lifeCycle(),
+                plant.waterNeed(),
+                plant.lightLevel(),
+                plant.soilType(),
+                plant.soilPhMin(),
+                plant.soilPhMax(),
+                plant.temperatureMin(),
+                plant.temperatureMax(),
+                plant.humidityNeed(),
+                plant.bloomMonth(),
+                plant.petToxic(),
+                plant.humanToxic(),
+                plant.indoorFriendly(),
+                tasksDto
+        );
+    }
+
+
 
     public static PlantEntity toEntity(PlantRegister plantRegister, UserEntity user, String processedImageUrl) {
         return PlantEntity.builder()

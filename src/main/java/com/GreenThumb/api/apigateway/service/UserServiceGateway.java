@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.service;
 
+import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
 
@@ -41,8 +42,7 @@ public class UserServiceGateway {
         return userService.countUsers();
     }
 
-    public Page<PlantDto> getAllPlantsByUsername(String username, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public PageResponse<PlantDto> getAllPlantsByUsername(String username, Pageable pageable) {
         return plantModule.getAllPlantsByUsername(username, pageable);
     }
 
