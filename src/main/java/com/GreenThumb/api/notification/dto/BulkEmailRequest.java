@@ -1,4 +1,4 @@
-package com.GreenThumb.api.admin.dto;
+package com.GreenThumb.api.notification.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
