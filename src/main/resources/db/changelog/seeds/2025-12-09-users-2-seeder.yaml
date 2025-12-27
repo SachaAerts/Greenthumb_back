@@ -1,0 +1,410 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-10-25-users-seeder
+      author: jason
+      changes:
+        # User 2
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Marie
+              - column:
+                  name: lastname
+                  value: Dubois
+              - column:
+                  name: username
+                  value: mdubois
+              - column:
+                  name: mail
+                  value: marie.dubois@proton.me
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0475123456"
+              - column:
+                  name: biography
+                  value: "Passionnée de jardinage urbain"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 3
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Lucas
+              - column:
+                  name: lastname
+                  value: Martin
+              - column:
+                  name: username
+                  value: lmartin
+              - column:
+                  name: mail
+                  value: lucas.m@gmail.com
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0476234567"
+              - column:
+                  name: biography
+                  value: "Expert en permaculture"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 4
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Sophie
+              - column:
+                  name: lastname
+                  value: Bernard
+              - column:
+                  name: username
+                  value: sbernard
+              - column:
+                  name: mail
+                  value: sophie.b@proton.me
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0477345678"
+              - column:
+                  name: biography
+                  value: "Amoureuse des plantes grasses"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 5
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Thomas
+              - column:
+                  name: lastname
+                  value: Petit
+              - column:
+                  name: username
+                  value: tpetit
+              - column:
+                  name: mail
+                  value: thomas.petit@gmail.com
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0478456789"
+              - column:
+                  name: biography
+                  value: "Débutant en jardinage"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 6
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Emma
+              - column:
+                  name: lastname
+                  value: Robert
+              - column:
+                  name: username
+                  value: erobert
+              - column:
+                  name: mail
+                  value: emma.r@proton.me
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0479567890"
+              - column:
+                  name: biography
+                  value: "Botaniste amateur"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 7
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Antoine
+              - column:
+                  name: lastname
+                  value: Richard
+              - column:
+                  name: username
+                  value: arichard
+              - column:
+                  name: mail
+                  value: antoine.richard@gmail.com
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0471678901"
+              - column:
+                  name: biography
+                  value: "Cultivateur de tomates"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 8
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Camille
+              - column:
+                  name: lastname
+                  value: Durand
+              - column:
+                  name: username
+                  value: cdurand
+              - column:
+                  name: mail
+                  value: camille.d@proton.me
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0472789012"
+              - column:
+                  name: biography
+                  value: "Fan de plantes aromatiques"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 9
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Hugo
+              - column:
+                  name: lastname
+                  value: Moreau
+              - column:
+                  name: username
+                  value: hmoreau
+              - column:
+                  name: mail
+                  value: hugo.moreau@gmail.com
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0473890123"
+              - column:
+                  name: biography
+                  value: "Collectionneur de cactus"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 10
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Léa
+              - column:
+                  name: lastname
+                  value: Simon
+              - column:
+                  name: username
+                  value: lsimon
+              - column:
+                  name: mail
+                  value: lea.simon@proton.me
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0474901234"
+              - column:
+                  name: biography
+                  value: "Spécialiste en orchidées"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 11
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Nathan
+              - column:
+                  name: lastname
+                  value: Laurent
+              - column:
+                  name: username
+                  value: nlaurent
+              - column:
+                  name: mail
+                  value: nathan.l@gmail.com
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0475012345"
+              - column:
+                  name: biography
+                  value: "Jardinier du dimanche"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 12
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Chloé
+              - column:
+                  name: lastname
+                  value: Lefebvre
+              - column:
+                  name: username
+                  value: clefebvre
+              - column:
+                  name: mail
+                  value: chloe.lefebvre@proton.me
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0476123456"
+              - column:
+                  name: biography
+                  value: "Créatrice de jardins zen"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 13
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Maxime
+              - column:
+                  name: lastname
+                  value: Roux
+              - column:
+                  name: username
+                  value: mroux
+              - column:
+                  name: mail
+                  value: maxime.roux@gmail.com
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0477234567"
+              - column:
+                  name: biography
+                  value: "Adepte du compostage"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 14
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Clara
+              - column:
+                  name: lastname
+                  value: Garnier
+              - column:
+                  name: username
+                  value: cgarnier
+              - column:
+                  name: mail
+                  value: clara.g@proton.me
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0478345678"
+              - column:
+                  name: biography
+                  value: "Horticultrice passionnée"
+              - column:
+                  name: id_role
+                  value: "3"
+
+        # User 15
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: firstname
+                  value: Julien
+              - column:
+                  name: lastname
+                  value: Faure
+              - column:
+                  name: username
+                  value: jfaure
+              - column:
+                  name: mail
+                  value: julien.faure@gmail.com
+              - column:
+                  name: password
+                  value: $argon2i$v=19$m=16,t=2,p=1$bG9pMEpYa08wdXdqZEFEbg$31VYr3DJjPGeRIwF5ttEqA
+              - column:
+                  name: phone_number
+                  value: "0479456789"
+              - column:
+                  name: biography
+                  value: "Cultivateur bio convaincu"
+              - column:
+                  name: id_role
+                  value: "3"

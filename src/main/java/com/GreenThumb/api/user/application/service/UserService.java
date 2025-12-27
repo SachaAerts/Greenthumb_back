@@ -1,9 +1,12 @@
 package com.GreenThumb.api.user.application.service;
 
+import com.GreenThumb.api.user.application.dto.PageResponse;
+import com.GreenThumb.api.user.application.dto.AdminUserDto;
 import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
+import com.GreenThumb.api.user.application.dto.UserSearchFilters;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +26,13 @@ public class UserService {
 
     public long countUsers() {
         return userRepository.count();
+    }
+
+    public PageResponse<AdminUserDto> searchUsers(String query, String status, Boolean enabled, String role, int page, int size) {
+        int validatedPage = Math.max(0, page);
+        int validatedSize = Math.min(Math.max(1, size), 100);
+        UserSearchFilters filters = UserSearchFilters.of(query, status, enabled, role);
+        return userRepository.searchUsers(filters, validatedPage, validatedSize);
     }
 
     public String getUsername(long id_user) throws NoFoundException {
@@ -73,6 +83,29 @@ public class UserService {
         return  userRepository.getIdByUsername(username);
     }
 
+    public AdminUserDto findByUsernameForAdmin(String username) throws NoFoundException {
+        return userRepository.findByUsernameForAdmin(username);
+    }
+
+    public void setUserEnabled(String username, boolean enabled) throws NoFoundException {
+        userRepository.setUserEnabled(username, enabled);
+    }
+
+    public void softDeleteUserByUsername(String username) throws NoFoundException {
+        userRepository.softDeleteUserByUsername(username);
+    }
+
+    public void hardDeleteUserByUsername(String username) throws NoFoundException {
+        userRepository.hardDeleteUserByUsername(username);
+    }
+
+    public void restoreUserByUsername(String username) throws NoFoundException {
+        userRepository.restoreUserByUsername(username);
+    }
+
+    public boolean isAdmin(String username) {
+        return userRepository.isAdmin(username);
+    }
     public boolean existeUser(String email) throws NoFoundException {
         return userRepository.existUser(email);
     }
