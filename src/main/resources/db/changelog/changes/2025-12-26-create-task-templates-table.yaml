@@ -1,0 +1,166 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-task-templates-table
+      author: greenthumb
+      changes:
+        # ÉTAPE 1 : Créer la table d'abord
+        - createTable:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: id_template
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: task_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: title_template
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description_template
+                  type: TEXT
+
+              - column:
+                  name: color
+                  type: VARCHAR(7)
+                  defaultValue: '#3B82F6'
+
+              - column:
+                  name: water_need
+                  type: VARCHAR(50)
+
+              - column:
+                  name: life_cycle
+                  type: VARCHAR(50)
+
+              - column:
+                  name: light_level
+                  type: VARCHAR(50)
+
+              - column:
+                  name: humidity_need
+                  type: BOOLEAN
+
+              - column:
+                  name: base_frequency
+                  type: INT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_recurrent
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: spring_adjustment
+                  type: INT
+                  defaultValueNumeric: 0
+
+              - column:
+                  name: summer_adjustment
+                  type: INT
+                  defaultValueNumeric: 0
+
+              - column:
+                  name: autumn_adjustment
+                  type: INT
+                  defaultValueNumeric: 0
+
+              - column:
+                  name: winter_adjustment
+                  type: INT
+                  defaultValueNumeric: 0
+
+              - column:
+                  name: priority
+                  type: INT
+                  defaultValueNumeric: 1
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  # ÉTAPE 2 : Créer les index APRÈS la table (changeset séparé)
+  - changeSet:
+      id: 001-create-task-templates-indexes
+      author: greenthumb
+      changes:
+        - createIndex:
+            indexName: idx_task_templates_type
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+
+        - createIndex:
+            indexName: idx_task_templates_active
+            tableName: task_templates
+            columns:
+              - column:
+                  name: is_active
+
+        - createIndex:
+            indexName: idx_task_templates_conditions
+            tableName: task_templates
+            columns:
+              - column:
+                  name: water_need
+              - column:
+                  name: life_cycle
+              - column:
+                  name: light_level
+
+      rollback:
+        - dropIndex:
+            indexName: idx_task_templates_type
+            tableName: task_templates
+        - dropIndex:
+            indexName: idx_task_templates_active
+            tableName: task_templates
+        - dropIndex:
+            indexName: idx_task_templates_conditions
+            tableName: task_templates
+
+  # Rollback pour la table (à la fin)
+  - changeSet:
+      id: 001-rollback-task-templates-table
+      author: greenthumb
+      preConditions:
+        - onFail: MARK_RAN
+      changes: []
+      rollback:
+        - dropTable:
+            tableName: task_templates

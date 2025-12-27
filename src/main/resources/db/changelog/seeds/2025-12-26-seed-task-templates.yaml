@@ -1,0 +1,494 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-26-seed-task-templates
+      author: jason engels
+      context: seed
+      changes:
+        # ==============================
+        # TEMPLATES ARROSAGE
+        # ==============================
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: ARROSAGE
+              - column:
+                  name: title_template
+                  value: "Arroser {plantName}"
+              - column:
+                  name: description_template
+                  value: "Vérifier l'humidité du sol avant d'arroser. Arroser modérément pour éviter l'excès d'eau."
+              - column:
+                  name: color
+                  value: "#3B82F6"
+              - column:
+                  name: water_need
+                  value: "Faible"
+              - column:
+                  name: base_frequency
+                  valueNumeric: 12
+              - column:
+                  name: is_recurrent
+                  valueBoolean: true
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: -10
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: 20
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: 50
+              - column:
+                  name: priority
+                  valueNumeric: 1
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: ARROSAGE
+              - column:
+                  name: title_template
+                  value: "Arroser {plantName}"
+              - column:
+                  name: description_template
+                  value: "Vérifier l'humidité du sol avant d'arroser. Maintenir le sol légèrement humide."
+              - column:
+                  name: color
+                  value: "#3B82F6"
+              - column:
+                  name: water_need
+                  value: "Modéré"
+              - column:
+                  name: base_frequency
+                  valueNumeric: 6
+              - column:
+                  name: is_recurrent
+                  valueBoolean: true
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: -15
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: 15
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: 30
+              - column:
+                  name: priority
+                  valueNumeric: 1
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: ARROSAGE
+              - column:
+                  name: title_template
+                  value: "Arroser {plantName}"
+              - column:
+                  name: description_template
+                  value: "Vérifier l'humidité du sol avant d'arroser. Cette plante nécessite un arrosage fréquent."
+              - column:
+                  name: color
+                  value: "#3B82F6"
+              - column:
+                  name: water_need
+                  value: "Élevé"
+              - column:
+                  name: base_frequency
+                  valueNumeric: 3
+              - column:
+                  name: is_recurrent
+                  valueBoolean: true
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: 10
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: 20
+              - column:
+                  name: priority
+                  valueNumeric: 1
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+        # ==============================
+        # TEMPLATES FERTILISATION
+        # ==============================
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: FERTILISATION
+              - column:
+                  name: title_template
+                  value: "Fertiliser {plantName}"
+              - column:
+                  name: description_template
+                  value: "Apporter de l'engrais adapté aux plantes annuelles. Fertiliser régulièrement pendant la période de croissance."
+              - column:
+                  name: color
+                  value: "#10B981"
+              - column:
+                  name: life_cycle
+                  value: "Annuelle"
+              - column:
+                  name: base_frequency
+                  valueNumeric: 15
+              - column:
+                  name: is_recurrent
+                  valueBoolean: true
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: -30
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: -100
+              - column:
+                  name: priority
+                  valueNumeric: 2
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: FERTILISATION
+              - column:
+                  name: title_template
+                  value: "Fertiliser {plantName}"
+              - column:
+                  name: description_template
+                  value: "Apporter de l'engrais adapté aux plantes bisannuelles. Adapter selon l'année de croissance."
+              - column:
+                  name: color
+                  value: "#10B981"
+              - column:
+                  name: life_cycle
+                  value: "Biannuelle"
+              - column:
+                  name: base_frequency
+                  valueNumeric: 21
+              - column:
+                  name: is_recurrent
+                  valueBoolean: true
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: -30
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: -100
+              - column:
+                  name: priority
+                  valueNumeric: 2
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: FERTILISATION
+              - column:
+                  name: title_template
+                  value: "Fertiliser {plantName}"
+              - column:
+                  name: description_template
+                  value: "Apporter de l'engrais adapté aux plantes vivaces. Fertiliser pendant la saison de croissance."
+              - column:
+                  name: color
+                  value: "#10B981"
+              - column:
+                  name: life_cycle
+                  value: "Vivace"
+              - column:
+                  name: base_frequency
+                  valueNumeric: 28
+              - column:
+                  name: is_recurrent
+                  valueBoolean: true
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: -30
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: -100
+              - column:
+                  name: priority
+                  valueNumeric: 2
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+        # ==============================
+        # TEMPLATE VAPORISATION
+        # ==============================
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: VAPORISATION
+              - column:
+                  name: title_template
+                  value: "Vaporiser {plantName}"
+              - column:
+                  name: description_template
+                  value: "Vaporiser de l'eau sur le feuillage pour maintenir l'humidité ambiante."
+              - column:
+                  name: color
+                  value: "#06B6D4"
+              - column:
+                  name: humidity_need
+                  valueBoolean: true
+              - column:
+                  name: base_frequency
+                  valueNumeric: 3
+              - column:
+                  name: is_recurrent
+                  valueBoolean: true
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: -20
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: 10
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: 30
+              - column:
+                  name: priority
+                  valueNumeric: 3
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+        # ==============================
+        # TEMPLATE CONTROLE_LUMIERE
+        # ==============================
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: CONTROLE_LUMIERE
+              - column:
+                  name: title_template
+                  value: "Vérifier exposition lumière de {plantName}"
+              - column:
+                  name: description_template
+                  value: "S'assurer que la plante reçoit la bonne quantité de lumière selon ses besoins."
+              - column:
+                  name: color
+                  value: "#F59E0B"
+              - column:
+                  name: base_frequency
+                  valueNumeric: 30
+              - column:
+                  name: is_recurrent
+                  valueBoolean: true
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: priority
+                  valueNumeric: 4
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+        # ==============================
+        # TEMPLATE REMPOTAGE (Vivace uniquement)
+        # ==============================
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: REMPOTAGE
+              - column:
+                  name: title_template
+                  value: "Rempoter {plantName}"
+              - column:
+                  name: description_template
+                  value: "Changer le substrat et vérifier l'état des racines. Choisir un pot légèrement plus grand."
+              - column:
+                  name: color
+                  value: "#8B5CF6"
+              - column:
+                  name: life_cycle
+                  value: "Vivace"
+              - column:
+                  name: base_frequency
+                  valueNumeric: 730
+              - column:
+                  name: is_recurrent
+                  valueBoolean: false
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: priority
+                  valueNumeric: 5
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+        # ==============================
+        # TEMPLATE INSPECTION_PARASITES
+        # ==============================
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: INSPECTION_PARASITES
+              - column:
+                  name: title_template
+                  value: "Inspecter {plantName}"
+              - column:
+                  name: description_template
+                  value: "Vérifier la présence de parasites, maladies ou signes de stress sur les feuilles et tiges."
+              - column:
+                  name: color
+                  value: "#EF4444"
+              - column:
+                  name: base_frequency
+                  valueNumeric: 14
+              - column:
+                  name: is_recurrent
+                  valueBoolean: true
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: -15
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: 15
+              - column:
+                  name: priority
+                  valueNumeric: 6
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+        # ==============================
+        # TEMPLATE NETTOYAGE_FEUILLES (Indoor uniquement)
+        # ==============================
+        - insert:
+            tableName: task_templates
+            columns:
+              - column:
+                  name: task_type
+                  value: NETTOYAGE_FEUILLES
+              - column:
+                  name: title_template
+                  value: "Nettoyer les feuilles de {plantName}"
+              - column:
+                  name: description_template
+                  value: "Dépoussiérer les feuilles avec un chiffon humide pour améliorer la photosynthèse."
+              - column:
+                  name: color
+                  value: "#14B8A6"
+              - column:
+                  name: base_frequency
+                  valueNumeric: 30
+              - column:
+                  name: is_recurrent
+                  valueBoolean: true
+              - column:
+                  name: spring_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: summer_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: autumn_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: winter_adjustment
+                  valueNumeric: 0
+              - column:
+                  name: priority
+                  valueNumeric: 7
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
+      rollback:
+        - delete:
+            tableName: task_templates
