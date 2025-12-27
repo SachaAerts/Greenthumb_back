@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-27-fix-ressources-creation-date-type
+      author: jason
+      changes:
+        - modifyDataType:
+            tableName: ressources
+            columnName: creation_date
+            newDataType: DATE
+
