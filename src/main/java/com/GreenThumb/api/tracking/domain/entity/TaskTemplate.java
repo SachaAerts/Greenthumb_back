@@ -1,6 +1,6 @@
-package com.GreenThumb.api.plant.domain.entity;
+package com.GreenThumb.api.tracking.domain.entity;
 
-import com.GreenThumb.api.plant.domain.enums.TaskType;
+import com.GreenThumb.api.plant.application.enums.TaskType;
 
 public record TaskTemplate(
         String title,

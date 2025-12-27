@@ -1,4 +1,4 @@
-package com.GreenThumb.api.plant.domain.events;
+package com.GreenThumb.api.plant.application.events;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;

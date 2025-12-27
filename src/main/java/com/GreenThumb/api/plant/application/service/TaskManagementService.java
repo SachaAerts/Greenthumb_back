@@ -2,8 +2,8 @@ package com.GreenThumb.api.plant.application.service;
 
 import com.GreenThumb.api.plant.application.dto.TaskCreationRequest;
 import com.GreenThumb.api.plant.domain.entity.Task;
-import com.GreenThumb.api.plant.domain.enums.TaskStatus;
-import com.GreenThumb.api.plant.domain.enums.TaskType;
+import com.GreenThumb.api.plant.application.enums.TaskStatus;
+import com.GreenThumb.api.plant.application.enums.TaskType;
 import com.GreenThumb.api.plant.domain.repository.PlantRepository;
 import com.GreenThumb.api.plant.domain.repository.TaskRepository;
 import com.GreenThumb.api.plant.infrastructure.entity.PlantEntity;

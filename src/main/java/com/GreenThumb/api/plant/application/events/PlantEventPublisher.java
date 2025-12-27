@@ -1,9 +1,6 @@
 package com.GreenThumb.api.plant.application.events;
 
-import com.GreenThumb.api.plant.domain.enums.TaskType;
-import com.GreenThumb.api.plant.domain.events.PlantCreatedEvent;
-import com.GreenThumb.api.plant.domain.events.TaskCompletedEvent;
-import com.GreenThumb.api.plant.domain.events.TaskDueEvent;
+import com.GreenThumb.api.plant.application.enums.TaskType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;

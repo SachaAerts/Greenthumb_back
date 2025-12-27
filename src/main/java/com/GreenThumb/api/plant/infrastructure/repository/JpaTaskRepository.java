@@ -1,7 +1,7 @@
 package com.GreenThumb.api.plant.infrastructure.repository;
 
 import com.GreenThumb.api.plant.domain.entity.Task;
-import com.GreenThumb.api.plant.domain.enums.TaskStatus;
+import com.GreenThumb.api.plant.application.enums.TaskStatus;
 import com.GreenThumb.api.plant.domain.repository.TaskRepository;
 import com.GreenThumb.api.plant.infrastructure.entity.TaskEntity;
 import com.GreenThumb.api.plant.infrastructure.mapper.TaskMapper;

@@ -1,7 +1,7 @@
 package com.GreenThumb.api.plant.domain.entity;
 
-import com.GreenThumb.api.plant.domain.enums.TaskStatus;
-import com.GreenThumb.api.plant.domain.enums.TaskType;
+import com.GreenThumb.api.plant.application.enums.TaskStatus;
+import com.GreenThumb.api.plant.application.enums.TaskType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
 package com.GreenThumb.api.plant.application.dto;
 
-import com.GreenThumb.api.plant.domain.enums.TaskType;
+import com.GreenThumb.api.plant.application.enums.TaskType;
 
 import java.time.LocalDate;
 

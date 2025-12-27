@@ -1,6 +1,6 @@
 package com.GreenThumb.api.plant.infrastructure.entity;
 
-import com.GreenThumb.api.plant.domain.enums.TaskType;
+import com.GreenThumb.api.plant.application.enums.TaskType;
 import jakarta.persistence.*;
 import lombok.*;
 

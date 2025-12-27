@@ -1,6 +1,6 @@
-package com.GreenThumb.api.plant.infrastructure.mapper;
+package com.GreenThumb.api.tracking.infrastructure.mapper;
 
-import com.GreenThumb.api.plant.domain.entity.TaskTemplate;
+import com.GreenThumb.api.tracking.domain.entity.TaskTemplate;
 import com.GreenThumb.api.plant.infrastructure.entity.TaskTemplateEntity;
 
 public class TaskTemplateMapper {

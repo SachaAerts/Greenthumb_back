@@ -1,7 +1,7 @@
 package com.GreenThumb.api.tracking.domain.services;
 
-import com.GreenThumb.api.plant.domain.entity.TaskTemplate;
-import com.GreenThumb.api.plant.domain.enums.Season;
+import com.GreenThumb.api.tracking.domain.entity.TaskTemplate;
+import com.GreenThumb.api.plant.application.enums.Season;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

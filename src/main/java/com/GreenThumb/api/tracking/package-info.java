@@ -1,5 +1,5 @@
 @org.springframework.modulith.ApplicationModule(
-        allowedDependencies = {},
+        allowedDependencies = {"plant"},
         type = ApplicationModule.Type.OPEN
 )
 package com.GreenThumb.api.tracking;

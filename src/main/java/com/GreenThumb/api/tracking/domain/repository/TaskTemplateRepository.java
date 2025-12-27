@@ -1,7 +1,7 @@
-package com.GreenThumb.api.plant.domain.repository;
+package com.GreenThumb.api.tracking.domain.repository;
 
-import com.GreenThumb.api.plant.domain.entity.TaskTemplate;
-import com.GreenThumb.api.plant.domain.enums.TaskType;
+import com.GreenThumb.api.tracking.domain.entity.TaskTemplate;
+import com.GreenThumb.api.plant.application.enums.TaskType;
 
 import java.util.List;
 import java.util.Optional;

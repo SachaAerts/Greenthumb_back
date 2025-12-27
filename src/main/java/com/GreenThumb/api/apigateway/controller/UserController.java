@@ -96,6 +96,9 @@ public class UserController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     ) {
+        usernameValidator.validate(username);
+        paginationValidator.validate(page, size);
+
         Pageable pageable = PageRequest.of(page, size);
         PageResponse<PlantDto> response = userService.getAllPlantsByUsername(username, pageable);
 

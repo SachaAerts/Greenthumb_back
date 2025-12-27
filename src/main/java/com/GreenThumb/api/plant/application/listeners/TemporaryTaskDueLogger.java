@@ -1,6 +1,6 @@
 package com.GreenThumb.api.plant.application.listeners;
 
-import com.GreenThumb.api.plant.domain.events.TaskDueEvent;
+import com.GreenThumb.api.plant.application.events.TaskDueEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;

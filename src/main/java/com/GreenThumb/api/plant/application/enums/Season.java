@@ -1,4 +1,4 @@
-package com.GreenThumb.api.plant.domain.enums;
+package com.GreenThumb.api.plant.application.enums;
 
 public enum Season {
     SPRING,

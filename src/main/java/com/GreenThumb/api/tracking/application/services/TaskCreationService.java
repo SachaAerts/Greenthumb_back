@@ -2,14 +2,9 @@ package com.GreenThumb.api.tracking.application.services;
 
 import com.GreenThumb.api.plant.application.dto.TaskCreationRequest;
 import com.GreenThumb.api.plant.application.service.TaskManagementService;
-import com.GreenThumb.api.plant.domain.entity.Plant;
-import com.GreenThumb.api.plant.domain.entity.TaskTemplate;
-import com.GreenThumb.api.plant.domain.events.PlantCreatedEvent;
-import com.GreenThumb.api.plant.domain.repository.TaskTemplateRepository;
-import com.GreenThumb.api.plant.infrastructure.entity.PlantEntity;
-import com.GreenThumb.api.plant.infrastructure.entity.TaskEntity;
-import com.GreenThumb.api.plant.infrastructure.repository.SpringDataPlantRepository;
-import com.GreenThumb.api.plant.infrastructure.repository.SpringDataTaskRepository;
+import com.GreenThumb.api.tracking.domain.entity.TaskTemplate; //todo
+import com.GreenThumb.api.plant.application.events.PlantCreatedEvent;
+import com.GreenThumb.api.tracking.domain.repository.TaskTemplateRepository; // todo
 import com.GreenThumb.api.tracking.domain.services.SeasonalFrequencyCalculator;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;

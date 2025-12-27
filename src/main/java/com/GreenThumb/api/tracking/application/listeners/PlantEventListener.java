@@ -1,6 +1,6 @@
 package com.GreenThumb.api.tracking.application.listeners;
 
-import com.GreenThumb.api.plant.domain.events.PlantCreatedEvent;
+import com.GreenThumb.api.plant.application.events.PlantCreatedEvent;
 import com.GreenThumb.api.tracking.application.services.TaskCreationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

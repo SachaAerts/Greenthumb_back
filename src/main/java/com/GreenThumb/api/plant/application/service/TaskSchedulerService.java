@@ -1,7 +1,7 @@
 package com.GreenThumb.api.plant.application.service;
 
 import com.GreenThumb.api.plant.application.events.PlantEventPublisher;
-import com.GreenThumb.api.plant.domain.enums.TaskStatus;
+import com.GreenThumb.api.plant.application.enums.TaskStatus;
 import com.GreenThumb.api.plant.infrastructure.entity.TaskEntity;
 import com.GreenThumb.api.plant.infrastructure.repository.SpringDataTaskRepository;
 import org.springframework.transaction.annotation.Transactional;

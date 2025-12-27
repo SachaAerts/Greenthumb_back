@@ -1,6 +1,6 @@
-package com.GreenThumb.api.plant.infrastructure.repository;
+package com.GreenThumb.api.tracking.infrastructure.repository;
 
-import com.GreenThumb.api.plant.domain.enums.TaskType;
+import com.GreenThumb.api.plant.application.enums.TaskType;
 import com.GreenThumb.api.plant.infrastructure.entity.TaskTemplateEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

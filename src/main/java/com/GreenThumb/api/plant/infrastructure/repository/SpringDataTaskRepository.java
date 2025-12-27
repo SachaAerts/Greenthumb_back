@@ -1,6 +1,6 @@
 package com.GreenThumb.api.plant.infrastructure.repository;
 
-import com.GreenThumb.api.plant.domain.enums.TaskStatus;
+import com.GreenThumb.api.plant.application.enums.TaskStatus;
 import com.GreenThumb.api.plant.infrastructure.entity.TaskEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

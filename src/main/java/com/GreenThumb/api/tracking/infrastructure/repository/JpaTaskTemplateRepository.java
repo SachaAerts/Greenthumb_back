@@ -1,9 +1,9 @@
-package com.GreenThumb.api.plant.infrastructure.repository;
+package com.GreenThumb.api.tracking.infrastructure.repository;
 
-import com.GreenThumb.api.plant.domain.entity.TaskTemplate;
-import com.GreenThumb.api.plant.domain.enums.TaskType;
-import com.GreenThumb.api.plant.domain.repository.TaskTemplateRepository;
-import com.GreenThumb.api.plant.infrastructure.mapper.TaskTemplateMapper;
+import com.GreenThumb.api.tracking.domain.entity.TaskTemplate;
+import com.GreenThumb.api.plant.application.enums.TaskType;
+import com.GreenThumb.api.tracking.domain.repository.TaskTemplateRepository;
+import com.GreenThumb.api.tracking.infrastructure.mapper.TaskTemplateMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
