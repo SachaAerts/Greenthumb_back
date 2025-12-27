@@ -1,4 +1,4 @@
-package com.GreenThumb.api.notification.dto;
+package com.GreenThumb.api.user.application.dto;
 
 import java.util.List;
 

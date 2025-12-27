@@ -1,14 +1,12 @@
 package com.GreenThumb.api.apigateway.controller;
 
-import com.GreenThumb.api.admin.dto.BulkEmailRequest;
-import com.GreenThumb.api.admin.dto.BulkEmailResponse;
-import com.GreenThumb.api.notification.service.CommunicationMailService;
+import com.GreenThumb.api.user.application.dto.BulkEmailRequest;
+import com.GreenThumb.api.user.application.dto.BulkEmailResponse;
 import com.GreenThumb.api.user.application.dto.PageResponse;
 import com.GreenThumb.api.user.application.dto.AdminUserDto;
 import com.GreenThumb.api.user.application.service.UserService;
+import com.GreenThumb.api.user.application.service.AdminCommunicationService;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
-import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
-import com.GreenThumb.api.user.infrastructure.repository.SpringDataUserRepository;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -27,17 +24,14 @@ import java.util.Map;
 public class AdminController {
 
     private final UserService userService;
-    private final CommunicationMailService communicationMailService;
-    private final SpringDataUserRepository userRepository;
+    private final AdminCommunicationService adminCommunicationService;
 
     public AdminController(
         UserService userService,
-        CommunicationMailService communicationMailService,
-        SpringDataUserRepository userRepository
+        AdminCommunicationService adminCommunicationService
     ) {
         this.userService = userService;
-        this.communicationMailService = communicationMailService;
-        this.userRepository = userRepository;
+        this.adminCommunicationService = adminCommunicationService;
     }
 
     @GetMapping("/search")
@@ -209,62 +203,17 @@ public class AdminController {
             adminUsername, request.subject(), request.recipientType());
 
         try {
-            List<UserEntity> recipients;
-
-            switch (request.recipientType()) {
-                case ALL_USERS -> {
-                    recipients = userRepository.findEligibleUsersForBulkEmail();
-                    log.debug("Found {} eligible standard users for bulk email", recipients.size());
-                }
-                case STAFF_ONLY -> {
-                    recipients = userRepository.findStaffUsersForBulkEmail();
-                    log.debug("Found {} staff members (admins + moderators) for bulk email", recipients.size());
-                }
-                case SPECIFIC_USERS -> {
-                    if (request.recipientUsernames() == null || request.recipientUsernames().isEmpty()) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .body(Map.of("message", "La liste de destinataires ne peut pas être vide pour un envoi ciblé"));
-                    }
-                    recipients = userRepository.findByUsernamesForBulkEmail(request.recipientUsernames());
-                    log.debug("Found {} users from provided username list", recipients.size());
-                }
-                default -> {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(Map.of("message", "Type de destinataires invalide: " + request.recipientType()));
-                }
-            }
-
-            if (recipients.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of(
-                        "message",
-                        "Aucun utilisateur éligible trouvé pour le type: " + request.recipientType()
-                    ));
-            }
-
-            CommunicationMailService.BulkEmailResult result =
-                communicationMailService.sendPersonalizedBulkEmail(
-                    recipients,
-                    request.subject(),
-                    request.content()
-                );
-
-            log.info("Admin {} completed bulk email to {}. Total: {}, Success: {}, Failed: {}",
-                adminUsername, request.recipientType(),
-                result.totalRecipients(), result.successCount(), result.failureCount());
-
-            BulkEmailResponse response = BulkEmailResponse.of(
-                result.failureCount() == 0
-                    ? "Envoi groupé effectué avec succès"
-                    : "Envoi groupé terminé avec quelques échecs",
-                result.totalRecipients(),
-                result.successCount(),
-                result.failureCount(),
-                result.failedEmails()
+            BulkEmailResponse response = adminCommunicationService.sendBulkEmail(
+                request,
+                adminUsername
             );
 
             return ResponseEntity.ok(response);
 
+        } catch (IllegalArgumentException e) {
+            log.warn("Invalid bulk email request from admin {}: {}", adminUsername, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
             log.error("Error during bulk email send by admin {}: {}", adminUsername, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

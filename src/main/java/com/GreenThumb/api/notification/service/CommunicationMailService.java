@@ -1,6 +1,6 @@
 package com.GreenThumb.api.notification.service;
 
-import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
+import com.GreenThumb.api.notification.dto.EmailRecipient;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +64,7 @@ public class CommunicationMailService {
     }
 
     public BulkEmailResult sendPersonalizedBulkEmail(
-        List<UserEntity> recipients,
+        List<EmailRecipient> recipients,
         String subject,
         String plainTextContent
     ) {
@@ -72,19 +72,19 @@ public class CommunicationMailService {
         int failureCount = 0;
         List<String> failedEmails = new ArrayList<>();
 
-        for (UserEntity recipient : recipients) {
+        for (EmailRecipient recipient : recipients) {
             try {
                 String personalizedHtml = loadBulkEmailTemplate(
                     subject,
                     plainTextContent,
                     getRecipientDisplayName(recipient)
                 );
-                sendAnnouncement(recipient.getMail(), subject, personalizedHtml);
+                sendAnnouncement(recipient.email(), subject, personalizedHtml);
                 successCount++;
             } catch (RuntimeException e) {
                 failureCount++;
-                failedEmails.add(recipient.getMail());
-                log.warn("Échec de l'envoi à {} ({})", recipient.getMail(), recipient.getUsername());
+                failedEmails.add(recipient.email());
+                log.warn("Échec de l'envoi à {} ({})", recipient.email(), recipient.username());
             }
         }
 
@@ -111,11 +111,11 @@ public class CommunicationMailService {
         }
     }
 
-    private String getRecipientDisplayName(UserEntity user) {
-        if (user.getFirstname() != null && !user.getFirstname().isBlank()) {
-            return user.getFirstname();
+    private String getRecipientDisplayName(EmailRecipient recipient) {
+        if (recipient.firstName() != null && !recipient.firstName().isBlank()) {
+            return recipient.firstName();
         }
-        return user.getUsername();
+        return recipient.username();
     }
 
     private String escapeHtml(String text) {
