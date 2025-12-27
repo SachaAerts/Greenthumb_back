@@ -1,14 +1,19 @@
 package com.GreenThumb.api.notification.service;
 
+import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -57,4 +62,76 @@ public class CommunicationMailService {
 
         log.info("Envoi groupé terminé. Succès: {}, Échecs: {}", successCount, failureCount);
     }
+
+    public BulkEmailResult sendPersonalizedBulkEmail(
+        List<UserEntity> recipients,
+        String subject,
+        String plainTextContent
+    ) {
+        int successCount = 0;
+        int failureCount = 0;
+        List<String> failedEmails = new ArrayList<>();
+
+        for (UserEntity recipient : recipients) {
+            try {
+                String personalizedHtml = loadBulkEmailTemplate(
+                    subject,
+                    plainTextContent,
+                    getRecipientDisplayName(recipient)
+                );
+                sendAnnouncement(recipient.getMail(), subject, personalizedHtml);
+                successCount++;
+            } catch (RuntimeException e) {
+                failureCount++;
+                failedEmails.add(recipient.getMail());
+                log.warn("Échec de l'envoi à {} ({})", recipient.getMail(), recipient.getUsername());
+            }
+        }
+
+        log.info("Envoi groupé personnalisé terminé. Total: {}, Succès: {}, Échecs: {}",
+            recipients.size(), successCount, failureCount);
+
+        return new BulkEmailResult(recipients.size(), successCount, failureCount, failedEmails);
+    }
+
+    private String loadBulkEmailTemplate(String subject, String plainTextContent, String recipientName) {
+        try {
+            ClassPathResource resource = new ClassPathResource("templates/bulk-email-template.html");
+            String template = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+
+            String htmlContent = plainTextContent.replace("\n", "<br>");
+
+            return template
+                .replace("{{SUBJECT}}", escapeHtml(subject))
+                .replace("{{CONTENT}}", htmlContent)
+                .replace("{{RECIPIENT_NAME}}", escapeHtml(recipientName));
+        } catch (IOException e) {
+            log.error("Erreur lors du chargement du template d'email groupé", e);
+            throw new RuntimeException("Impossible de charger le template d'email", e);
+        }
+    }
+
+    private String getRecipientDisplayName(UserEntity user) {
+        if (user.getFirstname() != null && !user.getFirstname().isBlank()) {
+            return user.getFirstname();
+        }
+        return user.getUsername();
+    }
+
+    private String escapeHtml(String text) {
+        if (text == null) return "";
+        return text
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&quot;")
+            .replace("'", "&#x27;");
+    }
+
+    public record BulkEmailResult(
+        int totalRecipients,
+        int successCount,
+        int failureCount,
+        List<String> failedEmails
+    ) {}
 }

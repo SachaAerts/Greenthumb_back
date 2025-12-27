@@ -1,15 +1,23 @@
 package com.GreenThumb.api.apigateway.controller;
 
+import com.GreenThumb.api.admin.dto.BulkEmailRequest;
+import com.GreenThumb.api.admin.dto.BulkEmailResponse;
+import com.GreenThumb.api.notification.service.CommunicationMailService;
 import com.GreenThumb.api.user.application.dto.PageResponse;
 import com.GreenThumb.api.user.application.dto.AdminUserDto;
 import com.GreenThumb.api.user.application.service.UserService;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
+import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
+import com.GreenThumb.api.user.infrastructure.repository.SpringDataUserRepository;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -19,9 +27,17 @@ import java.util.Map;
 public class AdminController {
 
     private final UserService userService;
+    private final CommunicationMailService communicationMailService;
+    private final SpringDataUserRepository userRepository;
 
-    public AdminController(UserService userService) {
+    public AdminController(
+        UserService userService,
+        CommunicationMailService communicationMailService,
+        SpringDataUserRepository userRepository
+    ) {
         this.userService = userService;
+        this.communicationMailService = communicationMailService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/search")
@@ -180,6 +196,64 @@ public class AdminController {
             log.warn("User not found: {}", username);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("message", "Utilisateur non trouvé"));
+        }
+    }
+
+    @PostMapping("/communications/send-bulk-email")
+    public ResponseEntity<?> sendBulkEmail(
+        @Valid @RequestBody BulkEmailRequest request,
+        Authentication authentication
+    ) {
+        String adminUsername = authentication.getName();
+        log.info("Admin {} initiating bulk email. Subject: '{}', sendToAll: {}",
+            adminUsername, request.subject(), request.sendToAll());
+
+        try {
+            List<UserEntity> recipients;
+            if (request.sendToAll()) {
+                recipients = userRepository.findEligibleUsersForBulkEmail();
+                log.debug("Found {} eligible users for bulk email", recipients.size());
+            } else {
+                recipients = userRepository.findByUsernamesForBulkEmail(request.recipientUsernames());
+                log.debug("Found {} users from provided username list", recipients.size());
+
+                if (recipients.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Aucun destinataire éligible trouvé"));
+                }
+            }
+
+            if (recipients.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "Aucun utilisateur éligible pour l'envoi groupé"));
+            }
+
+            CommunicationMailService.BulkEmailResult result =
+                communicationMailService.sendPersonalizedBulkEmail(
+                    recipients,
+                    request.subject(),
+                    request.content()
+                );
+
+            log.info("Admin {} completed bulk email. Total: {}, Success: {}, Failed: {}",
+                adminUsername, result.totalRecipients(), result.successCount(), result.failureCount());
+
+            BulkEmailResponse response = BulkEmailResponse.of(
+                result.failureCount() == 0
+                    ? "Envoi groupé effectué avec succès"
+                    : "Envoi groupé terminé avec quelques échecs",
+                result.totalRecipients(),
+                result.successCount(),
+                result.failureCount(),
+                result.failedEmails()
+            );
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("Error during bulk email send by admin {}: {}", adminUsername, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("message", "Erreur lors de l'envoi groupé: " + e.getMessage()));
         }
     }
 }

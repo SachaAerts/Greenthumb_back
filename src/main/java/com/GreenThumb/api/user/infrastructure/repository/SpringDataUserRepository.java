@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long> {
@@ -41,4 +42,10 @@ public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long
     @Modifying
     @Query("UPDATE UserEntity u SET u.deletedAt = null WHERE u.username = :username")
     int restoreByUsername(@Param("username") String username);
+
+    @Query("SELECT u FROM UserEntity u WHERE u.enabled = true AND u.deletedAt IS NULL AND u.role.label NOT IN ('ADMIN', 'MODERATEUR')")
+    List<UserEntity> findEligibleUsersForBulkEmail();
+
+    @Query("SELECT u FROM UserEntity u WHERE u.username IN :usernames AND u.enabled = true AND u.deletedAt IS NULL")
+    List<UserEntity> findByUsernamesForBulkEmail(@Param("usernames") List<String> usernames);
 }
