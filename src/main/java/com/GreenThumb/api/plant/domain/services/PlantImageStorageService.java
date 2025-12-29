@@ -1,34 +1,33 @@
 package com.GreenThumb.api.plant.domain.services;
 
+import com.GreenThumb.api.infrastructure.service.CloudinaryService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.Base64;
-import java.util.UUID;
 
+@Slf4j
 @Service
 public class PlantImageStorageService {
 
-    private static final String PLANTS_FOLDER = "plants/";
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-    private final Path staticDir;
+    private final CloudinaryService cloudinaryService;
+    private final String cloudinaryFolder;
 
-    public PlantImageStorageService() {
-        this.staticDir = Paths.get("src/main/resources/static/plants").toAbsolutePath().normalize();
-
-        try {
-            Files.createDirectories(this.staticDir);
-        } catch (IOException ex) {
-            throw new RuntimeException("Impossible de créer le dossier static/plants.", ex);
-        }
+    public PlantImageStorageService(
+            CloudinaryService cloudinaryService,
+            @Value("${greenthumb.cloudinary.plants-folder}") String cloudinaryFolder
+    ) {
+        this.cloudinaryService = cloudinaryService;
+        this.cloudinaryFolder = cloudinaryFolder;
+        log.info("PlantImageStorageService initialized with folder: {}", cloudinaryFolder);
     }
 
-    /**
-     * Vérifie si la chaîne est une image encodée en base64
-     */
     public boolean isBase64Image(String imageUrl) {
         if (imageUrl == null || imageUrl.isEmpty()) {
             return false;
@@ -36,22 +35,42 @@ public class PlantImageStorageService {
         return imageUrl.startsWith("data:image/");
     }
 
-    /**
-     * Stocke l'image de la plante si c'est un base64, sinon retourne l'URL telle quelle
-     */
     public String processPlantImage(String imageUrl) {
         if (!isBase64Image(imageUrl)) {
+            log.debug("Image is already a URL: {}", imageUrl);
             return imageUrl;
         }
 
-        byte[] imageBytes = decodeBase64Image(imageUrl);
-        validateImageSize(imageBytes);
-        String extension = extractImageExtension(imageUrl);
-        String filename = generateFilename(extension);
+        try {
+            byte[] imageBytes = decodeBase64Image(imageUrl);
+            validateImageSize(imageBytes);
+            String extension = extractImageExtension(imageUrl);
 
-        saveImageToFile(imageBytes, filename);
+            MultipartFile file = createMultipartFile(imageBytes, "plant" + extension);
 
-        return PLANTS_FOLDER + filename;
+            String cloudinaryUrl = cloudinaryService.uploadImage(file, cloudinaryFolder);
+            log.info("Plant image uploaded: {}", cloudinaryUrl);
+
+            return cloudinaryUrl;
+
+        } catch (Exception e) {
+            log.error("Failed to process plant image: {}", e.getMessage());
+            throw new RuntimeException("Erreur lors du traitement de l'image", e);
+        }
+    }
+
+    public void deletePlantImage(String imageUrl) {
+        if (imageUrl == null || !imageUrl.contains("cloudinary.com")) {
+            log.debug("Not a Cloudinary URL, skipping deletion: {}", imageUrl);
+            return;
+        }
+
+        try {
+            cloudinaryService.deleteImageByUrl(imageUrl);
+            log.info("Plant image deleted: {}", imageUrl);
+        } catch (Exception e) {
+            log.warn("Failed to delete plant image (non-blocking): {}", e.getMessage());
+        }
     }
 
     private byte[] decodeBase64Image(String base64Image) {
@@ -61,7 +80,7 @@ public class PlantImageStorageService {
         try {
             return Base64.getDecoder().decode(dataPart);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Base64 invalide.", e);
+            throw new RuntimeException("Base64 invalide", e);
         }
     }
 
@@ -70,8 +89,10 @@ public class PlantImageStorageService {
             return ".jpg";
         } else if (base64Image.startsWith("data:image/png")) {
             return ".png";
+        } else if (base64Image.startsWith("data:image/webp")) {
+            return ".webp";
         } else {
-            throw new RuntimeException("Type de fichier non supporté. Seuls PNG/JPG/JPEG sont autorisés.");
+            return ".jpg";
         }
     }
 
@@ -81,34 +102,49 @@ public class PlantImageStorageService {
         }
     }
 
-    private String generateFilename(String extension) {
-        return UUID.randomUUID() + extension;
-    }
-
-    private void saveImageToFile(byte[] imageBytes, String filename) {
-        Path targetLocation = staticDir.resolve(filename);
-
-        try (FileOutputStream fos = new FileOutputStream(targetLocation.toFile())) {
-            fos.write(imageBytes);
-        } catch (IOException e) {
-            throw new RuntimeException("Erreur lors de l'enregistrement du fichier.", e);
-        }
-    }
-
-    public void deletePlantImage(String imagePath) {
-        if (imagePath == null || !imagePath.startsWith(PLANTS_FOLDER)) {
-            return;
-        }
-
-        String filename = imagePath.replace(PLANTS_FOLDER, "");
-        Path fileToDelete = staticDir.resolve(filename);
-
-        try {
-            if (Files.exists(fileToDelete)) {
-                Files.delete(fileToDelete);
+    private MultipartFile createMultipartFile(byte[] content, String filename) {
+        return new MultipartFile() {
+            @Override
+            public String getName() {
+                return "file";
             }
-        } catch (IOException e) {
-            System.err.println("Impossible de supprimer l'ancienne image de plante: " + fileToDelete);
-        }
+
+            @Override
+            public String getOriginalFilename() {
+                return filename;
+            }
+
+            @Override
+            public String getContentType() {
+                if (filename.endsWith(".png")) return "image/png";
+                if (filename.endsWith(".webp")) return "image/webp";
+                return "image/jpeg";
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return content.length == 0;
+            }
+
+            @Override
+            public long getSize() {
+                return content.length;
+            }
+
+            @Override
+            public byte[] getBytes() {
+                return content;
+            }
+
+            @Override
+            public java.io.InputStream getInputStream() {
+                return new ByteArrayInputStream(content);
+            }
+
+            @Override
+            public void transferTo(java.io.File dest) throws IOException {
+                java.nio.file.Files.write(dest.toPath(), content);
+            }
+        };
     }
 }
