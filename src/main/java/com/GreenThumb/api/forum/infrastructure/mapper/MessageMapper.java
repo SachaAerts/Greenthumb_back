@@ -14,6 +14,6 @@ public class MessageMapper {
                         tag.getTag().getTag()
                 ))
                 .toList();
-        return new Message(messageEntity.getTitle(), messageEntity.getText(), messageEntity.getLikeCount(), tags, messageEntity.getDate());
+        return new Message(messageEntity.getText(), tags, messageEntity.getDate());
     }
 }

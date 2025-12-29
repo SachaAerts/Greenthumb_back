@@ -1,7 +1,8 @@
 package com.GreenThumb.api.apigateway.service;
 
-import com.GreenThumb.api.apigateway.dto.Message;
+import com.GreenThumb.api.apigateway.dto.MessageDto;
 import com.GreenThumb.api.forum.application.service.CommentaryService;
+import com.GreenThumb.api.forum.domain.entity.Message;
 import com.GreenThumb.api.user.application.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +33,13 @@ class MessageServiceTest {
     @InjectMocks
     private MessageService messageService;
 
-    private com.GreenThumb.api.forum.domain.entity.Message testMessage1;
-    private com.GreenThumb.api.forum.domain.entity.Message testMessage2;
-    private com.GreenThumb.api.forum.domain.entity.Message testMessage3;
+    private Message testMessage1;
+    private Message testMessage2;
+    private Message testMessage3;
 
     @BeforeEach
     void setUp() {
-        testMessage1 = new com.GreenThumb.api.forum.domain.entity.Message(
+        testMessage1 = new Message(
                 "Premier message",
                 "Contenu du premier message",
                 10,
@@ -47,7 +47,7 @@ class MessageServiceTest {
                 java.time.LocalDateTime.of(2024, 1, 1, 10, 0)
         );
 
-        testMessage2 = new com.GreenThumb.api.forum.domain.entity.Message(
+        testMessage2 = new Message(
                 "Deuxième message",
                 "Contenu du deuxième message",
                 20,
@@ -55,7 +55,7 @@ class MessageServiceTest {
                 java.time.LocalDateTime.of(2024, 1, 2, 10, 0)
         );
 
-        testMessage3 = new com.GreenThumb.api.forum.domain.entity.Message(
+        testMessage3 = new Message(
                 "Troisième message",
                 "Contenu du troisième message",
                 30,
@@ -68,7 +68,7 @@ class MessageServiceTest {
     @DisplayName("getTop3Message - Doit retourner les 3 messages les plus likés avec les usernames")
     void getTop3Message_shouldReturnTop3MessagesWithUsernames() {
         // Given
-        Map<com.GreenThumb.api.forum.domain.entity.Message, Long> top3Map = new LinkedHashMap<>();
+        Map<Message, Long> top3Map = new LinkedHashMap<>();
         top3Map.put(testMessage1, 101L);
         top3Map.put(testMessage2, 102L);
         top3Map.put(testMessage3, 103L);
@@ -79,7 +79,7 @@ class MessageServiceTest {
         when(userService.getUsername(103L)).thenReturn("user3");
 
         // When
-        List<Message> result = messageService.getTop3Message();
+        List<MessageDto> result = messageService.getTop3Message();
 
         // Then
         assertThat(result).hasSize(3);
@@ -97,11 +97,11 @@ class MessageServiceTest {
     @DisplayName("getTop3Message - Doit retourner une liste vide si aucun message")
     void getTop3Message_shouldReturnEmptyListIfNoMessages() {
         // Given
-        Map<com.GreenThumb.api.forum.domain.entity.Message, Long> emptyMap = new LinkedHashMap<>();
+        Map<Message, Long> emptyMap = new LinkedHashMap<>();
         when(commentaryService.getTopThreeMessagesByLikeCount()).thenReturn(emptyMap);
 
         // When
-        List<Message> result = messageService.getTop3Message();
+        List<MessageDto> result = messageService.getTop3Message();
 
         // Then
         assertThat(result).isEmpty();
@@ -113,14 +113,14 @@ class MessageServiceTest {
     @DisplayName("getTop3Message - Doit gérer un seul message")
     void getTop3Message_shouldHandleSingleMessage() {
         // Given
-        Map<com.GreenThumb.api.forum.domain.entity.Message, Long> singleMap = new LinkedHashMap<>();
+        Map<Message, Long> singleMap = new LinkedHashMap<>();
         singleMap.put(testMessage1, 101L);
 
         when(commentaryService.getTopThreeMessagesByLikeCount()).thenReturn(singleMap);
         when(userService.getUsername(101L)).thenReturn("user1");
 
         // When
-        List<Message> result = messageService.getTop3Message();
+        List<MessageDto> result = messageService.getTop3Message();
 
         // Then
         assertThat(result).hasSize(1);
@@ -133,7 +133,7 @@ class MessageServiceTest {
     @DisplayName("getTop3Message - Doit gérer deux messages")
     void getTop3Message_shouldHandleTwoMessages() {
         // Given
-        Map<com.GreenThumb.api.forum.domain.entity.Message, Long> twoMessagesMap = new LinkedHashMap<>();
+        Map<Message, Long> twoMessagesMap = new LinkedHashMap<>();
         twoMessagesMap.put(testMessage1, 101L);
         twoMessagesMap.put(testMessage2, 102L);
 
@@ -142,7 +142,7 @@ class MessageServiceTest {
         when(userService.getUsername(102L)).thenReturn("user2");
 
         // When
-        List<Message> result = messageService.getTop3Message();
+        List<MessageDto> result = messageService.getTop3Message();
 
         // Then
         assertThat(result).hasSize(2);
@@ -155,7 +155,7 @@ class MessageServiceTest {
     @DisplayName("getTop3Message - Doit appeler le mapper pour chaque message")
     void getTop3Message_shouldCallMapperForEachMessage() {
         // Given
-        Map<com.GreenThumb.api.forum.domain.entity.Message, Long> top3Map = new LinkedHashMap<>();
+        Map<Message, Long> top3Map = new LinkedHashMap<>();
         top3Map.put(testMessage1, 101L);
         top3Map.put(testMessage2, 102L);
 
@@ -164,7 +164,7 @@ class MessageServiceTest {
         when(userService.getUsername(102L)).thenReturn("user2");
 
         // When
-        List<Message> result = messageService.getTop3Message();
+        List<MessageDto> result = messageService.getTop3Message();
 
         // Then
         assertThat(result).hasSize(2);
@@ -194,7 +194,7 @@ class MessageServiceTest {
     @DisplayName("getTop3Message - Doit propager les exceptions du UserService")
     void getTop3Message_shouldPropagateUserServiceExceptions() {
         // Given
-        Map<com.GreenThumb.api.forum.domain.entity.Message, Long> top3Map = new LinkedHashMap<>();
+        Map<Message, Long> top3Map = new LinkedHashMap<>();
         top3Map.put(testMessage1, 101L);
 
         when(commentaryService.getTopThreeMessagesByLikeCount()).thenReturn(top3Map);

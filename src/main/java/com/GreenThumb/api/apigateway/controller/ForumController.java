@@ -1,6 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
-import com.GreenThumb.api.apigateway.dto.Message;
+import com.GreenThumb.api.apigateway.dto.MessageDto;
 import com.GreenThumb.api.apigateway.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,10 @@ public class ForumController {
     }
 
     @GetMapping("/top3like")
-    public ResponseEntity<List<Message>> getTop3Like() {
+    public ResponseEntity<List<MessageDto>> getTop3Like() {
         log.debug("Fetching top 3 most liked messages");
 
-        List<Message> messages = messageService.getTop3Message();
+        List<MessageDto> messages = messageService.getTop3Message();
 
         if (messages.isEmpty()) {
             log.debug("No messages found, returning empty list");

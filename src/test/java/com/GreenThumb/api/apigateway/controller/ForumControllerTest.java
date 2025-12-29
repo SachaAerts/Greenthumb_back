@@ -1,6 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
-import com.GreenThumb.api.apigateway.dto.Message;
+import com.GreenThumb.api.apigateway.dto.MessageDto;
 import com.GreenThumb.api.apigateway.service.MessageService;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -44,10 +44,10 @@ class ForumControllerTest {
     @DisplayName("GET /api/messages/top3like - Doit retourner les 3 messages les plus likés")
     void getTop3Like_shouldReturnTop3Messages() throws Exception {
         // Given
-        Message message1 = new Message(List.of("tag1", "tag2"), "Title 1", "Author 1", 100, "2024-01-01");
-        Message message2 = new Message(List.of("tag3"), "Title 2", "Author 2", 50, "2024-01-02");
-        Message message3 = new Message(List.of("tag4", "tag5"), "Title 3", "Author 3", 25, "2024-01-03");
-        List<Message> messages = Arrays.asList(message1, message2, message3);
+        MessageDto message1 = new MessageDto(List.of("tag1", "tag2"), "Title 1", "Author 1", 100, "2024-01-01");
+        MessageDto message2 = new MessageDto(List.of("tag3"), "Title 2", "Author 2", 50, "2024-01-02");
+        MessageDto message3 = new MessageDto(List.of("tag4", "tag5"), "Title 3", "Author 3", 25, "2024-01-03");
+        List<MessageDto> messages = Arrays.asList(message1, message2, message3);
 
         when(messageService.getTop3Message()).thenReturn(messages);
 
@@ -62,7 +62,7 @@ class ForumControllerTest {
     @DisplayName("GET /api/messages/top3like - Doit retourner une liste vide quand aucun message")
     void getTop3Like_shouldReturnEmptyListWhenNoMessages() throws Exception {
         // Given
-        List<Message> emptyList = Collections.emptyList();
+        List<MessageDto> emptyList = Collections.emptyList();
         when(messageService.getTop3Message()).thenReturn(emptyList);
 
         // When & Then
@@ -76,8 +76,8 @@ class ForumControllerTest {
     @DisplayName("GET /api/messages/top3like - Doit retourner 1 ou 2 messages si moins de 3 disponibles")
     void getTop3Like_shouldReturnLessThanThreeMessagesWhenAvailable() throws Exception {
         // Given
-        Message message1 = new Message(List.of("tag1"), "Title 1", "Author 1", 10, "2024-01-01");
-        List<Message> messages = Collections.singletonList(message1);
+        MessageDto message1 = new MessageDto(List.of("tag1"), "Title 1", "Author 1", 10, "2024-01-01");
+        List<MessageDto> messages = Collections.singletonList(message1);
 
         when(messageService.getTop3Message()).thenReturn(messages);
 
@@ -120,10 +120,10 @@ class ForumControllerTest {
     @DisplayName("GET /api/messages/top3like - Doit retourner exactement 3 messages quand disponibles")
     void getTop3Like_shouldReturnExactlyThreeMessagesWhenAvailable() throws Exception {
         // Given
-        Message message1 = new Message(List.of("tag1"), "Title 1", "Author 1", 100, "2024-01-01");
-        Message message2 = new Message(List.of("tag2"), "Title 2", "Author 2", 50, "2024-01-02");
-        Message message3 = new Message(List.of("tag3"), "Title 3", "Author 3", 25, "2024-01-03");
-        List<Message> messages = Arrays.asList(message1, message2, message3);
+        MessageDto message1 = new MessageDto(List.of("tag1"), "Title 1", "Author 1", 100, "2024-01-01");
+        MessageDto message2 = new MessageDto(List.of("tag2"), "Title 2", "Author 2", 50, "2024-01-02");
+        MessageDto message3 = new MessageDto(List.of("tag3"), "Title 3", "Author 3", 25, "2024-01-03");
+        List<MessageDto> messages = Arrays.asList(message1, message2, message3);
 
         when(messageService.getTop3Message()).thenReturn(messages);
 

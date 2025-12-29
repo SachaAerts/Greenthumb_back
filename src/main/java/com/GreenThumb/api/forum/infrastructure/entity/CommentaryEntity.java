@@ -3,6 +3,7 @@ package com.GreenThumb.api.forum.infrastructure.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,12 @@ public class CommentaryEntity {
     @Column(name = "text", nullable = false)
     private String text;
 
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_message", nullable = false)
     private MessageEntity message;
@@ -30,4 +37,14 @@ public class CommentaryEntity {
     @OneToMany(mappedBy = "commentary", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<MediaEntity> medias = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

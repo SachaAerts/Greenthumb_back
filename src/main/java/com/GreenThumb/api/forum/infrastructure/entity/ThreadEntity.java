@@ -9,25 +9,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "messages")
+@Table(name = "threads")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MessageEntity {
+public class ThreadEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_message")
+    @Column(name = "id_thread")
     private Long id;
 
-    @Column(name = "text")
-    private String text;
+    @Column(name = "title", nullable = false)
+    private String title;
 
+    @Column(name = "is_pinned", nullable = false)
+    @Builder.Default
+    private Boolean isPinned = false;
 
-    @Column(name = "published_date")
-    private LocalDateTime date;
+    @Column(name = "is_locked", nullable = false)
+    @Builder.Default
+    private Boolean isLocked = false;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -36,24 +40,16 @@ public class MessageEntity {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_channel", nullable = false)
+    private ChannelEntity channel;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", nullable = false)
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_thread", nullable = false)
-    private ThreadEntity thread;
-
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<CommentaryEntity> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<MediaEntity> medias = new ArrayList<>();
-
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<TagEntity> tags = new ArrayList<>();
+    private List<MessageEntity> messages = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
