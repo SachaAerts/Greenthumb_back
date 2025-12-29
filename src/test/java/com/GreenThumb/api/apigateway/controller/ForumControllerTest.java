@@ -2,8 +2,8 @@ package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.dto.Message;
 import com.GreenThumb.api.apigateway.service.MessageService;
-import com.GreenThumb.api.infrastructure.config.JwtAuthenticationFilter;
-import com.GreenThumb.api.infrastructure.config.SecurityConfig;
+import com.GreenThumb.api.apigateway.config.JwtAuthenticationFilter;
+import com.GreenThumb.api.apigateway.config.SecurityConfig;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

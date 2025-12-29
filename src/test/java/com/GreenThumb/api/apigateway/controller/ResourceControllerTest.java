@@ -2,8 +2,8 @@ package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.dto.Resource;
 import com.GreenThumb.api.apigateway.service.ResourceServiceApi;
-import com.GreenThumb.api.infrastructure.config.JwtAuthenticationFilter;
-import com.GreenThumb.api.infrastructure.config.SecurityConfig;
+import com.GreenThumb.api.apigateway.config.JwtAuthenticationFilter;
+import com.GreenThumb.api.apigateway.config.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

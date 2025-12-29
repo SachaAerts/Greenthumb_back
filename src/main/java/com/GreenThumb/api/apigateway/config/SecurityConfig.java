@@ -1,23 +1,91 @@
 package com.GreenThumb.api.apigateway.config;
 
+import com.GreenThumb.api.apigateway.service.TokenService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@Configuration("apigatewaySecurityConfig")
+import java.util.Arrays;
+
+@Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
+    @Value("${greenthumb.cors.allowed-origins}")
+    private String allowedOrigin;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Cette chaîne ne s'applique qu'aux URLs d'images : elle ne doit pas utiliser `anyRequest()`
+    public JwtAuthenticationFilter jwtAuthFilter(TokenService tokenService) {
+        return new JwtAuthenticationFilter(tokenService);
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigin.split(",")));
+
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthFilter, CorsConfigurationSource corsConfigurationSource) throws Exception {
+
         http
-                .securityMatcher("/users/**", "/uploads/**")
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll() // autorise l'accès public aux ressources statiques
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((req, res, e) -> {
+                            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            res.setContentType("application/json");
+                            res.getWriter().write("{\"error\":\"Unauthorized\"}");
+                        })
                 )
-                .csrf(csrf -> csrf.disable());
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/articles/**").permitAll()
+                        .requestMatchers(
+                                "/api/users/count",
+                                "/api/messages/top3like",
+                                "/api/resources/three-resources",
+                                "/api/sessions",
+                                "/api/sessions/refresh",
+                                "/api/sessions/verify",
+                                "/api/sessions/verify/resend",
+                                "/api/register",
+                                "/api/codes",
+                                "/api/users/verification",
+                                "/api/users/*/resetPassword"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                );
 
         return http.build();
+    }
+
+    @Bean
+    public FilterRegistrationBean<JwtAuthenticationFilter> jwtAuthFilterRegistration(JwtAuthenticationFilter filter) {
+        FilterRegistrationBean<JwtAuthenticationFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
     }
 }
