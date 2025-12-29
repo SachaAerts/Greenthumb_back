@@ -27,14 +27,11 @@ public class AvatarStorageService {
         this.defaultAvatarUrl = defaultAvatarUrl;
         this.cloudinaryFolder = cloudinaryFolder;
 
-        log.info("✅ AvatarStorageService initialized:");
+        log.info("AvatarStorageService initialized:");
         log.info("   - Cloudinary folder: {}", cloudinaryFolder);
         log.info("   - Default avatar: {}", defaultAvatarUrl);
     }
 
-    /**
-     * Stocke un avatar (base64) sur Cloudinary
-     */
     public String storeUserImage(String base64Image) {
         if (base64Image == null || base64Image.isEmpty()) {
             log.debug("Empty image, returning default avatar");
@@ -47,19 +44,16 @@ public class AvatarStorageService {
             MultipartFile file = toMultipartFile(imageBytes, "avatar" + extension);
 
             String uploadedUrl = cloudinaryService.uploadImage(file, cloudinaryFolder);
-            log.info("📤 Avatar uploaded: {}", uploadedUrl);
+            log.info("Avatar uploaded: {}", uploadedUrl);
 
             return uploadedUrl;
 
         } catch (Exception e) {
-            log.error("❌ Failed to upload avatar: {}", e.getMessage());
+            log.error("Failed to upload avatar: {}", e.getMessage());
             throw new RuntimeException("Erreur upload avatar", e);
         }
     }
 
-    /**
-     * Remplace un avatar
-     */
     public String replaceUserImage(String oldUrl, String newBase64) {
         if (newBase64 == null || newBase64.isEmpty()) {
             log.debug("Empty new image, deleting old and returning default");
@@ -73,23 +67,18 @@ public class AvatarStorageService {
         }
 
         try {
-            // Upload nouveau
             String newUrl = storeUserImage(newBase64);
 
-            // Supprimer ancien
             deleteAvatar(oldUrl);
 
             return newUrl;
 
         } catch (Exception e) {
-            log.error("❌ Failed to replace avatar: {}", e.getMessage());
+            log.error("Failed to replace avatar: {}", e.getMessage());
             throw new RuntimeException("Erreur remplacement avatar", e);
         }
     }
 
-    /**
-     * Supprime un avatar sur Cloudinary
-     */
     private void deleteAvatar(String url) {
         if (url == null || url.equals(defaultAvatarUrl)) {
             log.debug("Default avatar or null, skipping deletion");
@@ -103,13 +92,11 @@ public class AvatarStorageService {
 
         try {
             cloudinaryService.deleteImageByUrl(url);
-            log.info("🗑️ Avatar deleted: {}", url);
+            log.info("Avatar deleted: {}", url);
         } catch (Exception e) {
-            log.warn("⚠️ Failed to delete avatar (non-blocking): {}", e.getMessage());
+            log.warn("Failed to delete avatar (non-blocking): {}", e.getMessage());
         }
     }
-
-    // ========== Utilitaires ==========
 
     private byte[] decodeBase64(String base64) {
         String data = base64.contains(",") ? base64.split(",")[1] : base64;
