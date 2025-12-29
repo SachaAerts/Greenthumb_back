@@ -1,4 +1,4 @@
-package com.GreenThumb.api.apigateway.service;
+package com.GreenThumb.api.infrastructure.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

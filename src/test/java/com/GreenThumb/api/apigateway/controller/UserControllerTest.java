@@ -4,6 +4,8 @@ import com.GreenThumb.api.apigateway.service.TokenExtractor;
 import com.GreenThumb.api.apigateway.service.UserServiceGateway;
 import com.GreenThumb.api.apigateway.validation.PaginationValidator;
 import com.GreenThumb.api.apigateway.validation.UsernameValidator;
+import com.GreenThumb.api.infrastructure.config.JwtAuthenticationFilter;
+import com.GreenThumb.api.infrastructure.config.SecurityConfig;
 import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
@@ -35,8 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                         classes = {
-                                com.GreenThumb.api.config.SecurityConfig.class,
-                                com.GreenThumb.api.config.JwtAuthenticationFilter.class
+                                SecurityConfig.class,
+                                JwtAuthenticationFilter.class
                         })
         }
 )

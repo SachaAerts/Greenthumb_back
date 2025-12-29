@@ -1,4 +1,4 @@
-package com.GreenThumb.api.config;
+package com.GreenThumb.api.infrastructure.config;
 
 import com.GreenThumb.api.apigateway.service.TokenService;
 import jakarta.servlet.FilterChain;
