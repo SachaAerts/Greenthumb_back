@@ -107,35 +107,42 @@ public class AdminController {
     }
 
     @DeleteMapping("/{username}")
-    public ResponseEntity<?> softDeleteUser(
+    public ResponseEntity<?> deactivateUser(
             @PathVariable String username,
             Authentication authentication
     ) {
-        log.debug("Admin attempting to soft delete user: {}", username);
+        log.debug("Admin attempting to deactivate user: {}", username);
 
         String currentAdminUsername = authentication.getName();
 
         if (currentAdminUsername.equals(username)) {
-            log.warn("Admin {} attempted to delete themselves", currentAdminUsername);
+            log.warn("Admin {} attempted to deactivate themselves", currentAdminUsername);
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "Un administrateur ne peut pas se supprimer lui-même"));
+                    .body(Map.of("message", "Un administrateur ne peut pas se désactiver lui-même"));
         }
 
         try {
             if (userService.isAdmin(username)) {
-                log.warn("Admin {} attempted to delete another admin: {}", currentAdminUsername, username);
+                log.warn("Admin {} attempted to deactivate another admin: {}", currentAdminUsername, username);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Impossible de supprimer un autre administrateur"));
+                        .body(Map.of("message", "Impossible de désactiver un autre administrateur"));
             }
 
-            userService.softDeleteUserByUsername(username);
+            userService.deactivateUserByUsername(username);
 
-            log.info("Admin {} soft deleted user {}", currentAdminUsername, username);
-            return ResponseEntity.ok(Map.of("message", "Utilisateur supprimé avec succès (soft delete)"));
+            log.info("Admin {} deactivated and anonymized user {}", currentAdminUsername, username);
+            return ResponseEntity.ok(Map.of(
+                "message", "Utilisateur désactivé définitivement et anonymisé avec succès",
+                "permanent", true
+            ));
         } catch (NoFoundException e) {
             log.warn("User not found: {}", username);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("message", "Utilisateur non trouvé"));
+        } catch (IllegalStateException e) {
+            log.warn("User already deactivated: {}", username);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", e.getMessage()));
         }
     }
 
@@ -165,27 +172,6 @@ public class AdminController {
 
             log.info("Admin {} hard deleted user {}", currentAdminUsername, username);
             return ResponseEntity.ok(Map.of("message", "Utilisateur supprimé définitivement"));
-        } catch (NoFoundException e) {
-            log.warn("User not found: {}", username);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Utilisateur non trouvé"));
-        }
-    }
-
-    @PatchMapping("/{username}/restore")
-    public ResponseEntity<?> restoreUser(
-            @PathVariable String username,
-            Authentication authentication
-    ) {
-        log.debug("Admin attempting to restore user: {}", username);
-
-        String currentAdminUsername = authentication.getName();
-
-        try {
-            userService.restoreUserByUsername(username);
-
-            log.info("Admin {} restored user {}", currentAdminUsername, username);
-            return ResponseEntity.ok(Map.of("message", "Utilisateur restauré avec succès"));
         } catch (NoFoundException e) {
             log.warn("User not found: {}", username);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

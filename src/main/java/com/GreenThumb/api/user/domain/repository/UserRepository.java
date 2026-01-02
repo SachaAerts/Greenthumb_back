@@ -42,11 +42,9 @@ public interface UserRepository {
 
     void setUserEnabled(String username, boolean enabled);
 
-    void softDeleteUserByUsername(String username);
+    void deactivateUserByUsername(String username);
 
     void hardDeleteUserByUsername(String username);
-
-    void restoreUserByUsername(String username);
 
     boolean isAdmin(String username);
 

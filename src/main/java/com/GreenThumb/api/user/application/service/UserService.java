@@ -91,16 +91,12 @@ public class UserService {
         userRepository.setUserEnabled(username, enabled);
     }
 
-    public void softDeleteUserByUsername(String username) throws NoFoundException {
-        userRepository.softDeleteUserByUsername(username);
+    public void deactivateUserByUsername(String username) throws NoFoundException {
+        userRepository.deactivateUserByUsername(username);
     }
 
     public void hardDeleteUserByUsername(String username) throws NoFoundException {
         userRepository.hardDeleteUserByUsername(username);
-    }
-
-    public void restoreUserByUsername(String username) throws NoFoundException {
-        userRepository.restoreUserByUsername(username);
     }
 
     public boolean isAdmin(String username) {
