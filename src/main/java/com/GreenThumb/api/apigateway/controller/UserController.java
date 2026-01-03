@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -186,5 +187,35 @@ public class UserController {
         userService.resetPassword(passwords, email);
 
         return  ResponseEntity.ok().body(Map.of("sucess", "Mot de passe modifier avec succes"));
+    }
+    
+    @DeleteMapping("/me")
+    public ResponseEntity<?> deactivateOwnAccount(Authentication authentication) {
+        String username = authentication.getName();
+        log.debug("User {} requesting self-deactivation", username);
+
+        try {
+            if (userService.isAdmin(username)) {
+                log.warn("Admin {} attempted to self-deactivate (blocked)", username);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("message", "Les administrateurs ne peuvent pas désactiver leur propre compte"));
+            }
+
+            userService.deactivateUser(username);
+
+            log.info("User {} successfully deactivated and anonymized their account", username);
+            return ResponseEntity.ok(Map.of(
+                "message", "Votre compte a été désactivé définitivement. Vos données ont été anonymisées. Cette action est irréversible.",
+                "permanent", true
+            ));
+        } catch (NoFoundException e) {
+            log.error("User {} not found during self-deactivation", username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Utilisateur non trouvé"));
+        } catch (IllegalStateException e) {
+            log.warn("User {} already deactivated", username);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", e.getMessage()));
+        }
     }
 }
