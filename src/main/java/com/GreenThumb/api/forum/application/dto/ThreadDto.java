@@ -22,4 +22,16 @@ public record ThreadDto (
                         .toList()
         );
     }
+
+    public Thread toDomain() {
+        return new Thread(
+                this.title,
+                this.isPinned,
+                this.isLocked,
+                this.creator,
+                this.messages.stream()
+                        .map(MessageDto::toDomain)
+                        .toList()
+        );
+    }
 }

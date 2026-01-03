@@ -13,6 +13,7 @@ import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.GreenThumb.api.user.domain.service.AvatarStorageService;
 import com.GreenThumb.api.user.domain.service.PasswordService;
 import com.GreenThumb.api.user.infrastructure.entity.RoleEntity;
+import com.GreenThumb.api.user.infrastructure.entity.ThreadLimitTierEntity;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import com.GreenThumb.api.user.infrastructure.mapper.UserMapper;
 import jakarta.persistence.EntityManager;
@@ -31,14 +32,19 @@ import static com.GreenThumb.api.user.domain.service.PasswordService.hash;
 public class JpaUserRepository implements UserRepository {
     private final SpringDataUserRepository jpaRepo;
     private final RoleRepository roleRepository;
+    private final SpringDataThreadLimitTierRepository threadLimitTierRepository;
     private final AvatarStorageService avatarStorageService;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public JpaUserRepository(SpringDataUserRepository jpaRepo, RoleRepository roleRepository, AvatarStorageService avatarStorageService) {
+    public JpaUserRepository(SpringDataUserRepository jpaRepo,
+                             RoleRepository roleRepository,
+                             SpringDataThreadLimitTierRepository threadLimitTierRepository,
+                             AvatarStorageService avatarStorageService) {
         this.jpaRepo = jpaRepo;
         this.roleRepository = roleRepository;
+        this.threadLimitTierRepository = threadLimitTierRepository;
         this.avatarStorageService = avatarStorageService;
     }
 
@@ -163,6 +169,9 @@ public class JpaUserRepository implements UserRepository {
     public void postUserRegistration(UserRegister user) {
         String hashPassword = hash(user.password());
         RoleEntity roleUser = roleRepository.getRoleEntity("UTILISATEUR");
+        ThreadLimitTierEntity tier = threadLimitTierRepository.findById(1L)
+                .orElseThrow(() -> new NoFoundException("Le tier n'a pas été trouvé"));
+
         if (roleUser == null) {
             throw new NoFoundException("Le rôle n'existe pas !");
         }
@@ -171,7 +180,13 @@ public class JpaUserRepository implements UserRepository {
         checkUsername(user.username());
 
         String avatarPath = saveAvatar(user.avatar());
-        UserEntity userEntity = UserMapper.toEntityForRegistration(user, hashPassword, avatarPath, roleUser);
+        UserEntity userEntity = UserMapper.toEntityForRegistration(
+                user,
+                hashPassword,
+                avatarPath,
+                roleUser,
+                tier
+        );
         jpaRepo.save(userEntity);
     }
 

@@ -20,4 +20,14 @@ public record ChannelDto(
                         .toList()
         );
     }
+
+    public Channel toDomain() {
+        return new Channel(
+                this.name,
+                this.description,
+                this.threads.stream()
+                        .map(ThreadDto::toDomain)
+                        .toList()
+        );
+    }
 }

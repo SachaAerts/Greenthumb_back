@@ -54,6 +54,12 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/2025-12-28-add-threads-table.yaml
   - include:
+      file: db/changelog/changes/2026-01-01-add-thread-limit-tier-table.yaml
+  - include:
+      file: db/changelog/changes/2026-01-01-add-limit-thread.yaml
+  - include:
+      file: db/changelog/changes/2026-01-01-add-index-thread-limit.yaml
+  - include:
       file: db/changelog/seeds/2025-10-23-categorie-seeder.yaml
   - include:
       file: db/changelog/seeds/2025-10-23-roles-seeder.yaml

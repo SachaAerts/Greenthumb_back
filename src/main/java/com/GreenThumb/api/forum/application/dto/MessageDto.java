@@ -19,4 +19,14 @@ public record MessageDto(
                 message.date()
         );
     }
+
+    public Message toDomain() {
+        return new Message(
+                this.text,
+                this.tags.stream()
+                        .map(TagDto::toDomain)
+                        .toList(),
+                this.date
+        );
+    }
 }

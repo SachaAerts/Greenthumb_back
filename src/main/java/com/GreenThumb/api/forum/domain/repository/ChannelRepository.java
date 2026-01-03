@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ChannelRepository {
     List<Channel> findAll();
+
+    void save(Channel channel);
 }
