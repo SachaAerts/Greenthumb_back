@@ -1,6 +1,7 @@
 package com.GreenThumb.api.plant.application.service;
 
 import com.GreenThumb.api.plant.application.dto.TaskCreationRequest;
+import com.GreenThumb.api.plant.application.events.TaskCreatedEvent;
 import com.GreenThumb.api.plant.domain.entity.Task;
 import com.GreenThumb.api.plant.application.enums.TaskStatus;
 import com.GreenThumb.api.plant.application.enums.TaskType;
@@ -10,6 +11,7 @@ import com.GreenThumb.api.plant.infrastructure.entity.PlantEntity;
 import com.GreenThumb.api.plant.infrastructure.entity.TaskEntity;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,13 +22,16 @@ import java.time.LocalDateTime;
 public class TaskManagementService {
     private final TaskRepository taskRepository;
     private final PlantRepository plantRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public TaskManagementService(
             TaskRepository taskRepository,
-            PlantRepository plantRepository
+            PlantRepository plantRepository,
+            ApplicationEventPublisher eventPublisher
     ) {
         this.taskRepository = taskRepository;
         this.plantRepository = plantRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -58,7 +63,21 @@ public class TaskManagementService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return taskRepository.save(taskEntity);
+        Task savedTask = taskRepository.save(taskEntity);
+
+        TaskCreatedEvent event = new TaskCreatedEvent(
+                taskEntity.getId(),
+                plant.getUser().getUsername(),
+                plant.getCommonName(),
+                savedTask.title(),
+                savedTask.description(),
+                savedTask.taskType(),
+                savedTask.endDate()
+        );
+        eventPublisher.publishEvent(event);
+        log.debug("Published TaskCreatedEvent for task: {}", taskEntity.getId());
+
+        return savedTask;
     }
 
     @Transactional
@@ -80,7 +99,18 @@ public class TaskManagementService {
                     .createdAt(LocalDateTime.now())
                     .build();
 
-            taskRepository.save(taskEntity);
+            Task savedTask = taskRepository.save(taskEntity);
+
+            TaskCreatedEvent event = new TaskCreatedEvent(
+                    taskEntity.getId(),
+                    plant.getUser().getUsername(),
+                    plant.getCommonName(),
+                    savedTask.title(),
+                    savedTask.description(),
+                    savedTask.taskType(),
+                    savedTask.endDate()
+            );
+            eventPublisher.publishEvent(event);
         }
 
         log.info("✅ Created {} tasks for plant {}", requests.size(), plant.getCommonName());

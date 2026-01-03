@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/users/**").permitAll()
                         .requestMatchers("/articles/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         .requestMatchers(
                                 "/api/users/count",
                                 "/api/messages/top3like",

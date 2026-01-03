@@ -35,14 +35,6 @@ public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long
     @Query("SELECT u.role.label FROM UserEntity u WHERE u.username = :username")
     String findRoleByUsername(@Param("username") String username);
 
-    @Modifying
-    @Query("UPDATE UserEntity u SET u.deletedAt = :deletedAt WHERE u.username = :username")
-    int softDeleteByUsername(@Param("username") String username, @Param("deletedAt") LocalDateTime deletedAt);
-
-    @Modifying
-    @Query("UPDATE UserEntity u SET u.deletedAt = null WHERE u.username = :username")
-    int restoreByUsername(@Param("username") String username);
-
     @Query("SELECT u FROM UserEntity u WHERE u.enabled = true AND u.deletedAt IS NULL AND u.role.label NOT IN ('ADMIN', 'MODERATEUR')")
     List<UserEntity> findEligibleUsersForBulkEmail();
 

@@ -20,6 +20,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class JpaUserRepository implements UserRepository {
     private final RoleRepository roleRepository;
     private final SpringDataThreadLimitTierRepository threadLimitTierRepository;
     private final AvatarStorageService avatarStorageService;
+    private final String deletedAvatarUrl;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -41,11 +43,13 @@ public class JpaUserRepository implements UserRepository {
     public JpaUserRepository(SpringDataUserRepository jpaRepo,
                              RoleRepository roleRepository,
                              SpringDataThreadLimitTierRepository threadLimitTierRepository,
-                             AvatarStorageService avatarStorageService) {
+                             AvatarStorageService avatarStorageService,
+                             @Value("${greenthumb.avatar.default-url}") String deletedAvatarUrl) {
         this.jpaRepo = jpaRepo;
         this.roleRepository = roleRepository;
         this.threadLimitTierRepository = threadLimitTierRepository;
         this.avatarStorageService = avatarStorageService;
+        this.deletedAvatarUrl = deletedAvatarUrl;
     }
 
     private String sanitizeSearchQuery(String query) {
@@ -69,6 +73,11 @@ public class JpaUserRepository implements UserRepository {
     public User getUserByEmail(String email, String password) throws NoFoundException, IllegalArgumentException {
         return jpaRepo.findByMail(email)
                 .map(userEntity -> {
+                    if (userEntity.getDeletedAt() != null) {
+                        log.warn("Tentative de connexion avec un compte désactivé: {}", email);
+                        throw new IllegalStateException("Ce compte a été désactivé définitivement");
+                    }
+
                     if (!userEntity.isEnabled()) {
                         log.warn("Tentative de connexion avec un compte non vérifié: {}", email);
                         throw new AccountNotVerifiedException(
@@ -91,6 +100,11 @@ public class JpaUserRepository implements UserRepository {
     public User getUserByUsernameAndPassword(String username, String password) throws NoFoundException, IllegalArgumentException {
         return jpaRepo.findByUsername(username)
                 .map(userEntity -> {
+                    if (userEntity.getDeletedAt() != null) {
+                        log.warn("Tentative de connexion avec un compte désactivé: {}", username);
+                        throw new IllegalStateException("Ce compte a été désactivé définitivement");
+                    }
+
                     if (!userEntity.isEnabled()) {
                         log.warn("Tentative de connexion avec un compte non vérifié: {}", username);
                         throw new AccountNotVerifiedException(
@@ -320,14 +334,33 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     @Transactional
-    public void softDeleteUserByUsername(String username) {
-        if (!jpaRepo.existsByUsername(username)) {
-            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
+    public void deactivateUserByUsername(String username) {
+        UserEntity user = jpaRepo.findByUsername(username)
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+
+        if (user.getDeletedAt() != null) {
+            log.warn("Tentative de désactivation d'un compte déjà désactivé: {}", username);
+            throw new IllegalStateException("Ce compte est déjà désactivé");
         }
-        int updated = jpaRepo.softDeleteByUsername(username, LocalDateTime.now());
-        if (updated == 0) {
-            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
-        }
+
+        Long userId = user.getId();
+        String originalUsername = user.getUsername();
+
+        user.setUsername("deleted_user_" + userId);
+        user.setFirstname("Utilisateur");
+        user.setLastname("Désactivé");
+        user.setMail("deleted_" + userId + "@greenthumb.local");
+        user.setPhoneNumber(null);
+        user.setBiography(null);
+
+        user.setAvatar(this.deletedAvatarUrl);
+
+        user.setDeletedAt(LocalDateTime.now());
+
+        jpaRepo.save(user);
+
+        log.info("User '{}' (ID: {}) deactivated and anonymized. New username: '{}'",
+                originalUsername, userId, user.getUsername());
     }
 
     @Override
@@ -337,18 +370,6 @@ public class JpaUserRepository implements UserRepository {
             throw new NoFoundException("L'utilisateur n'a pas été trouvé");
         }
         jpaRepo.deleteByUsername(username);
-    }
-
-    @Override
-    @Transactional
-    public void restoreUserByUsername(String username) {
-        if (!jpaRepo.existsByUsername(username)) {
-            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
-        }
-        int updated = jpaRepo.restoreByUsername(username);
-        if (updated == 0) {
-            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
-        }
     }
 
     @Override

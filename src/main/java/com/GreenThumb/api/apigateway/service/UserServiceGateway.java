@@ -77,6 +77,15 @@ public class UserServiceGateway {
         userService.resetPassword(passwords, email);
     }
 
+    public void deactivateUser(String username) {
+        userService.deactivateUserByUsername(username);
+        redisService.delete(username);
+    }
+
+    public boolean isAdmin(String username) {
+        return userService.isAdmin(username);
+    }
+
     private String buildAvatarUrl(String storedPath) {
         if (storedPath == null || storedPath.isBlank()) {
             return "/uploads/users/default.png";
