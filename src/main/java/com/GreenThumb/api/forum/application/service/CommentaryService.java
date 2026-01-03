@@ -3,7 +3,7 @@ package com.GreenThumb.api.forum.application.service;
 
 import com.GreenThumb.api.forum.domain.entity.Message;
 import com.GreenThumb.api.forum.domain.repository.CommentaryRepository;
-import com.GreenThumb.api.forum.infrastructure.repository.SpringDataPostRepo;
+import com.GreenThumb.api.forum.domain.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -12,11 +12,11 @@ import java.util.Map;
 public class CommentaryService {
 
     private final CommentaryRepository commentaryRepository;
-    private final SpringDataPostRepo postRepo;
+    private final PostRepository postRepository;
 
-    public CommentaryService(CommentaryRepository commentaryRepository, SpringDataPostRepo postRepo) {
+    public CommentaryService(CommentaryRepository commentaryRepository, PostRepository postRepository) {
         this.commentaryRepository = commentaryRepository;
-        this.postRepo = postRepo;
+        this.postRepository = postRepository;
     }
 
     public Map<Message, Long> getTopThreeMessagesByLikeCount() {
@@ -24,6 +24,6 @@ public class CommentaryService {
     }
 
     public long countPostsByUserId(Long userId) {
-        return postRepo.countByUserId(userId);
+        return postRepository.countByUserId(userId);
     }
 }
