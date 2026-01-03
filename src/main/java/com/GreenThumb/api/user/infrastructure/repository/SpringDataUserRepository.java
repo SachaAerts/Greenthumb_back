@@ -51,4 +51,8 @@ public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long
 
     @Query("SELECT u FROM UserEntity u WHERE u.enabled = true AND u.deletedAt IS NULL AND u.role.label IN ('ADMIN', 'MODERATEUR') ORDER BY u.role.label DESC, u.username ASC")
     List<UserEntity> findStaffUsersForBulkEmail();
+
+    @Modifying
+    @Query("UPDATE UserEntity u SET u.countCreatedThread = u.countCreatedThread + 1 WHERE u.id = :id")
+    void incrementCreatedThread(@Param("id") Long id);
 }

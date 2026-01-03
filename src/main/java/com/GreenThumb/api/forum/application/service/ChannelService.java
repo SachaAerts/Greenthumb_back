@@ -3,6 +3,7 @@ package com.GreenThumb.api.forum.application.service;
 import com.GreenThumb.api.forum.application.dto.ChannelDto;
 import com.GreenThumb.api.forum.domain.entity.Channel;
 import com.GreenThumb.api.forum.domain.repository.ChannelRepository;
+import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,5 +27,9 @@ public class ChannelService {
         Channel channelDomain = channel.toDomain();
 
         channelRepository.save(channelDomain);
+    }
+
+    public boolean existChannel(String channel) {
+        return !channel.isEmpty() && channelRepository.existChannel(channel);
     }
 }

@@ -20,6 +20,7 @@ public class UserMapper {
                 userEntity.isPrivate(),
                 userEntity.getCountMessage(),
                 userEntity.getTier() != null ? TierMapper.toDomain(userEntity.getTier()) : null,
+                userEntity.getCountCreatedThread(),
                 toDomain(userEntity.getRole()),
                 new Avatar(userEntity.getAvatar())
         );

@@ -101,6 +101,7 @@ public class UserServiceGateway {
                 user.isPrivate(),
                 user.messageCount(),
                 user.tier(),
+                user.countCreatedThread(),
                 user.role(),
                 avatarUrl
         );

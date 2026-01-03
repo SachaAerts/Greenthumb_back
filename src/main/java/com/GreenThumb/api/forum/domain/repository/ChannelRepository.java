@@ -8,4 +8,6 @@ public interface ChannelRepository {
     List<Channel> findAll();
 
     void save(Channel channel);
+
+    boolean existChannel(String channel);
 }

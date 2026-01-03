@@ -12,6 +12,7 @@ public record UserDto(
         boolean isPrivate,
         int messageCount,
         TierDto tier,
+        int countCreatedThread,
         String role,
         String avatar
 ) {
@@ -26,6 +27,7 @@ public record UserDto(
                 user.isPrivate(),
                 user.messageCount(),
                 user.tier() != null ? TierDto.toDto(user.tier()) : null,
+                user.countCreatedThread(),
                 user.role().label(),
                 user.avatar().avatar()
         );

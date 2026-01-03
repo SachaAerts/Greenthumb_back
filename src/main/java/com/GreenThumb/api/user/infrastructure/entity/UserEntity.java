@@ -60,6 +60,9 @@ public class UserEntity {
     @Column(name = "total_message_count")
     private int countMessage;
 
+    @Column(name = "thread-created-count")
+    private int countCreatedThread;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tier")
     private ThreadLimitTierEntity tier;

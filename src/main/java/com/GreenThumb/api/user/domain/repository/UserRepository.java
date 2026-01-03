@@ -7,6 +7,7 @@ import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.user.application.dto.UserSearchFilters;
 import com.GreenThumb.api.user.domain.entity.User;
+import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 
 public interface UserRepository {
 
@@ -51,4 +52,10 @@ public interface UserRepository {
     boolean isAdmin(String username);
 
     boolean existUser(String email);
+
+    boolean existByUsername(String username);
+
+    UserEntity findByUsername(String username);
+
+    void incrementCreatedThread(Long id);
 }

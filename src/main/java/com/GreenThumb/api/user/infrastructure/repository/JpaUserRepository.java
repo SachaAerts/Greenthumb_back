@@ -150,6 +150,12 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    public UserEntity findByUsername(String username) {
+        return jpaRepo.findByUsername(username)
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+    }
+
+    @Override
     public void enableUser(String email) throws NoFoundException {
         UserEntity user = jpaRepo.findByMail(email)
                 .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
@@ -203,6 +209,11 @@ public class JpaUserRepository implements UserRepository {
     @Override
     public boolean existUser(String email) {
         return jpaRepo.existsByMail(email);
+    }
+
+    @Override
+    public boolean existByUsername(String username) {
+        return jpaRepo.existsByUsername(username);
     }
 
     private void checkMailAndPhone(String mail, String phone) {
@@ -424,5 +435,10 @@ public class JpaUserRepository implements UserRepository {
                 .toList();
 
         return PageResponse.of(content, totalElements, page, size);
+    }
+
+    @Override
+    public void incrementCreatedThread(Long id) {
+        jpaRepo.incrementCreatedThread(id);
     }
 }

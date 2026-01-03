@@ -11,6 +11,7 @@ public record User(
         boolean isPrivate,
         int messageCount,
         Tier tier,
+        int countCreatedThread,
         Role role,
         Avatar avatar
 ) {
