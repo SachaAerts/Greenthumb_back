@@ -8,7 +8,7 @@ import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.apigateway.service.UserServiceGateway;
 import com.GreenThumb.api.apigateway.validation.PaginationValidator;
 import com.GreenThumb.api.apigateway.validation.UsernameValidator;
-import com.GreenThumb.api.forum.infrastructure.repository.SpringDataPostRepo;
+import com.GreenThumb.api.forum.application.service.CommentaryService;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
 import com.GreenThumb.api.user.application.dto.UserDto;
@@ -45,7 +45,7 @@ public class UserController {
     private final PaginationValidator paginationValidator;
     private final UsernameValidator usernameValidator;
     private final PlantFacade plantFacade;
-    private final SpringDataPostRepo postRepo;
+    private final CommentaryService commentaryService;
 
     /**
      * Constructs a new UserController with required dependencies.
@@ -61,14 +61,14 @@ public class UserController {
             PaginationValidator paginationValidator,
             UsernameValidator usernameValidator,
             PlantFacade plantFacade,
-            SpringDataPostRepo postRepo
+            CommentaryService commentaryService
     ) {
         this.userService = userService;
         this.tokenExtractor = tokenExtractor;
         this.paginationValidator = paginationValidator;
         this.usernameValidator = usernameValidator;
         this.plantFacade = plantFacade;
-        this.postRepo = postRepo;
+        this.commentaryService = commentaryService;
     }
 
     /**
@@ -134,7 +134,7 @@ public class UserController {
 
         long userId = userService.getIdByUsername(username);
 
-        return ResponseEntity.ok(postRepo.countByUserId(userId));
+        return ResponseEntity.ok(commentaryService.countPostsByUserId(userId));
     }
 
     /**

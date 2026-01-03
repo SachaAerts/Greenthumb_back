@@ -6,6 +6,7 @@ import com.GreenThumb.api.apigateway.validation.PaginationValidator;
 import com.GreenThumb.api.apigateway.validation.UsernameValidator;
 import com.GreenThumb.api.apigateway.config.JwtAuthenticationFilter;
 import com.GreenThumb.api.apigateway.config.SecurityConfig;
+import com.GreenThumb.api.forum.application.service.CommentaryService;
 import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
@@ -62,6 +63,9 @@ class UserControllerTest {
 
     @MockitoBean
     private PlantFacade plantFacade;
+
+    @MockitoBean
+    private CommentaryService commentaryService;
 
     @Test
     @DisplayName("GET /api/users/count - Doit retourner le nombre d'utilisateurs")
