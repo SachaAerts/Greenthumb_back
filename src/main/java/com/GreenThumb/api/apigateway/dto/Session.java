@@ -6,6 +6,4 @@ public record Session(
         UserResponse user,
         String accessToken,
         String refreshToken
-) {
-
-}
+) { }

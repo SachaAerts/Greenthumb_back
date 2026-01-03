@@ -2,6 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: 2025-12-10-add-slug-resource
       author: jason engels
+      validCheckSum: 9:c14cbe490e5406bed4ccec1bb0686007
       changes:
         - addColumn:
             tableName: ressources
