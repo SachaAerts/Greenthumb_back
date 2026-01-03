@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.controller.advice;
 
+import com.GreenThumb.api.infrastructure.exception.GeminiApiException;
 import com.GreenThumb.api.plant.domain.exceptions.PlantNotFoundException;
 import com.GreenThumb.api.plant.domain.exceptions.TrefleApiException;
 import com.GreenThumb.api.user.domain.exception.AccountNotVerifiedException;
@@ -114,6 +115,15 @@ public class GlobalExceptionHandler {
         log.error("Trefle API error: {}", exception.getMessage());
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "External API error");
+        errors.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errors);
+    }
+
+    @ExceptionHandler(GeminiApiException.class)
+    public ResponseEntity<Map<String, String>> handleGeminiApiException(GeminiApiException exception) {
+        log.error("Gemini API error: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "AI Moderation Service Error");
         errors.put("message", exception.getMessage());
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errors);
     }
