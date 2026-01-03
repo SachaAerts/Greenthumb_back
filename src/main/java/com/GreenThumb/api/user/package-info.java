@@ -1,5 +1,5 @@
 @org.springframework.modulith.ApplicationModule(
-        allowedDependencies = {"notification"},
+        allowedDependencies = {"notification", "infrastructure"},
         type = ApplicationModule.Type.OPEN
 )
 package com.GreenThumb.api.user;

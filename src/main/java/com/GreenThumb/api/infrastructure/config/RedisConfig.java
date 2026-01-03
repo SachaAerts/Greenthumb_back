@@ -1,4 +1,4 @@
-package com.GreenThumb.api.config;
+package com.GreenThumb.api.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

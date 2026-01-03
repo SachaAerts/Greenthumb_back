@@ -2,6 +2,8 @@ package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.dto.MessageDto;
 import com.GreenThumb.api.apigateway.service.MessageService;
+import com.GreenThumb.api.apigateway.config.JwtAuthenticationFilter;
+import com.GreenThumb.api.apigateway.config.SecurityConfig;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,8 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                         classes = {
-                                com.GreenThumb.api.config.SecurityConfig.class,
-                                com.GreenThumb.api.config.JwtAuthenticationFilter.class
+                                SecurityConfig.class,
+                                JwtAuthenticationFilter.class
                         })
         }
 )

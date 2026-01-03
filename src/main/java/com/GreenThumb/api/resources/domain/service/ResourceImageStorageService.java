@@ -1,4 +1,4 @@
-package com.GreenThumb.api.plant.domain.services;
+package com.GreenThumb.api.resources.domain.service;
 
 import com.GreenThumb.api.infrastructure.service.CloudinaryService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,64 +12,89 @@ import java.util.Base64;
 
 @Slf4j
 @Service
-public class PlantImageStorageService {
-
-    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+public class ResourceImageStorageService {
 
     private final CloudinaryService cloudinaryService;
+    private final String defaultImageUrl;
     private final String cloudinaryFolder;
 
-    public PlantImageStorageService(
+    public ResourceImageStorageService(
             CloudinaryService cloudinaryService,
-            @Value("${greenthumb.cloudinary.plants-folder}") String cloudinaryFolder
+            @Value("${greenthumb.resources.default-url}") String defaultImageUrl,
+            @Value("${greenthumb.cloudinary.resources-folder}") String cloudinaryFolder
     ) {
         this.cloudinaryService = cloudinaryService;
+        this.defaultImageUrl = defaultImageUrl;
         this.cloudinaryFolder = cloudinaryFolder;
-        log.info("PlantImageStorageService initialized with folder: {}", cloudinaryFolder);
+
+        log.info("ResourceStorageService initialized:");
+        log.info("   - Cloudinary folder: {}", cloudinaryFolder);
+        log.info("   - Default image: {}", defaultImageUrl);
     }
 
-    public boolean isBase64Image(String imageUrl) {
-        if (imageUrl == null || imageUrl.isEmpty()) {
-            return false;
-        }
-        return imageUrl.startsWith("data:image/");
-    }
-
-    public String processPlantImage(String imageUrl) {
-        if (!isBase64Image(imageUrl)) {
-            log.debug("Image is already a URL: {}", imageUrl);
-            return imageUrl;
+    public String storeResourceImage(String base64Image) {
+        if (base64Image == null || base64Image.isEmpty()) {
+            log.debug("Empty image, returning default");
+            return defaultImageUrl;
         }
 
         try {
-            byte[] imageBytes = decodeBase64Image(imageUrl);
-            validateImageSize(imageBytes);
-            String extension = extractImageExtension(imageUrl);
+            byte[] imageBytes = decodeBase64Image(base64Image);
+            String extension = extractImageExtension(base64Image);
+            MultipartFile file = createMultipartFile(imageBytes, "resource" + extension);
 
-            MultipartFile file = createMultipartFile(imageBytes, "plant" + extension);
+            String uploadedUrl = cloudinaryService.uploadImage(file, cloudinaryFolder);
+            log.info("Resource image uploaded: {}", uploadedUrl);
 
-            String cloudinaryUrl = cloudinaryService.uploadImage(file, cloudinaryFolder);
-            log.info("Plant image uploaded: {}", cloudinaryUrl);
-
-            return cloudinaryUrl;
+            return uploadedUrl;
 
         } catch (Exception e) {
-            log.error("Failed to process plant image: {}", e.getMessage());
-            throw new RuntimeException("Erreur lors du traitement de l'image", e);
+            log.error("Failed to upload resource image: {}", e.getMessage());
+            throw new RuntimeException("Erreur upload image ressource", e);
         }
     }
 
-    public void deletePlantImage(String imageUrl) {
-        if (imageUrl == null || !imageUrl.contains("cloudinary.com")) {
+    public String replaceResourceImage(String oldImageUrl, String newBase64Image) {
+        if (newBase64Image == null || newBase64Image.isEmpty()) {
+            log.debug("Empty new image, deleting old and returning default");
+            deleteImage(oldImageUrl);
+            return defaultImageUrl;
+        }
+
+        if (newBase64Image.equals(oldImageUrl)) {
+            log.debug("Same URL, no change needed");
+            return newBase64Image;
+        }
+
+        try {
+            String newUrl = storeResourceImage(newBase64Image);
+
+            deleteImage(oldImageUrl);
+
+            return newUrl;
+
+        } catch (Exception e) {
+            log.error("Failed to replace resource image: {}", e.getMessage());
+            throw new RuntimeException("Erreur remplacement image ressource", e);
+        }
+    }
+
+    public void deleteImage(String imageUrl) {
+        if (imageUrl == null || imageUrl.equals(defaultImageUrl)) {
+            log.debug("Default image or null, skipping deletion");
+            return;
+        }
+
+        if (!imageUrl.contains("cloudinary.com")) {
             log.debug("Not a Cloudinary URL, skipping deletion: {}", imageUrl);
             return;
         }
 
         try {
             cloudinaryService.deleteImageByUrl(imageUrl);
-            log.info("Plant image deleted: {}", imageUrl);
+            log.info("🗑️ Resource image deleted: {}", imageUrl);
         } catch (Exception e) {
-            log.warn("Failed to delete plant image (non-blocking): {}", e.getMessage());
+            log.warn("⚠️ Failed to delete resource image (non-blocking): {}", e.getMessage());
         }
     }
 
@@ -93,12 +118,6 @@ public class PlantImageStorageService {
             return ".webp";
         } else {
             return ".jpg";
-        }
-    }
-
-    private void validateImageSize(byte[] imageBytes) {
-        if (imageBytes.length > MAX_FILE_SIZE) {
-            throw new RuntimeException("L'image est trop volumineuse. La taille maximale est de 5MB.");
         }
     }
 

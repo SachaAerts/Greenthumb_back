@@ -248,16 +248,20 @@ public class JpaUserRepository implements UserRepository {
     }
 
     private void editUser(UserEdit userEdit, UserEntity user) {
-        if (userEdit.username() != null) {user.setUsername(userEdit.username());}
-        if (userEdit.firstname() != null) {user.setFirstname(userEdit.firstname());}
-        if (userEdit.lastname() != null) {user.setLastname(userEdit.lastname());}
-        if (userEdit.email() != null) {user.setMail(userEdit.email());}
-        if (userEdit.phoneNumber() != null) {user.setPhoneNumber(userEdit.phoneNumber());}
-        if (userEdit.biography() != null) {user.setBiography(userEdit.biography());}
+        if (userEdit.username() != null) user.setUsername(userEdit.username());
+        if (userEdit.firstname() != null) user.setFirstname(userEdit.firstname());
+        if (userEdit.lastname() != null) user.setLastname(userEdit.lastname());
+        if (userEdit.email() != null) user.setMail(userEdit.email());
+        if (userEdit.phoneNumber() != null) user.setPhoneNumber(userEdit.phoneNumber());
+        if (userEdit.biography() != null) user.setBiography(userEdit.biography());
 
-        AvatarStorageService avatarStorageService = new AvatarStorageService();
-        String newAvatar = avatarStorageService.replaceUserImage(user.getAvatar(), userEdit.avatar());
-        if (newAvatar != null) {user.setAvatar(newAvatar);}
+        if (userEdit.avatar() != null) {
+            String newAvatar = avatarStorageService.replaceUserImage(
+                    user.getAvatar(),
+                    userEdit.avatar()
+            );
+            user.setAvatar(newAvatar);
+        }
     }
 
     @Override

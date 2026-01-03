@@ -4,7 +4,7 @@ import com.GreenThumb.api.resources.application.dto.ResourceRequest;
 import com.GreenThumb.api.resources.domain.entity.Resource;
 import com.GreenThumb.api.resources.domain.repository.ResourceCategoryRepository;
 import com.GreenThumb.api.resources.domain.repository.ResourceRepository;
-import com.GreenThumb.api.resources.domain.service.ResourceStorageService;
+import com.GreenThumb.api.resources.domain.service.ResourceImageStorageService;
 import com.GreenThumb.api.resources.domain.utils.SlugGenerator;
 import com.GreenThumb.api.resources.infrastructure.entity.ResourceCategoryEntity;
 import com.GreenThumb.api.resources.infrastructure.entity.ResourceEntity;
@@ -24,18 +24,20 @@ import java.util.stream.Collectors;
 public class JpaResourceRepository implements ResourceRepository {
 
     private final SpringDataResourceRepository resourceRepository;
-
     private final ResourceCategoryRepository categoryRepository;
     private final UserService userService;
+    private final ResourceImageStorageService storageService;
 
     public JpaResourceRepository(
             SpringDataResourceRepository resourceRepository,
             UserService userService,
-            ResourceCategoryRepository resourceCategoryRepository
+            ResourceCategoryRepository resourceCategoryRepository,
+            ResourceImageStorageService storageService
     ) {
         this.resourceRepository = resourceRepository;
         this.userService = userService;
         this.categoryRepository = resourceCategoryRepository;
+        this.storageService = storageService;
     }
 
     @Override
@@ -158,9 +160,11 @@ public class JpaResourceRepository implements ResourceRepository {
             resource.getCategories().addAll(newCategories);
         }
 
-        ResourceStorageService storageService = new ResourceStorageService();
-        String newImage = storageService.replaceUserImage(resource.getPictureUrl(), request.picture());
-        if (newImage != null) {
+        if (request.picture() != null && !request.picture().isEmpty()) {
+            String newImage = storageService.replaceResourceImage(
+                    resource.getPictureUrl(),
+                    request.picture()
+            );
             resource.setPictureUrl(newImage);
         }
     }
