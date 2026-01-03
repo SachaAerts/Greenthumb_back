@@ -1,6 +1,7 @@
 package com.GreenThumb.api.apigateway.controller.advice;
 
 import com.GreenThumb.api.plant.domain.exceptions.PlantNotFoundException;
+import com.GreenThumb.api.plant.domain.exceptions.TaskNotFoundException;
 import com.GreenThumb.api.plant.domain.exceptions.TrefleApiException;
 import com.GreenThumb.api.user.domain.exception.AccountNotVerifiedException;
 import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
@@ -105,6 +106,15 @@ public class GlobalExceptionHandler {
         log.warn("Plant not found: {}", exception.getMessage());
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "Plant not found");
+        errors.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+    }
+
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleTaskNotFoundException(TaskNotFoundException exception) {
+        log.warn("Task not found: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Task not found");
         errors.put("message", exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
     }

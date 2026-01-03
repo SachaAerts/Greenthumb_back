@@ -5,6 +5,7 @@ import com.GreenThumb.api.forum.infrastructure.entity.PostId;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -18,4 +19,7 @@ public interface SpringDataPostRepo extends JpaRepository<PostEntity, PostId> {
         ORDER BY p.message.likeCount DESC
     """)
     List<Object[]> findTopLikedMessages(PageRequest pageRequest);
+
+    @Query("SELECT COUNT(p) FROM PostEntity p WHERE p.user.id = :userId")
+    long countByUserId(@Param("userId") Long userId);
 }

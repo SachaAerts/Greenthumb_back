@@ -49,4 +49,6 @@ public interface UserRepository {
     boolean isAdmin(String username);
 
     boolean existUser(String email);
+
+    void incrementTasksCompleted(Long userId);
 }

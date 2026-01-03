@@ -18,7 +18,8 @@ public class UserMapper {
                 userEntity.getBiography(),
                 userEntity.isPrivate(),
                 toDomain(userEntity.getRole()),
-                new Avatar(userEntity.getAvatar())
+                new Avatar(userEntity.getAvatar()),
+                userEntity.getTasksCompleted()
         );
     }
 

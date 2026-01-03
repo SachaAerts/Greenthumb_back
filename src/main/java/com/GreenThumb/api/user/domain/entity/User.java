@@ -10,6 +10,7 @@ public record User(
         String biography,
         boolean isPrivate,
         Role role,
-        Avatar avatar
+        Avatar avatar,
+        Integer tasksCompleted
 ) {
 }

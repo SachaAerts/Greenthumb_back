@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2026-01-03-fix-slug-resource
+      author: jeremy
+      changes:
+        - sql:
+            sql: >
+              UPDATE ressources
+              SET slug = LOWER(CONCAT(
+                REGEXP_REPLACE(
+                  REGEXP_REPLACE(title, '[^a-zA-Z0-9\s-]', '', 'g'),
+                  '\s+', '-', 'g'
+                ),
+                '-',
+                id_resource
+              ))
+              WHERE slug IS NULL;
+
+        - addNotNullConstraint:
+            tableName: ressources
+            columnName: slug
+            columnDataType: varchar(255)
+
+        - addUniqueConstraint:
+            tableName: ressources
+            columnNames: slug
+            constraintName: uk_resource_slug
+

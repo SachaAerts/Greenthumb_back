@@ -57,4 +57,8 @@ public class UserEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Column(name = "tasks_completed", nullable = false)
+    @Builder.Default
+    private Integer tasksCompleted = 0;
+
 }

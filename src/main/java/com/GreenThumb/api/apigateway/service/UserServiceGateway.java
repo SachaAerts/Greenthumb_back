@@ -114,7 +114,8 @@ public class UserServiceGateway {
                 user.biography(),
                 user.isPrivate(),
                 user.role(),
-                avatarUrl
+                avatarUrl,
+                user.tasksCompleted()
         );
     }
 

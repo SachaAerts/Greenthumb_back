@@ -62,7 +62,8 @@ class SessionServiceTest {
                 "Test bio",
                 false,
                 "USER",
-                "default-avatar.png"
+                "default-avatar.png",
+                0
         );
 
         frontendUrl = "http://localhost:3000";

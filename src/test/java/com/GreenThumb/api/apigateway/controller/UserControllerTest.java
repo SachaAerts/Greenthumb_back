@@ -91,8 +91,8 @@ class UserControllerTest {
     @DisplayName("GET /api/users/{username}/plants - Doit retourner les plantes d'un utilisateur avec pagination par défaut")
     void getAllPlant_shouldReturnUserPlantsWithDefaultPagination() throws Exception {
         // Given
-        PlantDto plant1 = new PlantDto("slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
-        PlantDto plant2 = new PlantDto("slug2", "Scientific Name 2", "Common Name 2", "http://image2.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
+        PlantDto plant1 = new PlantDto(1L, "slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
+        PlantDto plant2 = new PlantDto(2L, "slug2", "Scientific Name 2", "Common Name 2", "http://image2.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
         Page<PlantDto> plantsPage = new PageImpl<>(List.of(plant1, plant2));
 
         doNothing().when(usernameValidator).validate("testuser");
@@ -111,7 +111,7 @@ class UserControllerTest {
     @DisplayName("GET /api/users/{username}/plants - Doit retourner les plantes avec pagination personnalisée")
     void getAllPlant_shouldReturnUserPlantsWithCustomPagination() throws Exception {
         // Given
-        PlantDto plant1 = new PlantDto("slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
+        PlantDto plant1 = new PlantDto(1L, "slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
         Page<PlantDto> plantsPage = new PageImpl<>(List.of(plant1));
 
         doNothing().when(usernameValidator).validate("testuser");
@@ -233,7 +233,7 @@ class UserControllerTest {
     void getMe_shouldReturnCurrentUserInfo() throws Exception {
         // Given
         UserDto userDto = new UserDto("testuser", "Test", "User", "test@example.com",
-                                      "0123456789", "My bio", false, "USER", null);
+                                      "0123456789", "My bio", false, "USER", null, 0);
 
         when(tokenExtractor.extractToken("Bearer valid-token-123")).thenReturn("valid-token-123");
         when(userService.getMe("valid-token-123")).thenReturn(userDto);
@@ -353,7 +353,7 @@ class UserControllerTest {
     void getMe_shouldReturnAdminUser() throws Exception {
         // Given
         UserDto adminDto = new UserDto("adminuser", "Admin", "User", "admin@example.com",
-                                       "0123456789", "Admin bio", false, "ADMIN", null);
+                                       "0123456789", "Admin bio", false, "ADMIN", null, 0);
 
         when(tokenExtractor.extractToken("Bearer admin-token")).thenReturn("admin-token");
         when(userService.getMe("admin-token")).thenReturn(adminDto);
@@ -371,7 +371,7 @@ class UserControllerTest {
     void getMe_shouldReturnPrivateUser() throws Exception {
         // Given
         UserDto privateUserDto = new UserDto("privateuser", "Private", "User", "private@example.com",
-                                             "0123456789", "Bio", true, "USER", null);
+                                             "0123456789", "Bio", true, "USER", null, 0);
 
         when(tokenExtractor.extractToken("Bearer token")).thenReturn("token");
         when(userService.getMe("token")).thenReturn(privateUserDto);

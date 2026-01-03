@@ -430,4 +430,13 @@ public class JpaUserRepository implements UserRepository {
 
         return PageResponse.of(content, totalElements, page, size);
     }
+
+    @Override
+    @Transactional
+    public void incrementTasksCompleted(Long userId) {
+        UserEntity user = jpaRepo.findById(userId)
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+        user.setTasksCompleted(user.getTasksCompleted() + 1);
+        jpaRepo.save(user);
+    }
 }
