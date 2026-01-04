@@ -239,8 +239,7 @@ class UserControllerTest {
         // Given
         TierDto tierDto = new TierDto("Nouveau membre", 0, 1);
         UserDto userDto = new UserDto("testuser", "Test", "User", "test@example.com",
-                                      "0123456789", "My bio", false, 0, tierDto, 0, "USER", null);
-                                      "0123456789", "My bio", false, "USER", null, 0);
+                                      "0123456789", "My bio", false, 0, tierDto, 0, "USER", null, 0);
 
         when(tokenExtractor.extractToken("Bearer valid-token-123")).thenReturn("valid-token-123");
         when(userService.getMe("valid-token-123")).thenReturn(userDto);
@@ -361,8 +360,7 @@ class UserControllerTest {
         // Given
         TierDto adminTierDto = new TierDto("Nouveau membre", 0, 1);
         UserDto adminDto = new UserDto("adminuser", "Admin", "User", "admin@example.com",
-                                       "0123456789", "Admin bio", false, 0, adminTierDto, 0, "ADMIN", null);
-                                       "0123456789", "Admin bio", false, "ADMIN", null, 0);
+                                       "0123456789", "Admin bio", false, 0, adminTierDto, 0, "ADMIN", null, 0);
 
         when(tokenExtractor.extractToken("Bearer admin-token")).thenReturn("admin-token");
         when(userService.getMe("admin-token")).thenReturn(adminDto);
@@ -381,8 +379,7 @@ class UserControllerTest {
         // Given
         TierDto privateTierDto = new TierDto("Nouveau membre", 0, 1);
         UserDto privateUserDto = new UserDto("privateuser", "Private", "User", "private@example.com",
-                                             "0123456789", "Bio", true, "USER", null, 0);
-                                             "0123456789", "Bio", true, 0, privateTierDto, 0, "USER", null);
+                                             "0123456789", "Bio", true, 0, privateTierDto, 0, "USER", null, 0);
 
         when(tokenExtractor.extractToken("Bearer token")).thenReturn("token");
         when(userService.getMe("token")).thenReturn(privateUserDto);
