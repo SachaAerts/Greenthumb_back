@@ -88,6 +88,7 @@ public class UserController {
      * @param username the username to fetch plants for
      * @param page the page number (default: 0, must be >= 0)
      * @param size the page size (default: 5, must be between 1 and 100)
+     * @param search optional search query for filtering by plant name
      * @return HTTP 200 OK with a page of plants
      * @throws IllegalArgumentException if validation fails
      */
@@ -95,13 +96,20 @@ public class UserController {
     public ResponseEntity<PageResponse<PlantDto>> getAllPlants(
             @PathVariable String username,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) String search
     ) {
         usernameValidator.validate(username);
         paginationValidator.validate(page, size);
 
         Pageable pageable = PageRequest.of(page, size);
-        PageResponse<PlantDto> response = userService.getAllPlantsByUsername(username, pageable);
+        PageResponse<PlantDto> response;
+
+        if (search != null && !search.trim().isEmpty()) {
+            response = userService.getAllPlantsByUsernameAndSearch(username, search.trim(), pageable);
+        } else {
+            response = userService.getAllPlantsByUsername(username, pageable);
+        }
 
         return ResponseEntity.ok(response);
     }

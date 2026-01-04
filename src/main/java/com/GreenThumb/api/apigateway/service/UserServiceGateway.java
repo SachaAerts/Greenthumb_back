@@ -43,6 +43,10 @@ public class UserServiceGateway {
         return plantModule.getAllPlantsByUsername(username, pageable);
     }
 
+    public PageResponse<PlantDto> getAllPlantsByUsernameAndSearch(String username, String search, Pageable pageable) {
+        return plantModule.getAllPlantsByUsernameAndSearch(username, search, pageable);
+    }
+
     public UserDto getMe(String token) throws JsonProcessingException {
         String username = tokenService.extractUsername(token);
 

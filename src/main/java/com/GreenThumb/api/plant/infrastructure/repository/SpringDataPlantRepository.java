@@ -15,6 +15,9 @@ public interface SpringDataPlantRepository extends JpaRepository<PlantEntity, Lo
 
     Page<PlantEntity> findAllByUser_username(String username, Pageable pageable);
 
+    @Query("SELECT p FROM PlantEntity p WHERE p.user.username = :username AND (LOWER(p.commonName) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(p.scientificName) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<PlantEntity> findAllByUser_usernameAndSearch(@Param("username") String username, @Param("search") String search, Pageable pageable);
+
     @Query("SELECT p.id FROM PlantEntity p WHERE p.slug = :slug")
     Long findIdBySlug(@Param("slug") String slug);
 
