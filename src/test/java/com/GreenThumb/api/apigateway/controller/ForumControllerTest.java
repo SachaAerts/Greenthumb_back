@@ -1,7 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.dto.MessageDto;
-import com.GreenThumb.api.apigateway.service.MessageService;
 import com.GreenThumb.api.apigateway.config.JwtAuthenticationFilter;
 import com.GreenThumb.api.apigateway.config.SecurityConfig;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
@@ -24,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(
-        controllers = ForumController.class,
+        controllers = MessageController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                         classes = {

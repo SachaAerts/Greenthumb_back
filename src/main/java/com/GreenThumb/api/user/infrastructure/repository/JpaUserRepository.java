@@ -144,6 +144,12 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    public UserEntity getUserEntityByName(String username) {
+        return jpaRepo.findByUsername(username)
+                .orElseThrow(() -> new NoFoundException("Erreur l'or de la récuperation de l'utilisateur"));
+    }
+
+    @Override
     public User findByEmail(String email) throws NoFoundException {
         return jpaRepo.findByMail(email)
                 .map(userEntity -> {

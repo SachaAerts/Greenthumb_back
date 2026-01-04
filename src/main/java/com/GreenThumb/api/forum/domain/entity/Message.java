@@ -4,8 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record Message(
+        Long id,
         String text,
-        List<Tag> tags,
-        LocalDateTime date
+        String author,
+        LocalDateTime timestamp
 ) {
 }

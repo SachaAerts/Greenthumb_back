@@ -9,11 +9,11 @@ import java.util.List;
 
 public class MessageMapper {
     public static Message toDomain(MessageEntity messageEntity) {
-        List<Tag> tags = messageEntity.getTags().stream()
-                .map(tag -> new Tag(
-                        tag.getTag().getTag()
-                ))
-                .toList();
-        return new Message(messageEntity.getText(), tags, messageEntity.getDate());
+        return new Message(
+                messageEntity.getId(),
+                messageEntity.getText(),
+                messageEntity.getUser().getUsername(),
+                messageEntity.getDate()
+                );
     }
 }

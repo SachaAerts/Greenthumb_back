@@ -21,6 +21,8 @@ public interface UserRepository {
 
     User getUserByUsername(String username);
 
+    UserEntity getUserEntityByName(String username);
+
     User findByEmail(String email);
 
     void enableUser(String email);

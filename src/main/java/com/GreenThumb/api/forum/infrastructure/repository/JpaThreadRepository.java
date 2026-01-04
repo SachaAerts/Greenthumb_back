@@ -5,6 +5,7 @@ import com.GreenThumb.api.forum.domain.entity.Thread;
 import com.GreenThumb.api.forum.domain.repository.ThreadRepository;
 import com.GreenThumb.api.forum.infrastructure.entity.ChannelEntity;
 import com.GreenThumb.api.forum.infrastructure.entity.ThreadEntity;
+import com.GreenThumb.api.forum.infrastructure.mapper.ThreadMapper;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;

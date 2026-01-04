@@ -1,4 +1,4 @@
-package com.GreenThumb.api.notification.config;
+package com.GreenThumb.api.infrastructure.config;
 
 import com.GreenThumb.api.apigateway.service.TokenService;
 import lombok.extern.slf4j.Slf4j;

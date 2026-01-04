@@ -7,6 +7,7 @@ public class ThreadMapper {
 
     public static Thread toDomain(ThreadEntity entity) {
         return new Thread(
+                entity.getId(),
                 entity.getTitle(),
                 entity.getIsPinned(),
                 entity.getIsLocked(),

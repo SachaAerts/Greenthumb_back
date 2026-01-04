@@ -45,15 +45,7 @@ public class MessageEntity {
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<CommentaryEntity> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<MediaEntity> medias = new ArrayList<>();
-
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<TagEntity> tags = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

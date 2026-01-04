@@ -6,27 +6,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record MessageDto(
+        Long id,
         String text,
-        List<TagDto> tags,
-        LocalDateTime date
+        String author,
+        LocalDateTime timestamp
 ) {
     public static MessageDto to(Message message) {
         return new MessageDto(
+                message.id(),
                 message.text(),
-                message.tags().stream()
-                        .map(TagDto::to)
-                        .toList(),
-                message.date()
+                message.author(),
+                message.timestamp()
         );
     }
 
     public Message toDomain() {
         return new Message(
+                this.id,
                 this.text,
-                this.tags.stream()
-                        .map(TagDto::toDomain)
-                        .toList(),
-                this.date
+                this.author,
+                this.timestamp
         );
     }
 }

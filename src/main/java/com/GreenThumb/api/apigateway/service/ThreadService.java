@@ -8,7 +8,6 @@ import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.service.UserService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,17 +19,13 @@ public class ThreadService {
     private final UserService userService;
     private final ThreadModuleService threadService;
     private final RedisService redisService;
-    private final ObjectMapper objectMapper;
-
     public ThreadService(UserService userService,
                          ThreadModuleService threadService,
-                         RedisService redisService,
-                         ObjectMapper objectMapper
+                         RedisService redisService
     ) {
         this.userService = userService;
         this.threadService = threadService;
         this.redisService = redisService;
-        this.objectMapper = objectMapper;
     }
 
     public boolean validateAddThread(ThreadRequest request) {
@@ -49,6 +44,7 @@ public class ThreadService {
     public void saveThread(ThreadRequest request, String channel) throws CreatedException, JsonProcessingException {
         if (validateAddThread(request)) {
             ThreadDto thread = new ThreadDto(
+                    null,
                     request.title(),
                     false,
                     false,

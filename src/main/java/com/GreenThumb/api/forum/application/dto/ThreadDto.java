@@ -5,6 +5,7 @@ import com.GreenThumb.api.forum.domain.entity.Thread;
 import java.util.List;
 
 public record ThreadDto (
+        Long id,
         String title,
         boolean isPinned,
         boolean isLocked,
@@ -13,6 +14,7 @@ public record ThreadDto (
 ) {
     public static ThreadDto to(Thread thread) {
         return new ThreadDto(
+                thread.id(),
                 thread.title(),
                 thread.isPinned(),
                 thread.isLocked(),
@@ -25,6 +27,7 @@ public record ThreadDto (
 
     public Thread toDomain() {
         return new Thread(
+                this.id,
                 this.title,
                 this.isPinned,
                 this.isLocked,

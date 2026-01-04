@@ -1,7 +1,6 @@
 package com.GreenThumb.api.apigateway.service;
 
 import com.GreenThumb.api.apigateway.dto.MessageDto;
-import com.GreenThumb.api.forum.application.service.CommentaryService;
 import com.GreenThumb.api.forum.domain.entity.Message;
 import com.GreenThumb.api.user.application.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
