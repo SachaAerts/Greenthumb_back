@@ -27,7 +27,7 @@ databaseChangeLog:
                   name: reason
                   type: VARCHAR
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: status
                   type: VARCHAR
