@@ -18,12 +18,10 @@ public class UserMapper {
                 new PhoneNumber(userEntity.getPhoneNumber()),
                 userEntity.getBiography(),
                 userEntity.isPrivate(),
-                userEntity.getRole() != null ? toDomain(userEntity.getRole()) : new Role("UTILISATEUR"),
-                new Avatar(userEntity.getAvatar())
                 userEntity.getCountMessage(),
                 userEntity.getTier() != null ? TierMapper.toDomain(userEntity.getTier()) : null,
                 userEntity.getCountCreatedThread(),
-                toDomain(userEntity.getRole()),
+                userEntity.getRole() != null ? toDomain(userEntity.getRole()) : new Role("UTILISATEUR"),
                 new Avatar(userEntity.getAvatar()),
                 userEntity.getTasksCompleted()
         );
