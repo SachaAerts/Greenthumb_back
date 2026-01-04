@@ -5,6 +5,7 @@ import com.GreenThumb.api.plant.domain.entity.Plant;
 import java.util.List;
 
 public record PlantDto(
+        Long id,
         String slug,
         String scientificName,
         String commonName,
@@ -27,6 +28,7 @@ public record PlantDto(
 ) {
     public static PlantDto toDomain(Plant plant) {
         return new PlantDto(
+                null,
                 plant.slug(),
                 plant.scientificName(),
                 plant.commonName(),

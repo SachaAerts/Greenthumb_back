@@ -135,8 +135,17 @@ public class UserService {
         return userRepository.existUser(email);
     }
 
+    public boolean existUserByUsername(String username) {
+        return userRepository.existByUsername(username);
+    }
+
     public void sendEmailResetCode(String email) {
         emailResetCodeService.sendResetCodeMail(email);
     }
 
+    public void incrementCreatedCount(String username) {
+        Long id = getIdByUsername(username);
+
+        userRepository.incrementCreatedThread(id);
+    }
 }

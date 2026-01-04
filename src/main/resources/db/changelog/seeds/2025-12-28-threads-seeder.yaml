@@ -1,0 +1,108 @@
+databaseChangeLog:
+  - changeSet:
+      id: seed-forum-threads
+      author: system
+      comment: Seed some example threads in forum channels
+      changes:
+        # Threads pour le channel "general"
+        - insert:
+            tableName: threads
+            columns:
+              - column:
+                  name: id_channel
+                  valueComputed: "(SELECT id_channel FROM channels WHERE name = 'general' LIMIT 1)"
+              - column:
+                  name: id_user
+                  valueComputed: "(SELECT id_user FROM users LIMIT 1)"
+              - column:
+                  name: title
+                  value: "Bienvenue sur le forum GreenThumb !"
+              - column:
+                  name: is_pinned
+                  valueBoolean: true
+              - column:
+                  name: created_at
+                  valueComputed: "CURRENT_TIMESTAMP"
+
+        - insert:
+            tableName: threads
+            columns:
+              - column:
+                  name: id_channel
+                  valueComputed: "(SELECT id_channel FROM channels WHERE name = 'general' LIMIT 1)"
+              - column:
+                  name: id_user
+                  valueComputed: "(SELECT id_user FROM users LIMIT 1 OFFSET 1)"
+              - column:
+                  name: title
+                  value: "Quelles sont vos plantes préférées ?"
+              - column:
+                  name: created_at
+                  valueComputed: "CURRENT_TIMESTAMP - INTERVAL '2 hours'"
+
+        # Threads pour le channel "identification"
+        - insert:
+            tableName: threads
+            columns:
+              - column:
+                  name: id_channel
+                  valueComputed: "(SELECT id_channel FROM channels WHERE name = 'identification' LIMIT 1)"
+              - column:
+                  name: id_user
+                  valueComputed: "(SELECT id_user FROM users LIMIT 1 OFFSET 2)"
+              - column:
+                  name: title
+                  value: "Plante inconnue avec des feuilles tachetées"
+              - column:
+                  name: created_at
+                  valueComputed: "CURRENT_TIMESTAMP - INTERVAL '5 hours'"
+
+        - insert:
+            tableName: threads
+            columns:
+              - column:
+                  name: id_channel
+                  valueComputed: "(SELECT id_channel FROM channels WHERE name = 'identification' LIMIT 1)"
+              - column:
+                  name: id_user
+                  valueComputed: "(SELECT id_user FROM users LIMIT 1 OFFSET 1)"
+              - column:
+                  name: title
+                  value: "Est-ce un Monstera ou un Philodendron ?"
+              - column:
+                  name: created_at
+                  valueComputed: "CURRENT_TIMESTAMP - INTERVAL '1 day'"
+
+        # Threads pour le channel "soins"
+        - insert:
+            tableName: threads
+            columns:
+              - column:
+                  name: id_channel
+                  valueComputed: "(SELECT id_channel FROM channels WHERE name = 'soins' LIMIT 1)"
+              - column:
+                  name: id_user
+                  valueComputed: "(SELECT id_user FROM users LIMIT 1)"
+              - column:
+                  name: title
+                  value: "Fréquence d'arrosage pour les succulentes"
+              - column:
+                  name: created_at
+                  valueComputed: "CURRENT_TIMESTAMP - INTERVAL '3 hours'"
+
+        # Thread pour le channel "maladies"
+        - insert:
+            tableName: threads
+            columns:
+              - column:
+                  name: id_channel
+                  valueComputed: "(SELECT id_channel FROM channels WHERE name = 'maladies' LIMIT 1)"
+              - column:
+                  name: id_user
+                  valueComputed: "(SELECT id_user FROM users LIMIT 1 OFFSET 2)"
+              - column:
+                  name: title
+                  value: "Feuilles qui jaunissent - Que faire ?"
+              - column:
+                  name: created_at
+                  valueComputed: "CURRENT_TIMESTAMP - INTERVAL '6 hours'"

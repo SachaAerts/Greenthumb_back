@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
+import com.GreenThumb.api.forum.application.service.CommentaryService;
 import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.apigateway.dto.user.CodeRequest;
 import com.GreenThumb.api.apigateway.service.TokenExtractor;
@@ -44,6 +45,7 @@ public class UserController {
     private final PaginationValidator paginationValidator;
     private final UsernameValidator usernameValidator;
     private final PlantFacade plantFacade;
+    private final CommentaryService commentaryService;
 
     /**
      * Constructs a new UserController with required dependencies.
@@ -58,13 +60,15 @@ public class UserController {
             TokenExtractor tokenExtractor,
             PaginationValidator paginationValidator,
             UsernameValidator usernameValidator,
-            PlantFacade plantFacade
+            PlantFacade plantFacade,
+            CommentaryService commentaryService
     ) {
         this.userService = userService;
         this.tokenExtractor = tokenExtractor;
         this.paginationValidator = paginationValidator;
         this.usernameValidator = usernameValidator;
         this.plantFacade = plantFacade;
+        this.commentaryService = commentaryService;
     }
 
     /**
@@ -88,6 +92,7 @@ public class UserController {
      * @param username the username to fetch plants for
      * @param page the page number (default: 0, must be >= 0)
      * @param size the page size (default: 5, must be between 1 and 100)
+     * @param search optional search query for filtering by plant name
      * @return HTTP 200 OK with a page of plants
      * @throws IllegalArgumentException if validation fails
      */
@@ -95,13 +100,20 @@ public class UserController {
     public ResponseEntity<PageResponse<PlantDto>> getAllPlants(
             @PathVariable String username,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) String search
     ) {
         usernameValidator.validate(username);
         paginationValidator.validate(page, size);
 
         Pageable pageable = PageRequest.of(page, size);
-        PageResponse<PlantDto> response = userService.getAllPlantsByUsername(username, pageable);
+        PageResponse<PlantDto> response;
+
+        if (search != null && !search.trim().isEmpty()) {
+            response = userService.getAllPlantsByUsernameAndSearch(username, search.trim(), pageable);
+        } else {
+            response = userService.getAllPlantsByUsername(username, pageable);
+        }
 
         return ResponseEntity.ok(response);
     }
@@ -118,6 +130,19 @@ public class UserController {
         long userId = userService.getIdByUsername(username);
 
         return ResponseEntity.ok(plantFacade.countTask(userId));
+    }
+
+    @GetMapping("/{username}/messages/count")
+    public ResponseEntity<Long> getUserMessagesCount(
+            @PathVariable String username
+    ) {
+        if (username == null || username.isEmpty()) {
+            throw new NoFoundException("Utilisateur non trouvé");
+        }
+
+        long userId = userService.getIdByUsername(username);
+
+        return ResponseEntity.ok(commentaryService.countPostsByUserId(userId));
     }
 
     @GetMapping("/{username}")

@@ -1,0 +1,105 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-drop-check-constraint-medias
+      author: system
+      comment: Drop CHECK constraint on medias table before removing commentary column
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE medias DROP CONSTRAINT IF EXISTS check_media_link
+
+  - changeSet:
+      id: 2-drop-reply-table
+      author: system
+      comment: Drop reply table (depends on commentaries)
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: reply
+      changes:
+        - dropTable:
+            tableName: reply
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 3-drop-medias-commentary-fk
+      author: system
+      comment: Drop foreign key from medias to commentaries
+      preConditions:
+        - onFail: MARK_RAN
+        - foreignKeyConstraintExists:
+            foreignKeyName: fk_medias_commentary
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: medias
+            constraintName: fk_medias_commentary
+
+  - changeSet:
+      id: 4-drop-commentary-column-from-medias
+      author: system
+      comment: Remove commentary reference from medias table
+      changes:
+        - dropColumn:
+            tableName: medias
+            columnName: id_commentary
+
+  - changeSet:
+      id: 5-make-message-required-in-medias
+      author: system
+      comment: Make id_message NOT NULL in medias table (medias are now only for messages)
+      changes:
+        - addNotNullConstraint:
+            tableName: medias
+            columnName: id_message
+            columnDataType: BIGINT
+
+  - changeSet:
+      id: 6-drop-commentaries-table
+      author: system
+      comment: Drop commentaries table
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: commentaries
+      changes:
+        - dropTable:
+            tableName: commentaries
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 7-drop-tag-table
+      author: system
+      comment: Drop tag junction table (many-to-many between messages and categories)
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: tag
+      changes:
+        - dropTable:
+            tableName: tag
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 8-drop-categories-table
+      author: system
+      comment: Drop categories table (no longer needed without tags)
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: categories
+      changes:
+        - dropTable:
+            tableName: categories
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 9-create-index-medias-message
+      author: system
+      comment: Create index on medias.id_message for better query performance
+      changes:
+        - createIndex:
+            indexName: idx_medias_message
+            tableName: medias
+            columns:
+              - column:
+                  name: id_message

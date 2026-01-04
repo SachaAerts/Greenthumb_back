@@ -7,31 +7,32 @@ import com.GreenThumb.api.forum.infrastructure.mapper.MessageMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JpaCommentaryRepository implements CommentaryRepository {
-    private final SpringDataPostRepo postRepo;
 
+    private final SpringDataPostRepo springDataPostRepo;
 
-    public JpaCommentaryRepository(SpringDataPostRepo postRepo) {
-        this.postRepo = postRepo;
+    public JpaCommentaryRepository(SpringDataPostRepo springDataPostRepo) {
+        this.springDataPostRepo = springDataPostRepo;
     }
 
     @Override
     public Map<Message, Long> getTopThreeLikedCommentary() {
-        List<Object[]> results = postRepo.findTopLikedMessages(PageRequest.of(0,3));
+        List<Object[]> results = springDataPostRepo.findTopLikedMessages(PageRequest.of(0, 3));
+        Map<Message, Long> topMessages = new LinkedHashMap<>();
 
-        Map<Message, Long> map = new LinkedHashMap<>();
-
-        for (Object[] row : results) {
-            MessageEntity message = (MessageEntity) row[0];
-            Long userId = (Long) row[1];
-            Message domainMessage = MessageMapper.toDomain(message);
-
-            map.put(domainMessage, userId);
+        for (Object[] result : results) {
+            MessageEntity messageEntity = (MessageEntity) result[0];
+            Long likeCount = (Long) result[1];
+            Message message = MessageMapper.toDomain(messageEntity);
+            topMessages.put(message, likeCount);
         }
 
-        return map;
+        return topMessages;
     }
 }
+

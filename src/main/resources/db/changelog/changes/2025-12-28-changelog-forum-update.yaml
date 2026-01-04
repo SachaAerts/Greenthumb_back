@@ -1,0 +1,228 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-create-channels-table
+      author: system
+      comment: Create channels table for forum
+      changes:
+        - createTable:
+            tableName: channels
+            columns:
+              - column:
+                  name: id_channel
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_channels
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uq_channels_name
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 2-add-columns-to-messages
+      author: system
+      comment: Add user reference, channel reference and timestamps to messages table
+      validCheckSum:
+        - ANY
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: messages
+                columnName: id_user
+      changes:
+        - addColumn:
+            tableName: messages
+            columns:
+              - column:
+                  name: id_user
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: id_channel
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 3-add-foreign-keys-to-messages
+      author: system
+      comment: Add foreign key constraints to messages table
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: messages
+            baseColumnNames: id_user
+            constraintName: fk_messages_user
+            referencedTableName: users
+            referencedColumnNames: id_user
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: messages
+            baseColumnNames: id_channel
+            constraintName: fk_messages_channel
+            referencedTableName: channels
+            referencedColumnNames: id_channel
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 4-drop-unused-columns-from-messages
+      author: system
+      comment: Remove title and number_like columns from messages
+      changes:
+        - dropColumn:
+            tableName: messages
+            columnName: title
+        - dropColumn:
+            tableName: messages
+            columnName: number_like
+
+  - changeSet:
+      id: 5-add-columns-to-commentaries
+      author: system
+      comment: Add user reference and timestamps to commentaries table
+      changes:
+        - addColumn:
+            tableName: commentaries
+            columns:
+              - column:
+                  name: id_user
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 6-add-foreign-key-to-commentaries
+      author: system
+      comment: Add foreign key constraint to commentaries table
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: commentaries
+            baseColumnNames: id_user
+            constraintName: fk_commentaries_user
+            referencedTableName: users
+            referencedColumnNames: id_user
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 7-fix-medias-constraints
+      author: system
+      comment: Fix medias table to allow either message or commentary reference, not both
+      changes:
+        - dropNotNullConstraint:
+            tableName: medias
+            columnName: id_commentary
+            columnDataType: BIGINT
+        - dropNotNullConstraint:
+            tableName: medias
+            columnName: id_message
+            columnDataType: BIGINT
+        - sql:
+            sql: >
+              ALTER TABLE medias
+              ADD CONSTRAINT check_media_link
+              CHECK (
+                (id_message IS NOT NULL AND id_commentary IS NULL) OR
+                (id_message IS NULL AND id_commentary IS NOT NULL)
+              )
+
+  - changeSet:
+      id: 8-insert-default-channels
+      author: system
+      comment: Insert default forum channels
+      changes:
+        - insert:
+            tableName: channels
+            columns:
+              - column:
+                  name: name
+                  value: general
+              - column:
+                  name: description
+                  value: Discussion générale sur les plantes
+        - insert:
+            tableName: channels
+            columns:
+              - column:
+                  name: name
+                  value: identification
+              - column:
+                  name: description
+                  value: Aide pour identifier vos plantes
+        - insert:
+            tableName: channels
+            columns:
+              - column:
+                  name: name
+                  value: soins
+              - column:
+                  name: description
+                  value: Conseils d'entretien et de soins
+        - insert:
+            tableName: channels
+            columns:
+              - column:
+                  name: name
+                  value: maladies
+              - column:
+                  name: description
+                  value: Problèmes et maladies des plantes
+        - insert:
+            tableName: channels
+            columns:
+              - column:
+                  name: name
+                  value: partage
+              - column:
+                  name: description
+                  value: Partagez vos réussites et photos
+
+  - changeSet:
+      id: 9-create-index-messages-channel
+      author: system
+      comment: Create index on messages.id_channel for better query performance
+      changes:
+        - createIndex:
+            indexName: idx_messages_channel
+            tableName: messages
+            columns:
+              - column:
+                  name: id_channel
+
+  - changeSet:
+      id: 10-create-index-messages-created-at
+      author: system
+      comment: Create index on messages.created_at for ordering
+      changes:
+        - createIndex:
+            indexName: idx_messages_created_at
+            tableName: messages
+            columns:
+              - column:
+                  name: created_at
+                  descending: true

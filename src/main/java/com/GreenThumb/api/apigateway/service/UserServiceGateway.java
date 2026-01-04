@@ -1,5 +1,7 @@
 package com.GreenThumb.api.apigateway.service;
 
+import com.GreenThumb.api.infrastructure.service.RedisService;
+import com.GreenThumb.api.infrastructure.service.TokenService;
 import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
@@ -8,16 +10,11 @@ import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.dto.UserEdit;
 import com.GreenThumb.api.user.application.service.UserService;
-import com.GreenThumb.api.user.domain.exception.EmailAlreadyUsedException;
-import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -44,6 +41,10 @@ public class UserServiceGateway {
 
     public PageResponse<PlantDto> getAllPlantsByUsername(String username, Pageable pageable) {
         return plantModule.getAllPlantsByUsername(username, pageable);
+    }
+
+    public PageResponse<PlantDto> getAllPlantsByUsernameAndSearch(String username, String search, Pageable pageable) {
+        return plantModule.getAllPlantsByUsernameAndSearch(username, search, pageable);
     }
 
     public UserDto getMe(String token) throws JsonProcessingException {
@@ -147,8 +148,12 @@ public class UserServiceGateway {
                 user.phoneNumber(),
                 user.biography(),
                 user.isPrivate(),
+                user.messageCount(),
+                user.tier(),
+                user.countCreatedThread(),
                 user.role(),
-                avatarUrl
+                avatarUrl,
+                user.tasksCompleted()
         );
     }
 

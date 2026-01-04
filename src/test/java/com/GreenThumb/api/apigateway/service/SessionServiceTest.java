@@ -3,6 +3,9 @@ package com.GreenThumb.api.apigateway.service;
 import com.GreenThumb.api.apigateway.dto.Session;
 import com.GreenThumb.api.apigateway.dto.user.UserConnection;
 import com.GreenThumb.api.apigateway.utils.EmailValidator;
+import com.GreenThumb.api.infrastructure.service.RedisService;
+import com.GreenThumb.api.infrastructure.service.TokenService;
+import com.GreenThumb.api.user.application.dto.TierDto;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.service.EmailVerificationService;
 import com.GreenThumb.api.user.application.service.UserService;
@@ -53,6 +56,7 @@ class SessionServiceTest {
 
     @BeforeEach
     void setUp() {
+        TierDto testTierDto = new TierDto("Nouveau membre", 0, 1);
         testUser = new UserDto(
                 "testuser",
                 "Test",
@@ -61,8 +65,12 @@ class SessionServiceTest {
                 "0123456789",
                 "Test bio",
                 false,
+                0,
+                testTierDto,
+                0,
                 "USER",
-                "default-avatar.png"
+                "default-avatar.png",
+                0
         );
 
         frontendUrl = "http://localhost:3000";

@@ -1,0 +1,125 @@
+databaseChangeLog:
+  - changeSet: 
+      id: add-thread-limit-tier-table
+      author: jason engels
+      changes:
+        - createTable:
+            tableName: thread_limit_tiers
+            columns:
+              - column:
+                  name: id_tier
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_tier
+              - column:
+                  name: messages_required
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: threads_unlocked
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tier_name
+                  type: VARCHAR
+                  constraints:
+                    nullable: false
+                    unique: true
+  - changeSet:
+      id: insert-thread-limit-tiers-data
+      author: jason engels
+      changes:
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: '0' }
+              - column: { name: threads_unlocked, valueNumeric: '0' }
+              - column: { name: tier_name, value: "Nouveau membre" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: '5' }
+              - column: { name: threads_unlocked, valueNumeric: '1' }
+              - column: { name: tier_name, value: "Débutant" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 12 }
+              - column: { name: threads_unlocked, valueNumeric: 2 }
+              - column: { name: tier_name, value: "Novice" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 22 }
+              - column: { name: threads_unlocked, valueNumeric: 3 }
+              - column: { name: tier_name, value: "Contributeur" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 35 }
+              - column: { name: threads_unlocked, valueNumeric: 4 }
+              - column: { name: tier_name, value: "Actif" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 51 }
+              - column: { name: threads_unlocked, valueNumeric: 5 }
+              - column: { name: tier_name, value: "Régulier" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 75 }
+              - column: { name: threads_unlocked, valueNumeric: 7 }
+              - column: { name: tier_name, value: "Habitué" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 105 }
+              - column: { name: threads_unlocked, valueNumeric: 9 }
+              - column: { name: tier_name, value: "Passionné" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 145 }
+              - column: { name: threads_unlocked, valueNumeric: 11 }
+              - column: { name: tier_name, value: "Engagé" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 195 }
+              - column: { name: threads_unlocked, valueNumeric: 13 }
+              - column: { name: tier_name, value: "Vétéran" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 265 }
+              - column: { name: threads_unlocked, valueNumeric: 16 }
+              - column: { name: tier_name, value: "Expert" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 355 }
+              - column: { name: threads_unlocked, valueNumeric: 19 }
+              - column: { name: tier_name, value: "Maître jardinier" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 475 }
+              - column: { name: threads_unlocked, valueNumeric: 22 }
+              - column: { name: tier_name, value: "Sage" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 625 }
+              - column: { name: threads_unlocked, valueNumeric: 25 }
+              - column: { name: tier_name, value: "Légende" }
+        - insert:
+            tableName: thread_limit_tiers
+            columns:
+              - column: { name: messages_required, valueNumeric: 1000 }
+              - column: { name: threads_unlocked, valueNumeric: 30 }
+              - column: { name: tier_name, value: "Grand Maître" }

@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2026-01-03-add-tasks-completed-to-users
+      author: jeremy
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: tasks_completed
+                  type: INT
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+                  remarks: "Nombre de tâches complétées par l'utilisateur"
+

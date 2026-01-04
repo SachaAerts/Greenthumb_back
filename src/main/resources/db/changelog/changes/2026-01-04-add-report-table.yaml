@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-report-table
+      author: jason engels
+      changes:
+        - createTable:
+            tableName: reports
+            columns:
+              - column:
+                  name: id_report
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_report
+              - column:
+                  name: id_message
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reporter_username
+                  type: VARCHAR
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason
+                  type: VARCHAR
+                  constraints:
+                    nullable: true
+              - column:
+                  name: status
+                  type: VARCHAR
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: reviewed_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: reviewed_by
+                  type: VARCHAR
+                  constraints:
+                    nullable: true

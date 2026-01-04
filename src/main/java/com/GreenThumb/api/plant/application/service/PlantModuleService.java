@@ -44,6 +44,18 @@ public class PlantModuleService {
         return PageResponse.of(plantsPage, plantDtos);
     }
 
+    public PageResponse<PlantDto> findAllByUser_usernameAndSearch(String username, String search, Pageable pageable) {
+        Page<Plant> plantsPage = plantRepository.findAllByUser_usernameAndSearch(username, search, pageable);
+
+        if (plantsPage.isEmpty()) {
+            return PageResponse.of(plantsPage, List.of());
+        }
+
+        List<PlantDto> plantDtos = toDtoOptimized(plantsPage.getContent());
+
+        return PageResponse.of(plantsPage, plantDtos);
+    }
+
     public long countTask(Long  userId) {
         return taskRepository.countTask(userId);
     }
@@ -74,7 +86,7 @@ public class PlantModuleService {
                 .map(plant -> {
                     Long plantId = plantRepository.findIdBySlug(plant.slug());
                     List<TaskDto> tasksDto = tasksByPlantId.getOrDefault(plantId, List.of());
-                    return PlantMapper.toDto(plant, tasksDto);
+                    return PlantMapper.toDto(plant, plantId, tasksDto);
                 })
                 .toList();
     }

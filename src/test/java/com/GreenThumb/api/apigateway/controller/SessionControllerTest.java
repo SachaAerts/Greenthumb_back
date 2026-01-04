@@ -7,7 +7,7 @@ import com.GreenThumb.api.apigateway.dto.user.UserConnection;
 import com.GreenThumb.api.apigateway.dto.user.UserResponse;
 import com.GreenThumb.api.apigateway.service.AuthenticationService;
 import com.GreenThumb.api.apigateway.service.SessionService;
-import com.GreenThumb.api.apigateway.service.TokenService;
+import com.GreenThumb.api.infrastructure.service.TokenService;
 import com.GreenThumb.api.apigateway.config.JwtAuthenticationFilter;
 import com.GreenThumb.api.apigateway.config.SecurityConfig;
 import com.GreenThumb.api.user.application.dto.UserRegister;

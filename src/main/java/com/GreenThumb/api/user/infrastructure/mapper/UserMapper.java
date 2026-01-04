@@ -5,6 +5,7 @@ import com.GreenThumb.api.user.domain.entity.User;
 import com.GreenThumb.api.user.domain.exception.FormatException;
 import com.GreenThumb.api.user.domain.objectValue.*;
 import com.GreenThumb.api.user.infrastructure.entity.RoleEntity;
+import com.GreenThumb.api.user.infrastructure.entity.ThreadLimitTierEntity;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 
 public class UserMapper {
@@ -19,6 +20,12 @@ public class UserMapper {
                 userEntity.isPrivate(),
                 userEntity.getRole() != null ? toDomain(userEntity.getRole()) : new Role("UTILISATEUR"),
                 new Avatar(userEntity.getAvatar())
+                userEntity.getCountMessage(),
+                userEntity.getTier() != null ? TierMapper.toDomain(userEntity.getTier()) : null,
+                userEntity.getCountCreatedThread(),
+                toDomain(userEntity.getRole()),
+                new Avatar(userEntity.getAvatar()),
+                userEntity.getTasksCompleted()
         );
     }
 
@@ -33,13 +40,15 @@ public class UserMapper {
             UserRegister userRegister,
             String hashedPassword,
             String avatar,
-            RoleEntity role) {
+            RoleEntity role,
+            ThreadLimitTierEntity tier
+            ) {
 
         return UserEntity.builder()
                 .username(userRegister.username())
                 .firstname(userRegister.firstname())
                 .lastname(userRegister.lastname())
-                .mail(userRegister.email())
+                .mail(userRegister.email().toLowerCase())
                 .password(hashedPassword)
                 .phoneNumber(userRegister.phoneNumber())
                 .biography(null)
@@ -47,6 +56,7 @@ public class UserMapper {
                 .role(role)
                 .enabled(false)
                 .avatar(avatar)
+                .tier(tier)
                 .build();
     }
 }

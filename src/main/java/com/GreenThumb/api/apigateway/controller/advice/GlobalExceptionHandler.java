@@ -1,6 +1,8 @@
 package com.GreenThumb.api.apigateway.controller.advice;
 
+import com.GreenThumb.api.apigateway.Exception.CreatedException;
 import com.GreenThumb.api.plant.domain.exceptions.PlantNotFoundException;
+import com.GreenThumb.api.plant.domain.exceptions.TaskNotFoundException;
 import com.GreenThumb.api.plant.domain.exceptions.TrefleApiException;
 import com.GreenThumb.api.user.domain.exception.AccountNotVerifiedException;
 import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
@@ -12,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -109,6 +114,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
     }
 
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleTaskNotFoundException(TaskNotFoundException exception) {
+        log.warn("Task not found: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Task not found");
+        errors.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+    }
+
     @ExceptionHandler(TrefleApiException.class)
     public ResponseEntity<Map<String, String>> handleTrefleApiException(TrefleApiException exception) {
         log.error("Trefle API error: {}", exception.getMessage());
@@ -128,6 +142,25 @@ public class GlobalExceptionHandler {
                         violation -> violation.getMessage()
                 ));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AuthorizationDeniedException ex) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        String userRole = "ANONYME";
+        if (auth != null && auth.getAuthorities() != null && !auth.getAuthorities().isEmpty()) {
+            userRole = auth.getAuthorities().iterator().next().getAuthority()
+                    .replace("ROLE_", "");
+        }
+
+
+        String message = String.format(
+                "Action non autorisée car vous n'êtes pas ADMIN (votre rôle actuel : %s)",
+                userRole
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message);
     }
 
     @ExceptionHandler(Exception.class)

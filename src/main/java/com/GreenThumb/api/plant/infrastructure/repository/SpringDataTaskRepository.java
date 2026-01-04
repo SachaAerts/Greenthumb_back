@@ -51,4 +51,7 @@ public interface SpringDataTaskRepository extends JpaRepository<TaskEntity, Long
             "AND t.isRecurrent = true " +
             "AND t.completedDate = :date")
     List<TaskEntity> findCompletedRecurrentTasks(@Param("date") LocalDate date);
+
+    @Query("SELECT COUNT(t) FROM TaskEntity t WHERE t.plant.user.id = :userId AND t.status = 'COMPLETED'")
+    long countCompletedTasksByUserId(@Param("userId") Long userId);
 }
