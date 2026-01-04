@@ -1,5 +1,6 @@
 package com.GreenThumb.api.forum.application.listener;
 
+import com.GreenThumb.api.forum.application.dto.MessageModerationEventDto;
 import com.GreenThumb.api.forum.application.event.MessageReportedEvent;
 import com.GreenThumb.api.forum.infrastructure.dto.gemini.ModerationResult;
 import com.GreenThumb.api.forum.infrastructure.entity.MessageEntity;
@@ -7,6 +8,7 @@ import com.GreenThumb.api.forum.infrastructure.repository.SpringDataMessageRepos
 import com.GreenThumb.api.forum.infrastructure.service.gemini.GeminiModerationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +19,15 @@ public class GeminiModerationListener {
 
     private final GeminiModerationService geminiModerationService;
     private final SpringDataMessageRepository messageRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public GeminiModerationListener(
             GeminiModerationService geminiModerationService,
-            SpringDataMessageRepository messageRepository) {
+            SpringDataMessageRepository messageRepository,
+            SimpMessagingTemplate messagingTemplate) {
         this.geminiModerationService = geminiModerationService;
         this.messageRepository = messageRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @Async
@@ -55,6 +60,21 @@ public class GeminiModerationListener {
             messageRepository.save(message);
 
             log.info("AI moderation result saved for message {}", messageId);
+
+            if (!result.valide()) {
+                Long threadId = message.getThread().getId();
+                MessageModerationEventDto moderationEvent = MessageModerationEventDto.messageRemoved(
+                        messageId,
+                        result.categorie() + ": " + result.raison()
+                );
+
+                messagingTemplate.convertAndSend(
+                        "/topic/forum/" + threadId,
+                        moderationEvent
+                );
+
+                log.info("Message removal notification sent to thread {} for message {}", threadId, messageId);
+            }
 
         } catch (Exception e) {
             log.error("Error during AI moderation for message {}: {}", messageId, e.getMessage(), e);
