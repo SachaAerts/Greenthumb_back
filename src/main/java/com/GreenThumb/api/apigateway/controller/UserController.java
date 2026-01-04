@@ -14,11 +14,11 @@ import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -266,5 +266,213 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("message", e.getMessage()));
         }
+    }
+
+    @PatchMapping("/{username}/grant-admin")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> grantAdminRole(
+            @PathVariable String username,
+            Authentication authentication
+    ) {
+        String superAdminUsername = authentication.getName();
+        log.debug("Super admin {} attempting to grant admin role to user {}", superAdminUsername, username);
+
+        try {
+            if (!userService.isSuperAdmin(superAdminUsername)) {
+                log.warn("Non-super-admin {} attempted to grant admin role", superAdminUsername);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("message", "Seuls les super administrateurs peuvent accorder le rôle d'administrateur"));
+            }
+
+            if (userService.isAdmin(username)) {
+                log.warn("User {} is already an admin", username);
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("message", "Cet utilisateur est déjà administrateur"));
+            }
+
+            if (userService.isSuperAdmin(username)) {
+                log.warn("Attempted to grant admin role to super admin {}", username);
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("message", "Cet utilisateur est un super administrateur"));
+            }
+
+            userService.grantAdminRole(username);
+
+            log.info("Super admin {} granted admin role to user {}", superAdminUsername, username);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Le rôle d'administrateur a été accordé avec succès",
+                    "username", username,
+                    "role", "ADMIN"
+            ));
+        } catch (Exception e) {
+            return handleAdminRoleException(e, username, "granting");
+        }
+    }
+
+    @PatchMapping("/{username}/revoke-admin")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> revokeAdminRole(
+            @PathVariable String username,
+            Authentication authentication
+    ) {
+        String superAdminUsername = authentication.getName();
+        log.debug("Super admin {} attempting to revoke admin role from user {}", superAdminUsername, username);
+
+        try {
+            if (!userService.isSuperAdmin(superAdminUsername)) {
+                log.warn("Non-super-admin {} attempted to revoke admin role", superAdminUsername);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("message", "Seuls les super administrateurs peuvent retirer le rôle d'administrateur"));
+            }
+
+            if (userService.isSuperAdmin(username)) {
+                log.warn("Attempted to revoke admin role from super admin {}", username);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("message", "Impossible de modifier le rôle d'un super administrateur"));
+            }
+
+            if (!userService.isAdmin(username)) {
+                log.warn("User {} is not an admin", username);
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("message", "Cet utilisateur n'est pas administrateur"));
+            }
+
+            userService.revokeAdminRole(username);
+
+            log.info("Super admin {} revoked admin role from user {}", superAdminUsername, username);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Le rôle d'administrateur a été retiré avec succès",
+                    "username", username,
+                    "role", "UTILISATEUR"
+            ));
+        } catch (Exception e) {
+            return handleAdminRoleException(e, username, "revoking");
+        }
+    }
+
+    @PatchMapping("/{username}/grant-moderator")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> grantModeratorRole(
+            @PathVariable String username,
+            Authentication authentication
+    ) {
+        String superAdminUsername = authentication.getName();
+        log.debug("Super admin {} attempting to grant moderator role to user {}", superAdminUsername, username);
+
+        try {
+            if (!userService.isSuperAdmin(superAdminUsername)) {
+                log.warn("Non-super-admin {} attempted to grant moderator role", superAdminUsername);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("message", "Seuls les super administrateurs peuvent accorder le rôle de modérateur"));
+            }
+
+            if (userService.isModerator(username)) {
+                log.warn("User {} is already a moderator", username);
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("message", "Cet utilisateur est déjà modérateur"));
+            }
+
+            if (userService.isAdmin(username)) {
+                log.warn("Attempted to grant moderator role to admin {}", username);
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("message", "Cet utilisateur est un administrateur"));
+            }
+
+            if (userService.isSuperAdmin(username)) {
+                log.warn("Attempted to grant moderator role to super admin {}", username);
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("message", "Cet utilisateur est un super administrateur"));
+            }
+
+            userService.grantModeratorRole(username);
+
+            log.info("Super admin {} granted moderator role to user {}", superAdminUsername, username);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Le rôle de modérateur a été accordé avec succès",
+                    "username", username,
+                    "role", "MODERATEUR"
+            ));
+        } catch (Exception e) {
+            return handleModeratorRoleException(e, username, "granting");
+        }
+    }
+
+    @PatchMapping("/{username}/revoke-moderator")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> revokeModeratorRole(
+            @PathVariable String username,
+            Authentication authentication
+    ) {
+        String superAdminUsername = authentication.getName();
+        log.debug("Super admin {} attempting to revoke moderator role from user {}", superAdminUsername, username);
+
+        try {
+            if (!userService.isSuperAdmin(superAdminUsername)) {
+                log.warn("Non-super-admin {} attempted to revoke moderator role", superAdminUsername);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("message", "Seuls les super administrateurs peuvent retirer le rôle de modérateur"));
+            }
+
+            if (userService.isSuperAdmin(username)) {
+                log.warn("Attempted to revoke moderator role from super admin {}", username);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("message", "Impossible de modifier le rôle d'un super administrateur"));
+            }
+
+            if (userService.isAdmin(username)) {
+                log.warn("Attempted to revoke moderator role from admin {}", username);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("message", "Impossible de modifier le rôle d'un administrateur"));
+            }
+
+            if (!userService.isModerator(username)) {
+                log.warn("User {} is not a moderator", username);
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("message", "Cet utilisateur n'est pas modérateur"));
+            }
+
+            userService.revokeModeratorRole(username);
+
+            log.info("Super admin {} revoked moderator role from user {}", superAdminUsername, username);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Le rôle de modérateur a été retiré avec succès",
+                    "username", username,
+                    "role", "UTILISATEUR"
+            ));
+        } catch (Exception e) {
+            return handleModeratorRoleException(e, username, "revoking");
+        }
+    }
+
+    private ResponseEntity<?> handleAdminRoleException(Exception e, String username, String action) {
+        if (e instanceof NoFoundException) {
+            log.warn("User not found: {}", username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Utilisateur non trouvé"));
+        }
+
+        String errorMessage = action.equals("granting")
+                ? "Erreur lors de l'attribution du rôle d'administrateur"
+                : "Erreur lors du retrait du rôle d'administrateur";
+
+        log.error("Error {} admin role to/from user {}: {}", action, username, e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("message", errorMessage));
+    }
+
+    private ResponseEntity<?> handleModeratorRoleException(Exception e, String username, String action) {
+        if (e instanceof NoFoundException) {
+            log.warn("User not found: {}", username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Utilisateur non trouvé"));
+        }
+
+        String errorMessage = action.equals("granting")
+                ? "Erreur lors de l'attribution du rôle de modérateur"
+                : "Erreur lors du retrait du rôle de modérateur";
+
+        log.error("Error {} moderator role to/from user {}: {}", action, username, e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("message", errorMessage));
     }
 }

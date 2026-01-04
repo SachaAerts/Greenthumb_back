@@ -17,12 +17,15 @@ public class UserMapper {
                 new PhoneNumber(userEntity.getPhoneNumber()),
                 userEntity.getBiography(),
                 userEntity.isPrivate(),
-                toDomain(userEntity.getRole()),
+                userEntity.getRole() != null ? toDomain(userEntity.getRole()) : new Role("UTILISATEUR"),
                 new Avatar(userEntity.getAvatar())
         );
     }
 
     public static Role toDomain(RoleEntity roleEntity) {
+        if (roleEntity == null) {
+            return new Role("UTILISATEUR");
+        }
         return new Role(roleEntity.getLabel());
     }
 
