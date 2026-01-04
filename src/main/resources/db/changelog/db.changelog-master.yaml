@@ -54,6 +54,8 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/2025-12-30-create-notifications-table.yaml
   - include:
+      file: db/changelog/changes/2026-01-03-add-tasks-completed-to-users.yaml
+  - include:
       file: db/changelog/changes/2025-12-28-changelog-forum-update.yaml
   - include:
       file: db/changelog/changes/2025-12-28-add-threads-table.yaml
@@ -69,8 +71,6 @@ databaseChangeLog:
       file: db/changelog/changes/2026-01-03-remove-commentaries-and-tags.yaml
   - include:
       file: db/changelog/changes/2026-01-04-add-report-table.yaml
-  - include:
-      file: db/changelog/seeds/2025-10-23-categorie-seeder.yaml
   - include:
       file: db/changelog/seeds/2025-10-23-roles-seeder.yaml
   - include:

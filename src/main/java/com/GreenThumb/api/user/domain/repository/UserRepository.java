@@ -64,4 +64,6 @@ public interface UserRepository {
     void incrementCountMessage(Long id);
 
     void updateUserTier(Long userId, Long tierId);
+
+    void incrementTasksCompleted(Long userId);
 }

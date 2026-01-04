@@ -1,10 +1,12 @@
 package com.GreenThumb.api.plant.application.service;
 
 import com.GreenThumb.api.plant.application.dto.TaskCreationRequest;
+import com.GreenThumb.api.plant.application.events.TaskCompletedEvent;
 import com.GreenThumb.api.plant.application.events.TaskCreatedEvent;
 import com.GreenThumb.api.plant.domain.entity.Task;
 import com.GreenThumb.api.plant.application.enums.TaskStatus;
 import com.GreenThumb.api.plant.application.enums.TaskType;
+import com.GreenThumb.api.plant.domain.exceptions.TaskNotFoundException;
 import com.GreenThumb.api.plant.domain.repository.PlantRepository;
 import com.GreenThumb.api.plant.domain.repository.TaskRepository;
 import com.GreenThumb.api.plant.infrastructure.entity.PlantEntity;
@@ -114,6 +116,81 @@ public class TaskManagementService {
         }
 
         log.info("✅ Created {} tasks for plant {}", requests.size(), plant.getCommonName());
+    }
+
+    @Transactional
+    public Task completeTask(Long taskId) {
+        log.debug("Completing task with id: {}", taskId);
+
+        TaskEntity taskEntity = taskRepository.findEntityById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
+
+        PlantEntity plant = taskEntity.getPlant();
+        Long userId = plant.getUser().getId();
+        String plantName = plant.getCommonName();
+        TaskType taskType = taskEntity.getTaskType();
+        LocalDate completedDate = LocalDate.now();
+
+        boolean newTaskCreated = false;
+        LocalDate nextTaskDate = null;
+
+        // Si la tâche est récurrente, créer la prochaine occurrence
+        if (Boolean.TRUE.equals(taskEntity.getIsRecurrent()) && taskEntity.getRecurrenceFrequency() != null) {
+            nextTaskDate = taskEntity.getEndDate().plusDays(taskEntity.getRecurrenceFrequency());
+
+            TaskEntity nextTask = TaskEntity.builder()
+                    .title(taskEntity.getTitle())
+                    .description(taskEntity.getDescription())
+                    .taskType(taskEntity.getTaskType())
+                    .status(TaskStatus.PENDING)
+                    .endDate(nextTaskDate)
+                    .color(taskEntity.getColor())
+                    .isRecurrent(true)
+                    .recurrenceFrequency(taskEntity.getRecurrenceFrequency())
+                    .plant(plant)
+                    .template(taskEntity.getTemplate())
+                    .createdAt(LocalDateTime.now())
+                    .build();
+
+            taskRepository.save(nextTask);
+            newTaskCreated = true;
+            log.info("✅ Created next recurring task for plant {} with end date {}", plantName, nextTaskDate);
+        }
+
+        // Supprimer la tâche complétée
+        taskRepository.deleteById(taskId);
+        log.info("✅ Deleted completed task {} for plant {}", taskId, plantName);
+
+        // Publier l'événement de tâche complétée
+        TaskCompletedEvent event = new TaskCompletedEvent(
+                this,
+                taskId,
+                plant.getId(),
+                userId,
+                plantName,
+                taskType,
+                completedDate,
+                newTaskCreated,
+                nextTaskDate
+        );
+        eventPublisher.publishEvent(event);
+        log.debug("Published TaskCompletedEvent for task: {}", taskId);
+
+        return new Task(
+                taskId,
+                plant.getId(),
+                taskEntity.getTitle(),
+                taskEntity.getDescription(),
+                taskType,
+                TaskStatus.COMPLETED,
+                taskEntity.getEndDate(),
+                taskEntity.getColor(),
+                taskEntity.getIsRecurrent(),
+                taskEntity.getRecurrenceFrequency(),
+                completedDate,
+                taskEntity.getCreatedAt(),
+                plantName
+        );
     }
 
 }

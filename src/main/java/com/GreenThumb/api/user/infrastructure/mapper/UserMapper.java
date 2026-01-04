@@ -22,7 +22,8 @@ public class UserMapper {
                 userEntity.getTier() != null ? TierMapper.toDomain(userEntity.getTier()) : null,
                 userEntity.getCountCreatedThread(),
                 toDomain(userEntity.getRole()),
-                new Avatar(userEntity.getAvatar())
+                new Avatar(userEntity.getAvatar()),
+                userEntity.getTasksCompleted()
         );
     }
 

@@ -487,4 +487,13 @@ public class JpaUserRepository implements UserRepository {
     public void updateUserTier(Long userId, Long tierId) {
         jpaRepo.updateUserTier(userId, tierId);
     }
+
+    @Override
+    @Transactional
+    public void incrementTasksCompleted(Long userId) {
+        UserEntity user = jpaRepo.findById(userId)
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+        user.setTasksCompleted(user.getTasksCompleted() + 1);
+        jpaRepo.save(user);
+    }
 }

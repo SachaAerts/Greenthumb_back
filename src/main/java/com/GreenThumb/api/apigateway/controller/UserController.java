@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.controller;
 
+import com.GreenThumb.api.forum.application.service.CommentaryService;
 import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.apigateway.dto.user.CodeRequest;
 import com.GreenThumb.api.apigateway.service.TokenExtractor;
@@ -44,6 +45,7 @@ public class UserController {
     private final PaginationValidator paginationValidator;
     private final UsernameValidator usernameValidator;
     private final PlantFacade plantFacade;
+    private final CommentaryService commentaryService;
 
     /**
      * Constructs a new UserController with required dependencies.
@@ -58,13 +60,15 @@ public class UserController {
             TokenExtractor tokenExtractor,
             PaginationValidator paginationValidator,
             UsernameValidator usernameValidator,
-            PlantFacade plantFacade
+            PlantFacade plantFacade,
+            CommentaryService commentaryService
     ) {
         this.userService = userService;
         this.tokenExtractor = tokenExtractor;
         this.paginationValidator = paginationValidator;
         this.usernameValidator = usernameValidator;
         this.plantFacade = plantFacade;
+        this.commentaryService = commentaryService;
     }
 
     /**
@@ -126,6 +130,19 @@ public class UserController {
         long userId = userService.getIdByUsername(username);
 
         return ResponseEntity.ok(plantFacade.countTask(userId));
+    }
+
+    @GetMapping("/{username}/messages/count")
+    public ResponseEntity<Long> getUserMessagesCount(
+            @PathVariable String username
+    ) {
+        if (username == null || username.isEmpty()) {
+            throw new NoFoundException("Utilisateur non trouvé");
+        }
+
+        long userId = userService.getIdByUsername(username);
+
+        return ResponseEntity.ok(commentaryService.countPostsByUserId(userId));
     }
 
     @GetMapping("/{username}")

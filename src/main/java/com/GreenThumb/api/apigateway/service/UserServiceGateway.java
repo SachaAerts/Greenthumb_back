@@ -128,7 +128,8 @@ public class UserServiceGateway {
                 user.tier(),
                 user.countCreatedThread(),
                 user.role(),
-                avatarUrl
+                avatarUrl,
+                user.tasksCompleted()
         );
     }
 

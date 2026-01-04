@@ -86,7 +86,7 @@ public class PlantModuleService {
                 .map(plant -> {
                     Long plantId = plantRepository.findIdBySlug(plant.slug());
                     List<TaskDto> tasksDto = tasksByPlantId.getOrDefault(plantId, List.of());
-                    return PlantMapper.toDto(plant, tasksDto);
+                    return PlantMapper.toDto(plant, plantId, tasksDto);
                 })
                 .toList();
     }
