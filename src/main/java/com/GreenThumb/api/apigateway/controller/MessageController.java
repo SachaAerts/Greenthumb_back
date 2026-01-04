@@ -1,9 +1,9 @@
 package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.dto.CreateMessageRequest;
-import com.GreenThumb.api.apigateway.service.RedisService;
+import com.GreenThumb.api.infrastructure.service.RedisService;
 import com.GreenThumb.api.apigateway.service.TokenExtractor;
-import com.GreenThumb.api.apigateway.service.TokenService;
+import com.GreenThumb.api.infrastructure.service.TokenService;
 import com.GreenThumb.api.forum.application.dto.ChatMessageDto;
 import com.GreenThumb.api.forum.application.service.ForumMessageService;
 import com.GreenThumb.api.forum.domain.services.ForumMediaStorageService;

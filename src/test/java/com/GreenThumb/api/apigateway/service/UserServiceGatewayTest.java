@@ -1,11 +1,13 @@
 package com.GreenThumb.api.apigateway.service;
 
+import com.GreenThumb.api.infrastructure.service.RedisService;
+import com.GreenThumb.api.infrastructure.service.TokenService;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
+import com.GreenThumb.api.user.application.dto.TierDto;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,10 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +52,7 @@ class UserServiceGatewayTest {
 
     @BeforeEach
     void setUp() {
+        TierDto testTierDto = new TierDto("Nouveau membre", 0, 1);
         testUser = new UserDto(
                 "testuser",
                 "Test",
@@ -62,6 +61,9 @@ class UserServiceGatewayTest {
                 "0123456789",
                 "Test bio",
                 false,
+                0,
+                testTierDto,
+                0,
                 "USER",
                 "default-avatar.png"
         );

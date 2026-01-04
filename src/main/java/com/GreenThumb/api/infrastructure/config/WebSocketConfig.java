@@ -1,6 +1,6 @@
 package com.GreenThumb.api.infrastructure.config;
 
-import com.GreenThumb.api.apigateway.service.TokenService;
+import com.GreenThumb.api.infrastructure.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;

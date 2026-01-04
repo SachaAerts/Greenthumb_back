@@ -4,6 +4,7 @@ import com.GreenThumb.api.apigateway.Exception.CreatedException;
 import com.GreenThumb.api.apigateway.dto.ThreadRequest;
 import com.GreenThumb.api.forum.application.dto.ThreadDto;
 import com.GreenThumb.api.forum.application.service.ThreadModuleService;
+import com.GreenThumb.api.infrastructure.service.RedisService;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.service.UserService;
 

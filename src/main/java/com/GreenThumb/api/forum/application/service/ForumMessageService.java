@@ -1,6 +1,6 @@
 package com.GreenThumb.api.forum.application.service;
 
-import com.GreenThumb.api.apigateway.service.RedisService;
+import com.GreenThumb.api.infrastructure.service.RedisService;
 import com.GreenThumb.api.forum.application.dto.ChatMessageDto;
 import com.GreenThumb.api.forum.domain.repository.MessageRepository;
 import com.GreenThumb.api.forum.infrastructure.entity.MediaEntity;

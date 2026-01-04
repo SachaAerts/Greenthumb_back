@@ -1,4 +1,4 @@
-package com.GreenThumb.api.apigateway.service;
+package com.GreenThumb.api.infrastructure.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

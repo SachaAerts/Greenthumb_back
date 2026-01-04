@@ -1,4 +1,4 @@
-package com.GreenThumb.api.apigateway.service;
+package com.GreenThumb.api.infrastructure.service;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
