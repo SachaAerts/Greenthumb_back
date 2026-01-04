@@ -120,6 +120,27 @@ public class UserController {
         return ResponseEntity.ok(plantFacade.countTask(userId));
     }
 
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        try {
+            usernameValidator.validate(username);
+            UserDto user = userService.getUserByUsername(username);
+
+            if (user.isPrivate()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("message", "Ce profil est privé"));
+            }
+
+            return ResponseEntity.ok(user);
+        } catch (NoFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Utilisateur non trouvé"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
     /**
      * Retrieves information about the currently authenticated user.
      *
@@ -189,6 +210,34 @@ public class UserController {
         return  ResponseEntity.ok().body(Map.of("sucess", "Mot de passe modifier avec succes"));
     }
     
+    @PatchMapping("/{username}/privacy")
+    public ResponseEntity<?> updateUserPrivacy(
+            @PathVariable String username,
+            @RequestBody Map<String, Boolean> request
+    ) {
+        try {
+            Boolean isPrivate = request.get("isPrivate");
+            if (isPrivate == null) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("message", "Le champ isPrivate est requis"));
+            }
+
+            userService.updateUserPrivacy(username, isPrivate);
+
+            String visibilityMessage = isPrivate
+                    ? "Votre profil est maintenant privé"
+                    : "Votre profil est maintenant public";
+
+            return ResponseEntity.ok(Map.of("message", visibilityMessage));
+        } catch (NoFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Utilisateur non trouvé"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
     @DeleteMapping("/me")
     public ResponseEntity<?> deactivateOwnAccount(Authentication authentication) {
         String username = authentication.getName();

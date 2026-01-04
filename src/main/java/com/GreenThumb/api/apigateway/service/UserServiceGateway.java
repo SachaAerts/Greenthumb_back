@@ -79,6 +79,11 @@ public class UserServiceGateway {
         userService.resetPassword(passwords, email);
     }
 
+    public void updateUserPrivacy(String username, boolean isPrivate) {
+        userService.updateUserPrivacy(username, isPrivate);
+        redisService.delete(username);
+    }
+
     public void deactivateUser(String username) {
         userService.deactivateUserByUsername(username);
         redisService.delete(username);
@@ -86,6 +91,11 @@ public class UserServiceGateway {
 
     public boolean isAdmin(String username) {
         return userService.isAdmin(username);
+    }
+
+    public UserDto getUserByUsername(String username) {
+        UserDto user = userService.getUserByUsername(username);
+        return normalizeAvatar(user);
     }
 
     private String buildAvatarUrl(String storedPath) {

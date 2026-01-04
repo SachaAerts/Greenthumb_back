@@ -45,6 +45,8 @@ public interface UserRepository {
 
     void setUserEnabled(String username, boolean enabled);
 
+    void updateUserPrivacy(String username, boolean isPrivate);
+
     void deactivateUserByUsername(String username);
 
     void hardDeleteUserByUsername(String username);

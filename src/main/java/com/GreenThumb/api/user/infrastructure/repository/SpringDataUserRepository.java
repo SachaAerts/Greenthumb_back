@@ -31,6 +31,10 @@ public interface SpringDataUserRepository extends JpaRepository<UserEntity, Long
     @Query("UPDATE UserEntity u SET u.enabled = :enabled WHERE u.username = :username")
     int updateEnabledByUsername(@Param("username") String username, @Param("enabled") boolean enabled);
 
+    @Modifying
+    @Query("UPDATE UserEntity u SET u.isPrivate = :isPrivate WHERE u.username = :username")
+    int updateIsPrivateByUsername(@Param("username") String username, @Param("isPrivate") boolean isPrivate);
+
     void deleteByUsername(String username);
 
     @Query("SELECT u.role.label FROM UserEntity u WHERE u.username = :username")

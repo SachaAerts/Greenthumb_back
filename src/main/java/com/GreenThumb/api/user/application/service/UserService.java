@@ -91,6 +91,10 @@ public class UserService {
         userRepository.setUserEnabled(username, enabled);
     }
 
+    public void updateUserPrivacy(String username, boolean isPrivate) throws NoFoundException {
+        userRepository.updateUserPrivacy(username, isPrivate);
+    }
+
     public void deactivateUserByUsername(String username) throws NoFoundException {
         userRepository.deactivateUserByUsername(username);
     }

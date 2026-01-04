@@ -340,6 +340,15 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     @Transactional
+    public void updateUserPrivacy(String username, boolean isPrivate) {
+        int updated = jpaRepo.updateIsPrivateByUsername(username, isPrivate);
+        if (updated == 0) {
+            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
+        }
+    }
+
+    @Override
+    @Transactional
     public void deactivateUserByUsername(String username) {
         UserEntity user = jpaRepo.findByUsername(username)
                 .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
