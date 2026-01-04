@@ -1,6 +1,6 @@
 package com.GreenThumb.api.apigateway.config;
 
-import com.GreenThumb.api.apigateway.service.TokenService;
+import com.GreenThumb.api.infrastructure.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

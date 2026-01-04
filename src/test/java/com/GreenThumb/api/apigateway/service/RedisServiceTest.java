@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.service;
 
+import com.GreenThumb.api.infrastructure.service.RedisService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

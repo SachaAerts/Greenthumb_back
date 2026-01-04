@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-count-thread-created-column
+      author: jason engels
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: thread-created-count
+                  type: INT
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false

@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-thread-limit-user-table
+      author: jason engels
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: id_tier
+                  type: BIGINT
+                  defaultValueNumeric: 1
+                  constraints:
+                    nullable: true
+              - column:
+                  name: total_message_count
+                  type: INT
+                  defaultValueNumeric: '0'
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: id_tier
+            constraintName: fk_users_tier
+            referencedTableName: thread_limit_tiers
+            referencedColumnNames: id_tier
+            onDelete: SET NULL
