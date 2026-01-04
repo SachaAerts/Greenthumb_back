@@ -7,6 +7,7 @@ public record Message(
         Long id,
         String text,
         String author,
-        LocalDateTime timestamp
+        LocalDateTime timestamp,
+        List<String> mediaUrls
 ) {
 }

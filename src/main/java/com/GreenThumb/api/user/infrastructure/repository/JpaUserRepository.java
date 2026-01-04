@@ -468,4 +468,14 @@ public class JpaUserRepository implements UserRepository {
     public void incrementCreatedThread(Long id) {
         jpaRepo.incrementCreatedThread(id);
     }
+
+    @Override
+    public void incrementCountMessage(Long id) {
+        jpaRepo.incrementCountMessage(id);
+    }
+
+    @Override
+    public void updateUserTier(Long userId, Long tierId) {
+        jpaRepo.updateUserTier(userId, tierId);
+    }
 }

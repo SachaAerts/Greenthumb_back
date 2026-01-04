@@ -24,4 +24,10 @@ public class JpaThreadLimitTierRepoistory implements ThreadLimitTierRepository {
                 .orElseThrow(() -> new NoFoundException("Aucun tier trouvé"));
         return TierMapper.toDomain(next);
     }
+
+    @Override
+    public ThreadLimitTierEntity findCurrentTier(int messageCount) {
+        return threadLimitTierRepository.findCurrentTierByMessageCount(messageCount)
+                .orElseThrow(() -> new NoFoundException("Aucun tier trouvé"));
+    }
 }

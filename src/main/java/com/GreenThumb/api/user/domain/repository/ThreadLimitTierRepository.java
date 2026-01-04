@@ -5,4 +5,6 @@ import com.GreenThumb.api.user.infrastructure.entity.ThreadLimitTierEntity;
 
 public interface ThreadLimitTierRepository {
     Tier findNextTier(String name);
+
+    ThreadLimitTierEntity findCurrentTier(int messageCount);
 }

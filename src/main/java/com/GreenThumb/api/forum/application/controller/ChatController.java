@@ -18,6 +18,7 @@ public class ChatController {
     public ChatController(ForumMessageService forumMessageService) {
         this.forumMessageService = forumMessageService;
     }
+
     @MessageMapping("/forum/send")
     public void sendMessage(@Payload ChatMessageDto message, Principal principal) {
         String username = principal.getName();

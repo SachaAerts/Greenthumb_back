@@ -38,6 +38,11 @@ public class JpaMessageRepository implements MessageRepository {
     }
 
     @Override
+    public MessageEntity save(MessageEntity message) {
+        return messageRepository.save(message);
+    }
+
+    @Override
     public List<MessageEntity> findByThreadId(Long threadId) {
         return messageRepository.findByThreadId(threadId);
     }

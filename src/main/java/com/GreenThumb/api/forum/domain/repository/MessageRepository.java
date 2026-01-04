@@ -8,5 +8,7 @@ import java.util.List;
 public interface MessageRepository {
     MessageEntity save(Long idThread, String text, UserEntity user);
 
+    MessageEntity save(MessageEntity message);
+
     List<MessageEntity> findByThreadId(Long threadId);
 }

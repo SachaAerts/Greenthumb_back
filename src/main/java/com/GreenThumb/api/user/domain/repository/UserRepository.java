@@ -58,4 +58,8 @@ public interface UserRepository {
     UserEntity findByUsername(String username);
 
     void incrementCreatedThread(Long id);
+
+    void incrementCountMessage(Long id);
+
+    void updateUserTier(Long userId, Long tierId);
 }
