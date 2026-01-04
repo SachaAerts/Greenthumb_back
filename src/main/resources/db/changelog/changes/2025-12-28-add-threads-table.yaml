@@ -1,0 +1,178 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-create-threads-table
+      author: system
+      comment: Create threads table for forum discussions
+      changes:
+        - createTable:
+            tableName: threads
+            columns:
+              - column:
+                  name: id_thread
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_threads
+              - column:
+                  name: id_channel
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: id_user
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_pinned
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_locked
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 2-add-foreign-keys-to-threads
+      author: system
+      comment: Add foreign key constraints to threads table
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: threads
+            baseColumnNames: id_channel
+            constraintName: fk_threads_channel
+            referencedTableName: channels
+            referencedColumnNames: id_channel
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: threads
+            baseColumnNames: id_user
+            constraintName: fk_threads_user
+            referencedTableName: users
+            referencedColumnNames: id_user
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 3-add-thread-column-to-messages
+      author: system
+      comment: Add thread reference to messages table
+      changes:
+        - addColumn:
+            tableName: messages
+            columns:
+              - column:
+                  name: id_thread
+                  type: BIGINT
+
+  - changeSet:
+      id: 4-migrate-messages-to-threads
+      author: system
+      comment: Create default threads for existing messages grouped by channel
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: messages
+      changes:
+        - sql:
+            sql: >
+              INSERT INTO threads (id_channel, id_user, title, created_at)
+              SELECT 
+                m.id_channel,
+                MIN(m.id_user) as id_user,
+                CONCAT('Discussion ', c.name) as title,
+                MIN(m.created_at) as created_at
+              FROM messages m
+              JOIN channels c ON m.id_channel = c.id_channel
+              GROUP BY m.id_channel, c.name
+        - sql:
+            sql: >
+              UPDATE messages m
+              SET id_thread = (
+                SELECT t.id_thread
+                FROM threads t
+                WHERE t.id_channel = m.id_channel
+                LIMIT 1
+              )
+              WHERE m.id_thread IS NULL
+
+  - changeSet:
+      id: 6-add-foreign-key-messages-thread
+      author: system
+      comment: Add foreign key constraint from messages to threads
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: messages
+            baseColumnNames: id_thread
+            constraintName: fk_messages_thread
+            referencedTableName: threads
+            referencedColumnNames: id_thread
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 7-drop-channel-from-messages
+      author: system
+      comment: Remove channel reference from messages (now using threads)
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: messages
+            constraintName: fk_messages_channel
+        - dropColumn:
+            tableName: messages
+            columnName: id_channel
+
+  - changeSet:
+      id: 8-create-indexes-threads
+      author: system
+      comment: Create indexes on threads table for better performance
+      changes:
+        - createIndex:
+            indexName: idx_threads_channel
+            tableName: threads
+            columns:
+              - column:
+                  name: id_channel
+        - createIndex:
+            indexName: idx_threads_created_at
+            tableName: threads
+            columns:
+              - column:
+                  name: created_at
+                  descending: true
+        - createIndex:
+            indexName: idx_threads_pinned
+            tableName: threads
+            columns:
+              - column:
+                  name: is_pinned
+              - column:
+                  name: created_at
+                  descending: true
+
+  - changeSet:
+      id: 9-create-index-messages-thread
+      author: system
+      comment: Create index on messages.id_thread for better query performance
+      changes:
+        - createIndex:
+            indexName: idx_messages_thread
+            tableName: messages
+            columns:
+              - column:
+                  name: id_thread

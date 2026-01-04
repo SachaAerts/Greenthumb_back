@@ -7,14 +7,13 @@ import com.GreenThumb.api.apigateway.dto.VerifyEmailRequest;
 import com.GreenThumb.api.apigateway.service.AuthenticationService;
 import com.GreenThumb.api.user.application.dto.UserRegister;
 import com.GreenThumb.api.apigateway.service.SessionService;
-import com.GreenThumb.api.apigateway.service.TokenService;
+import com.GreenThumb.api.infrastructure.service.TokenService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.security.Principal;
 import java.util.Map;

@@ -15,7 +15,6 @@ public interface SpringDataPostRepo extends JpaRepository<PostEntity, PostId> {
         FROM PostEntity p
         WHERE p.isLike = true
         GROUP BY p.message, p.user.id
-        ORDER BY p.message.likeCount DESC
     """)
     List<Object[]> findTopLikedMessages(PageRequest pageRequest);
 }
