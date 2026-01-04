@@ -97,6 +97,30 @@ public class UserServiceGateway {
         return userService.isAdmin(username);
     }
 
+    public boolean isSuperAdmin(String username) {
+        return userService.isSuperAdmin(username);
+    }
+
+    public boolean isModerator(String username) {
+        return userService.isModerator(username);
+    }
+
+    public void grantAdminRole(String username) {
+        userService.grantAdminRole(username);
+    }
+
+    public void revokeAdminRole(String username) {
+        userService.revokeAdminRole(username);
+    }
+
+    public void grantModeratorRole(String username) {
+        userService.grantModeratorRole(username);
+    }
+
+    public void revokeModeratorRole(String username) {
+        userService.revokeModeratorRole(username);
+    }
+
     public UserDto getUserByUsername(String username) {
         UserDto user = userService.getUserByUsername(username);
         return normalizeAvatar(user);

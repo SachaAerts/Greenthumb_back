@@ -8,6 +8,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: label
+                  value: "SUPER_ADMIN"
+
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: label
                   value: "ADMIN"
 
         - insert:
