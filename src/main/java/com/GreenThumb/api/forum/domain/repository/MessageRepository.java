@@ -11,4 +11,6 @@ public interface MessageRepository {
     MessageEntity save(MessageEntity message);
 
     List<MessageEntity> findByThreadId(Long threadId);
+
+    boolean existsById(Long messageId);
 }

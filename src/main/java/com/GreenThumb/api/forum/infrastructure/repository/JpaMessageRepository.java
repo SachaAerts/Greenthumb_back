@@ -46,4 +46,9 @@ public class JpaMessageRepository implements MessageRepository {
     public List<MessageEntity> findByThreadId(Long threadId) {
         return messageRepository.findByThreadId(threadId);
     }
+
+    @Override
+    public boolean existsById(Long messageId) {
+        return messageRepository.existsById(messageId);
+    }
 }
