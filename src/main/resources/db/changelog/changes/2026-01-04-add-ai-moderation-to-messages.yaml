@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-ai-moderation-columns-to-messages
+      author: jason
+      changes:
+        - addColumn:
+            tableName: messages
+            columns:
+              - column:
+                  name: ai_moderation_checked
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ai_moderation_valid
+                  type: BOOLEAN
+                  constraints:
+                    nullable: true
+              - column:
+                  name: ai_moderation_reason
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: ai_moderation_explanation
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: true

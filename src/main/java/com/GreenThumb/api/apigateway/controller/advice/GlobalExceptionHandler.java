@@ -1,6 +1,6 @@
 package com.GreenThumb.api.apigateway.controller.advice;
 
-import com.GreenThumb.api.infrastructure.exception.GeminiApiException;
+import com.GreenThumb.api.forum.infrastructure.exception.GeminiApiException;
 import com.GreenThumb.api.apigateway.Exception.CreatedException;
 import com.GreenThumb.api.plant.domain.exceptions.PlantNotFoundException;
 import com.GreenThumb.api.plant.domain.exceptions.TrefleApiException;

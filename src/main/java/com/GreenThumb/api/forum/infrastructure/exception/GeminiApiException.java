@@ -1,4 +1,4 @@
-package com.GreenThumb.api.infrastructure.exception;
+package com.GreenThumb.api.forum.infrastructure.exception;
 
 public class GeminiApiException extends RuntimeException {
     public GeminiApiException(String message) {

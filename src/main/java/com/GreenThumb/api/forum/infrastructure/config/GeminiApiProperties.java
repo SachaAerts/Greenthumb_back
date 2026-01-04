@@ -1,4 +1,4 @@
-package com.GreenThumb.api.infrastructure.config;
+package com.GreenThumb.api.forum.infrastructure.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

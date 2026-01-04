@@ -1,4 +1,4 @@
-package com.GreenThumb.api.infrastructure.dto.gemini;
+package com.GreenThumb.api.forum.infrastructure.dto.gemini;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

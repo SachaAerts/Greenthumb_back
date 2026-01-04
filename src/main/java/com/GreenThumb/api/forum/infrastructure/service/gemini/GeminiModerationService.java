@@ -1,8 +1,8 @@
-package com.GreenThumb.api.infrastructure.service;
+package com.GreenThumb.api.forum.infrastructure.service.gemini;
 
-import com.GreenThumb.api.infrastructure.config.GeminiApiProperties;
-import com.GreenThumb.api.infrastructure.dto.gemini.*;
-import com.GreenThumb.api.infrastructure.exception.GeminiApiException;
+import com.GreenThumb.api.forum.infrastructure.config.GeminiApiProperties;
+import com.GreenThumb.api.forum.infrastructure.dto.gemini.*;
+import com.GreenThumb.api.forum.infrastructure.exception.GeminiApiException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
