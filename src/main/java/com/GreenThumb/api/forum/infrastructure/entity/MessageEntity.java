@@ -1,5 +1,6 @@
 package com.GreenThumb.api.forum.infrastructure.entity;
 
+import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,27 +22,38 @@ public class MessageEntity {
     @Column(name = "id_message")
     private Long id;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "text")
     private String text;
 
-    @Column(name = "number_like")
-    private Integer likeCount;
 
     @Column(name = "published_date")
     private LocalDateTime date;
 
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<CommentaryEntity> comments = new ArrayList<>();
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user", nullable = false)
+    private UserEntity user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_thread", nullable = false)
+    private ThreadEntity thread;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<MediaEntity> medias = new ArrayList<>();
 
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<TagEntity> tags = new ArrayList<>();
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

@@ -10,6 +10,9 @@ public record UserDto(
         String phoneNumber,
         String biography,
         boolean isPrivate,
+        int messageCount,
+        TierDto tier,
+        int countCreatedThread,
         String role,
         String avatar,
         Integer tasksCompleted
@@ -23,6 +26,9 @@ public record UserDto(
                 user.phoneNumber().getPhoneNumber(),
                 user.biography(),
                 user.isPrivate(),
+                user.messageCount(),
+                user.tier() != null ? TierDto.toDto(user.tier()) : null,
+                user.countCreatedThread(),
                 user.role().label(),
                 user.avatar().avatar(),
                 user.tasksCompleted()

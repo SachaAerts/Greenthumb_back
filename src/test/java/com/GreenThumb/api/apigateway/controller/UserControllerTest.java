@@ -10,6 +10,7 @@ import com.GreenThumb.api.forum.application.service.CommentaryService;
 import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
+import com.GreenThumb.api.user.application.dto.TierDto;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -236,7 +237,9 @@ class UserControllerTest {
     @DisplayName("GET /api/users/me - Doit retourner les informations de l'utilisateur connecté")
     void getMe_shouldReturnCurrentUserInfo() throws Exception {
         // Given
+        TierDto tierDto = new TierDto("Nouveau membre", 0, 1);
         UserDto userDto = new UserDto("testuser", "Test", "User", "test@example.com",
+                                      "0123456789", "My bio", false, 0, tierDto, 0, "USER", null);
                                       "0123456789", "My bio", false, "USER", null, 0);
 
         when(tokenExtractor.extractToken("Bearer valid-token-123")).thenReturn("valid-token-123");
@@ -356,7 +359,9 @@ class UserControllerTest {
     @DisplayName("GET /api/users/me - Doit retourner un utilisateur avec le rôle ADMIN")
     void getMe_shouldReturnAdminUser() throws Exception {
         // Given
+        TierDto adminTierDto = new TierDto("Nouveau membre", 0, 1);
         UserDto adminDto = new UserDto("adminuser", "Admin", "User", "admin@example.com",
+                                       "0123456789", "Admin bio", false, 0, adminTierDto, 0, "ADMIN", null);
                                        "0123456789", "Admin bio", false, "ADMIN", null, 0);
 
         when(tokenExtractor.extractToken("Bearer admin-token")).thenReturn("admin-token");
@@ -374,8 +379,10 @@ class UserControllerTest {
     @DisplayName("GET /api/users/me - Doit retourner un compte privé")
     void getMe_shouldReturnPrivateUser() throws Exception {
         // Given
+        TierDto privateTierDto = new TierDto("Nouveau membre", 0, 1);
         UserDto privateUserDto = new UserDto("privateuser", "Private", "User", "private@example.com",
                                              "0123456789", "Bio", true, "USER", null, 0);
+                                             "0123456789", "Bio", true, 0, privateTierDto, 0, "USER", null);
 
         when(tokenExtractor.extractToken("Bearer token")).thenReturn("token");
         when(userService.getMe("token")).thenReturn(privateUserDto);

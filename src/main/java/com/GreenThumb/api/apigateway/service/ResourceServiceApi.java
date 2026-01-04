@@ -2,6 +2,7 @@ package com.GreenThumb.api.apigateway.service;
 
 import com.GreenThumb.api.apigateway.mapper.ResourceMapper;
 import com.GreenThumb.api.apigateway.dto.Resource;
+import com.GreenThumb.api.infrastructure.service.TokenService;
 import com.GreenThumb.api.resources.application.dto.CategoryDto;
 import com.GreenThumb.api.resources.application.dto.LikedDto;
 import com.GreenThumb.api.resources.application.dto.ResourceDto;

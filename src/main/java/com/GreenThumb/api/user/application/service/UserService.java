@@ -91,6 +91,10 @@ public class UserService {
         userRepository.setUserEnabled(username, enabled);
     }
 
+    public void updateUserPrivacy(String username, boolean isPrivate) throws NoFoundException {
+        userRepository.updateUserPrivacy(username, isPrivate);
+    }
+
     public void deactivateUserByUsername(String username) throws NoFoundException {
         userRepository.deactivateUserByUsername(username);
     }
@@ -106,8 +110,17 @@ public class UserService {
         return userRepository.existUser(email);
     }
 
+    public boolean existUserByUsername(String username) {
+        return userRepository.existByUsername(username);
+    }
+
     public void sendEmailResetCode(String email) {
         emailResetCodeService.sendResetCodeMail(email);
     }
 
+    public void incrementCreatedCount(String username) {
+        Long id = getIdByUsername(username);
+
+        userRepository.incrementCreatedThread(id);
+    }
 }

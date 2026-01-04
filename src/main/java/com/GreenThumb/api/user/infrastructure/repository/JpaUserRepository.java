@@ -13,6 +13,7 @@ import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.GreenThumb.api.user.domain.service.AvatarStorageService;
 import com.GreenThumb.api.user.domain.service.PasswordService;
 import com.GreenThumb.api.user.infrastructure.entity.RoleEntity;
+import com.GreenThumb.api.user.infrastructure.entity.ThreadLimitTierEntity;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import com.GreenThumb.api.user.infrastructure.mapper.UserMapper;
 import jakarta.persistence.EntityManager;
@@ -32,15 +33,21 @@ import static com.GreenThumb.api.user.domain.service.PasswordService.hash;
 public class JpaUserRepository implements UserRepository {
     private final SpringDataUserRepository jpaRepo;
     private final RoleRepository roleRepository;
+    private final SpringDataThreadLimitTierRepository threadLimitTierRepository;
     private final AvatarStorageService avatarStorageService;
     private final String deletedAvatarUrl;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public JpaUserRepository(SpringDataUserRepository jpaRepo, RoleRepository roleRepository, AvatarStorageService avatarStorageService, @Value("${greenthumb.avatar.default-url}") String deletedAvatarUrl) {
+    public JpaUserRepository(SpringDataUserRepository jpaRepo,
+                             RoleRepository roleRepository,
+                             SpringDataThreadLimitTierRepository threadLimitTierRepository,
+                             AvatarStorageService avatarStorageService,
+                             @Value("${greenthumb.avatar.default-url}") String deletedAvatarUrl) {
         this.jpaRepo = jpaRepo;
         this.roleRepository = roleRepository;
+        this.threadLimitTierRepository = threadLimitTierRepository;
         this.avatarStorageService = avatarStorageService;
         this.deletedAvatarUrl = deletedAvatarUrl;
     }
@@ -137,6 +144,12 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    public UserEntity getUserEntityByName(String username) {
+        return jpaRepo.findByUsername(username)
+                .orElseThrow(() -> new NoFoundException("Erreur l'or de la récuperation de l'utilisateur"));
+    }
+
+    @Override
     public User findByEmail(String email) throws NoFoundException {
         return jpaRepo.findByMail(email)
                 .map(userEntity -> {
@@ -153,6 +166,12 @@ public class JpaUserRepository implements UserRepository {
                         throw new IllegalArgumentException("Erreur de format interne", e);
                     }
                 })
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+    }
+
+    @Override
+    public UserEntity findByUsername(String username) {
+        return jpaRepo.findByUsername(username)
                 .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
     }
 
@@ -176,6 +195,9 @@ public class JpaUserRepository implements UserRepository {
     public void postUserRegistration(UserRegister user) {
         String hashPassword = hash(user.password());
         RoleEntity roleUser = roleRepository.getRoleEntity("UTILISATEUR");
+        ThreadLimitTierEntity tier = threadLimitTierRepository.findById(1L)
+                .orElseThrow(() -> new NoFoundException("Le tier n'a pas été trouvé"));
+
         if (roleUser == null) {
             throw new NoFoundException("Le rôle n'existe pas !");
         }
@@ -184,7 +206,13 @@ public class JpaUserRepository implements UserRepository {
         checkUsername(user.username());
 
         String avatarPath = saveAvatar(user.avatar());
-        UserEntity userEntity = UserMapper.toEntityForRegistration(user, hashPassword, avatarPath, roleUser);
+        UserEntity userEntity = UserMapper.toEntityForRegistration(
+                user,
+                hashPassword,
+                avatarPath,
+                roleUser,
+                tier
+        );
         jpaRepo.save(userEntity);
     }
 
@@ -201,6 +229,11 @@ public class JpaUserRepository implements UserRepository {
     @Override
     public boolean existUser(String email) {
         return jpaRepo.existsByMail(email);
+    }
+
+    @Override
+    public boolean existByUsername(String username) {
+        return jpaRepo.existsByUsername(username);
     }
 
     private void checkMailAndPhone(String mail, String phone) {
@@ -307,6 +340,15 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     @Transactional
+    public void updateUserPrivacy(String username, boolean isPrivate) {
+        int updated = jpaRepo.updateIsPrivateByUsername(username, isPrivate);
+        if (updated == 0) {
+            throw new NoFoundException("L'utilisateur n'a pas été trouvé");
+        }
+    }
+
+    @Override
+    @Transactional
     public void deactivateUserByUsername(String username) {
         UserEntity user = jpaRepo.findByUsername(username)
                 .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
@@ -318,16 +360,16 @@ public class JpaUserRepository implements UserRepository {
 
         Long userId = user.getId();
         String originalUsername = user.getUsername();
-        
+
         user.setUsername("deleted_user_" + userId);
         user.setFirstname("Utilisateur");
         user.setLastname("Désactivé");
         user.setMail("deleted_" + userId + "@greenthumb.local");
         user.setPhoneNumber(null);
         user.setBiography(null);
-        
+
         user.setAvatar(this.deletedAvatarUrl);
-        
+
         user.setDeletedAt(LocalDateTime.now());
 
         jpaRepo.save(user);
@@ -429,6 +471,21 @@ public class JpaUserRepository implements UserRepository {
                 .toList();
 
         return PageResponse.of(content, totalElements, page, size);
+    }
+
+    @Override
+    public void incrementCreatedThread(Long id) {
+        jpaRepo.incrementCreatedThread(id);
+    }
+
+    @Override
+    public void incrementCountMessage(Long id) {
+        jpaRepo.incrementCountMessage(id);
+    }
+
+    @Override
+    public void updateUserTier(Long userId, Long tierId) {
+        jpaRepo.updateUserTier(userId, tierId);
     }
 
     @Override

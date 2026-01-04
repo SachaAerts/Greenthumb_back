@@ -1,6 +1,6 @@
 package com.GreenThumb.api.apigateway.config;
 
-import com.GreenThumb.api.apigateway.service.TokenService;
+import com.GreenThumb.api.infrastructure.service.TokenService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
