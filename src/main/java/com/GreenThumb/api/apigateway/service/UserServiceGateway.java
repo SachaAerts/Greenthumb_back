@@ -9,7 +9,9 @@ import com.GreenThumb.api.plant.application.facade.PlantFacade;
 import com.GreenThumb.api.user.application.dto.Passwords;
 import com.GreenThumb.api.user.application.dto.UserDto;
 import com.GreenThumb.api.user.application.dto.UserEdit;
+import com.GreenThumb.api.user.application.dto.UserPrivateDto;
 import com.GreenThumb.api.user.application.service.UserService;
+import com.GreenThumb.api.user.domain.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Pageable;
@@ -126,6 +128,12 @@ public class UserServiceGateway {
         return normalizeAvatar(user);
     }
 
+    public UserPrivateDto getUserPrivateByUsername(String username) {
+        UserPrivateDto user = userService.getUserPrivateByUsername(username);
+
+        return normalizeAvatar(user);
+    }
+
     private String buildAvatarUrl(String storedPath) {
         if (storedPath == null || storedPath.isBlank()) {
             return "/uploads/users/default.png";
@@ -147,6 +155,21 @@ public class UserServiceGateway {
                 user.email(),
                 user.phoneNumber(),
                 user.biography(),
+                user.isPrivate(),
+                user.messageCount(),
+                user.tier(),
+                user.countCreatedThread(),
+                user.role(),
+                avatarUrl,
+                user.tasksCompleted()
+        );
+    }
+
+    private UserPrivateDto normalizeAvatar(UserPrivateDto user) {
+        if (user == null) return null;
+        String avatarUrl = buildAvatarUrl(user.avatar());
+        return new UserPrivateDto(
+                user.username(),
                 user.isPrivate(),
                 user.messageCount(),
                 user.tier(),

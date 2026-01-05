@@ -51,4 +51,14 @@ public class JpaMessageRepository implements MessageRepository {
     public boolean existsById(Long messageId) {
         return messageRepository.existsById(messageId);
     }
+
+    @Override
+    public List<MessageEntity> findByUser(UserEntity user) {
+        return messageRepository.findByUser(user);
+    }
+
+    @Override
+    public java.util.Optional<MessageEntity> findById(Long messageId) {
+        return messageRepository.findById(messageId);
+    }
 }

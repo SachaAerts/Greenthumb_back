@@ -13,6 +13,9 @@ public class MessageMapper {
                 messageEntity.getDate(),
                 messageEntity.getMedias().stream()
                         .map(MediaEntity::getUrl)
+                        .toList(),
+                messageEntity.getReactions().stream()
+                        .map(ReactionMapper::toDomain)
                         .toList()
                 );
     }

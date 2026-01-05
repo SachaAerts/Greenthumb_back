@@ -12,6 +12,7 @@ import com.GreenThumb.api.apigateway.validation.UsernameValidator;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
 import com.GreenThumb.api.user.application.dto.UserDto;
+import com.GreenThumb.api.user.application.dto.UserPrivateDto;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -146,7 +147,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+    public ResponseEntity<?> username(@PathVariable String username) {
         try {
             usernameValidator.validate(username);
             UserDto user = userService.getUserByUsername(username);
@@ -155,6 +156,22 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(Map.of("message", "Ce profil est privé"));
             }
+
+            return ResponseEntity.ok(user);
+        } catch (NoFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Utilisateur non trouvé"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/private/{username}")
+    public ResponseEntity<?> getPrivateValueUser(@PathVariable String username) {
+        try {
+            usernameValidator.validate(username);
+            UserPrivateDto user = userService.getUserPrivateByUsername(username);
 
             return ResponseEntity.ok(user);
         } catch (NoFoundException e) {
