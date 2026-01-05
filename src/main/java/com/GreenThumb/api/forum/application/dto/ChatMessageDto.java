@@ -9,7 +9,8 @@ public record ChatMessageDto(
         String username,
         String text,
         LocalDateTime timestamp,
-        List<String> mediaUrls
+        List<String> mediaUrls,
+        List<ReactionDto> reactions
 ) {
     public ChatMessageDto(
             Long idMessage,
@@ -18,6 +19,6 @@ public record ChatMessageDto(
             String text,
             LocalDateTime timestamp
     ) {
-        this(idMessage, idThread, username, text, timestamp, List.of());
+        this(idMessage, idThread, username, text, timestamp, List.of(), List.of());
     }
 }
