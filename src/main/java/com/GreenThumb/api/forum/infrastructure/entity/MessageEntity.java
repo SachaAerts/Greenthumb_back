@@ -35,6 +35,19 @@ public class MessageEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "ai_moderation_checked")
+    @Builder.Default
+    private Boolean aiModerationChecked = false;
+
+    @Column(name = "ai_moderation_valid")
+    private Boolean aiModerationValid;
+
+    @Column(name = "ai_moderation_reason", length = 100)
+    private String aiModerationReason;
+
+    @Column(name = "ai_moderation_explanation", length = 50)
+    private String aiModerationExplanation;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", nullable = false)
     private UserEntity user;
