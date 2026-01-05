@@ -1,5 +1,6 @@
 package com.GreenThumb.api.plant.domain.repository;
 
+import com.GreenThumb.api.plant.application.dto.PlantFilterDto;
 import com.GreenThumb.api.plant.application.dto.PlantRegister;
 import com.GreenThumb.api.plant.domain.entity.Plant;
 import com.GreenThumb.api.plant.infrastructure.entity.PlantEntity;
@@ -15,6 +16,8 @@ public interface PlantRepository {
     Page<Plant> findAllByUser_username(String username, Pageable pageable);
 
     Page<Plant> findAllByUser_usernameAndSearch(String username, String search, Pageable pageable);
+
+    Page<Plant> findAllByUser_usernameWithFilters(String username, String search, PlantFilterDto filters, Pageable pageable);
 
     Long findIdBySlug(String slug);
 

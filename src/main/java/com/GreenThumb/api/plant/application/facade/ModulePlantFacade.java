@@ -2,6 +2,7 @@ package com.GreenThumb.api.plant.application.facade;
 
 import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
+import com.GreenThumb.api.plant.application.dto.PlantFilterDto;
 import com.GreenThumb.api.plant.application.service.PlantModuleService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -46,6 +47,10 @@ public class ModulePlantFacade implements PlantFacade {
 
     public PageResponse<PlantDto> getAllPlantsByUsernameAndSearch(String username, String search, Pageable pageable) {
         return plantService.findAllByUser_usernameAndSearch(username, search, pageable);
+    }
+
+    public PageResponse<PlantDto> getAllPlantsByUsernameWithFilters(String username, String search, PlantFilterDto filters, Pageable pageable) {
+        return plantService.findAllByUser_usernameWithFilters(username, search, filters, pageable);
     }
 
     public long countTask(Long userId) {

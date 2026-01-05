@@ -4,6 +4,7 @@ import com.GreenThumb.api.infrastructure.service.RedisService;
 import com.GreenThumb.api.infrastructure.service.TokenService;
 import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
+import com.GreenThumb.api.plant.application.dto.PlantFilterDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
 
 import com.GreenThumb.api.user.application.dto.Passwords;
@@ -47,6 +48,10 @@ public class UserServiceGateway {
 
     public PageResponse<PlantDto> getAllPlantsByUsernameAndSearch(String username, String search, Pageable pageable) {
         return plantModule.getAllPlantsByUsernameAndSearch(username, search, pageable);
+    }
+
+    public PageResponse<PlantDto> getAllPlantsByUsernameWithFilters(String username, String search, PlantFilterDto filters, Pageable pageable) {
+        return plantModule.getAllPlantsByUsernameWithFilters(username, search, filters, pageable);
     }
 
     public UserDto getMe(String token) throws JsonProcessingException {
