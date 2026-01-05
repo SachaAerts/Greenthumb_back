@@ -56,4 +56,9 @@ public class JpaMessageRepository implements MessageRepository {
     public List<MessageEntity> findByUser(UserEntity user) {
         return messageRepository.findByUser(user);
     }
+
+    @Override
+    public java.util.Optional<MessageEntity> findById(Long messageId) {
+        return messageRepository.findById(messageId);
+    }
 }

@@ -10,7 +10,8 @@ public record MessageDto(
         String text,
         String author,
         LocalDateTime timestamp,
-        List<String> mediaUrls
+        List<String> mediaUrls,
+        List<ReactionDto> reactions
 ) {
     public static MessageDto to(Message message) {
         return new MessageDto(
@@ -18,7 +19,10 @@ public record MessageDto(
                 message.text(),
                 message.author(),
                 message.timestamp(),
-                message.mediaUrls()
+                message.mediaUrls(),
+                message.reactions().stream()
+                        .map(ReactionDto::toDto)
+                        .toList()
         );
     }
 
@@ -28,7 +32,10 @@ public record MessageDto(
                 this.text,
                 this.author,
                 this.timestamp,
-                this.mediaUrls
+                this.mediaUrls,
+                this.reactions.stream()
+                        .map(ReactionDto::toDomain)
+                        .toList()
         );
     }
 }

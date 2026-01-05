@@ -16,4 +16,6 @@ public interface MessageRepository {
     List<MessageEntity> findByUser(UserEntity user);
 
     boolean existsById(Long messageId);
+
+    Optional<MessageEntity> findById(Long messageId);
 }

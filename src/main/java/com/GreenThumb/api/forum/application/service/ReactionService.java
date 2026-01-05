@@ -40,17 +40,9 @@ public class ReactionService {
 
     @Transactional
     public void toggleReaction(ReactionActionDto dto, String username) {
-        if (!messageRepository.existsById(dto.idMessage())) {
-            log.error("Message {} not found", dto.idMessage());
-            throw new IllegalArgumentException("Message non trouvé");
-        }
-
         UserEntity user = userRepository.getUserEntityByName(username);
 
-        List<MessageEntity> messages = messageRepository.findByUser(user);
-        MessageEntity messageEntity = messages.stream()
-                .filter(message -> message.getId().equals(dto.idMessage()))
-                .findFirst()
+        MessageEntity messageEntity = messageRepository.findById(dto.idMessage())
                 .orElseThrow(() -> new IllegalArgumentException("Message non trouvé"));
 
         Optional<ReactionEntity> existingReaction = reactionRepository.findByMessageAndUserAndEmoji(messageEntity, user, dto.emoji());
@@ -87,12 +79,7 @@ public class ReactionService {
     }
 
     public List<ReactionDto> getReactionByMessage(Long idMessage, String username ) {
-        UserEntity user = userRepository.getUserEntityByName(username);
-
-        List<MessageEntity> messages = messageRepository.findByUser(user);
-        MessageEntity message = messages.stream()
-                .filter(m -> m.getId().equals(idMessage))
-                .findFirst()
+        MessageEntity message = messageRepository.findById(idMessage)
                 .orElseThrow(() -> new IllegalArgumentException("Message non trouvé"));
 
         List<ReactionEntity> reactions = reactionRepository.findByMessage(message);
