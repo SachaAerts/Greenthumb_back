@@ -7,6 +7,7 @@ import com.GreenThumb.api.forum.infrastructure.entity.ThreadEntity;
 import com.GreenThumb.api.forum.infrastructure.mapper.MessageMapper;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -66,7 +67,7 @@ public class JpaMessageRepository implements MessageRepository {
 
     @Override
     public List<Message> findTop3Message() {
-        return messageRepository.findTop3ByOrderByCreatedAtDesc().stream()
+        return messageRepository.findTop3MessagesForModeration(PageRequest.of(0, 3)).stream()
                 .map(MessageMapper::toDomain)
                 .toList();
     }
