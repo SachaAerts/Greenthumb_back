@@ -11,6 +11,7 @@ public record MessageDto(
         String author,
         LocalDateTime timestamp,
         List<String> mediaUrls,
+        List<ReactionDto> reactions,
         Boolean aiModerationValid
 ) {
     public static MessageDto to(Message message) {
@@ -20,7 +21,10 @@ public record MessageDto(
                 message.author(),
                 message.timestamp(),
                 message.mediaUrls(),
-                message.aiModerationValid()
+                message.aiModerationValid(),
+                message.reactions().stream()
+                        .map(ReactionDto::toDto)
+                        .toList()
         );
     }
 
@@ -31,6 +35,9 @@ public record MessageDto(
                 this.author,
                 this.timestamp,
                 this.mediaUrls,
+                this.reactions.stream()
+                        .map(ReactionDto::toDomain)
+                        .toList(),
                 this.aiModerationValid
         );
     }

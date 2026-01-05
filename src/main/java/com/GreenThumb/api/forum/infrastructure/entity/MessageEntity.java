@@ -60,6 +60,10 @@ public class MessageEntity {
     @Builder.Default
     private List<MediaEntity> medias = new ArrayList<>();
 
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ReactionEntity> reactions = new ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

@@ -15,6 +15,10 @@ public class MessageMapper {
                         .map(MediaEntity::getUrl)
                         .toList(),
                 messageEntity.getAiModerationValid()
+                        .toList(),
+                messageEntity.getReactions().stream()
+                        .map(ReactionMapper::toDomain)
+                        .toList()
                 );
     }
 }
