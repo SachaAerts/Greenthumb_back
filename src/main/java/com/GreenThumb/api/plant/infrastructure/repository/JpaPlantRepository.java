@@ -64,7 +64,12 @@ public class JpaPlantRepository implements PlantRepository {
     public void createPlant(PlantRegister newPlant) {
         UserEntity user = getUserAuthenticated();
         String processedImageUrl = plantImageStorageService.processPlantImage(newPlant.imageUrl());
+
+        // Générer un slug unique
+        String uniqueSlug = generateUniqueSlug(newPlant.slug());
+
         PlantEntity plantEntity = PlantMapper.toEntity(newPlant, user, processedImageUrl);
+        plantEntity.setSlug(uniqueSlug);
 
         PlantEntity savedPlant = plantRepository.save(plantEntity);
 
@@ -135,10 +140,11 @@ public class JpaPlantRepository implements PlantRepository {
         // Si le nom scientifique a changé, on met à jour le slug
         String newSlug = plant.getSlug();
         if (!plant.getScientificName().equals(plantRegister.scientificName())) {
-            newSlug = plantRegister.scientificName()
+            String baseSlug = plantRegister.scientificName()
                     .toLowerCase()
                     .replaceAll("\\s+", "-")
                     .replaceAll("[^a-z0-9-]", "");
+            newSlug = generateUniqueSlug(baseSlug);
             plant.setSlug(newSlug);
         }
 
@@ -164,5 +170,24 @@ public class JpaPlantRepository implements PlantRepository {
         plantRepository.save(plant);
 
         return newSlug;
+    }
+
+    /**
+     * Génère un slug unique en ajoutant un suffixe numérique si le slug existe déjà.
+     * Par exemple: "rosa-damascena" -> "rosa-damascena-2" si "rosa-damascena" existe déjà.
+     */
+    private String generateUniqueSlug(String baseSlug) {
+        if (!plantRepository.existsBySlug(baseSlug)) {
+            return baseSlug;
+        }
+
+        int suffix = 2;
+        String candidateSlug;
+        do {
+            candidateSlug = baseSlug + "-" + suffix;
+            suffix++;
+        } while (plantRepository.existsBySlug(candidateSlug));
+
+        return candidateSlug;
     }
 }

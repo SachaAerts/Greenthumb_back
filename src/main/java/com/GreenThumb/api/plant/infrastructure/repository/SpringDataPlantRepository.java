@@ -24,4 +24,5 @@ public interface SpringDataPlantRepository extends JpaRepository<PlantEntity, Lo
 
     Optional<PlantEntity> findBySlug(String slug);
 
+    boolean existsBySlug(String slug);
 }
