@@ -102,7 +102,7 @@ class UserControllerTest {
 
         doNothing().when(usernameValidator).validate("testuser");
         doNothing().when(paginationValidator).validate(0, 5);
-        when(userService.getAllPlantsByUsername(eq("testuser"), any()))
+        when(userService.getAllPlantsByUsernameWithFilters(eq("testuser"), isNull(), any(), any()))
                 .thenReturn(PageResponse.of(plantsPage));
 
         // When & Then
@@ -121,7 +121,7 @@ class UserControllerTest {
 
         doNothing().when(usernameValidator).validate("testuser");
         doNothing().when(paginationValidator).validate(1, 10);
-        when(userService.getAllPlantsByUsername(eq("testuser"), any()))
+        when(userService.getAllPlantsByUsernameWithFilters(eq("testuser"), isNull(), any(), any()))
                 .thenReturn(PageResponse.of(plantsPage));
 
         // When & Then
@@ -141,7 +141,7 @@ class UserControllerTest {
 
         doNothing().when(usernameValidator).validate("testuser");
         doNothing().when(paginationValidator).validate(0, 5);
-        when(userService.getAllPlantsByUsername(eq("testuser"), any()))
+        when(userService.getAllPlantsByUsernameWithFilters(eq("testuser"), isNull(), any(), any()))
                 .thenReturn(PageResponse.of(emptyPage));
 
         // When & Then
@@ -223,7 +223,7 @@ class UserControllerTest {
         Page<PlantDto> plantsPage = new PageImpl<>(Collections.emptyList());
         doNothing().when(usernameValidator).validate("testuser");
         doNothing().when(paginationValidator).validate(0, 100);
-        when(userService.getAllPlantsByUsername(eq("testuser"), any()))
+        when(userService.getAllPlantsByUsernameWithFilters(eq("testuser"), isNull(), any(), any()))
                 .thenReturn(PageResponse.of(plantsPage));
 
         // When & Then

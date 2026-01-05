@@ -16,7 +16,8 @@ public class MessageMapper {
                         .toList(),
                 messageEntity.getReactions().stream()
                         .map(ReactionMapper::toDomain)
-                        .toList()
+                        .toList(),
+                messageEntity.getAiModerationValid()
                 );
     }
 }

@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+@Slf4j
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -40,7 +43,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 String role = (String) claims.get("role");
 
+                log.info("JWT Authentication - User: {}, Role from JWT: {}", username, role);
+
                 var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+
+                log.info("Created authorities: {}", authorities);
 
                 User principal = new User(username, "", authorities);
 

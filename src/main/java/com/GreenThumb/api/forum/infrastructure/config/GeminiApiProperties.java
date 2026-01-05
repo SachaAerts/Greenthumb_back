@@ -1,0 +1,16 @@
+package com.GreenThumb.api.forum.infrastructure.config;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Data
+@Configuration
+@ConfigurationProperties(prefix = "gemini.api")
+public class GeminiApiProperties {
+    private String baseUrl;
+    private String model;
+    private String key;
+    private double temperature;
+    private int timeoutSeconds;
+}

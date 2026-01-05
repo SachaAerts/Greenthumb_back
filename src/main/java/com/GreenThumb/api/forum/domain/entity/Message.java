@@ -11,6 +11,7 @@ public record Message(
         String author,
         LocalDateTime timestamp,
         List<String> mediaUrls,
-        List<Reaction> reactions
+        List<Reaction> reactions,
+        Boolean aiModerationValid
 ) {
 }

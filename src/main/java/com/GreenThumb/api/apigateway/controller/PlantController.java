@@ -44,4 +44,18 @@ public class PlantController {
         plantService.createPlantApi(request);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{slug}")
+    public ResponseEntity<?> deletePlant(@PathVariable String slug) {
+        log.info("Received delete request for plant with slug: {}", slug);
+        plantService.deletePlant(slug);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{slug}")
+    public ResponseEntity<?> updatePlant(@PathVariable String slug, @Valid @RequestBody PlantRegister request) {
+        log.info("Received update request for plant with slug: {}", slug);
+        String newSlug = plantService.updatePlant(slug, request);
+        return ResponseEntity.ok().body(java.util.Map.of("slug", newSlug));
+    }
 }
