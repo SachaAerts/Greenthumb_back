@@ -22,6 +22,8 @@ public interface PlantRepository {
 
     void createPlant(PlantRegister plant);
 
+    String updateBySlug(String slug, PlantRegister plant);
+
     void deleteBySlug(String slug);
 
 }
