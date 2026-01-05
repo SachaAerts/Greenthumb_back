@@ -5,9 +5,12 @@ import com.GreenThumb.api.plant.domain.exceptions.PlantNotFoundException;
 import com.GreenThumb.api.plant.domain.exceptions.TaskNotFoundException;
 import com.GreenThumb.api.plant.domain.exceptions.TrefleApiException;
 import com.GreenThumb.api.user.domain.exception.AccountNotVerifiedException;
+import com.GreenThumb.api.user.domain.exception.EmailAlreadyUsedException;
 import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
+import com.GreenThumb.api.user.domain.exception.PhoneNumberAlreadyUsedException;
 import com.GreenThumb.api.user.domain.exception.UserAlreadyVerifiedException;
+import com.GreenThumb.api.user.domain.exception.UsernameAlreadyUsedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -79,6 +82,30 @@ public class GlobalExceptionHandler {
         errors.put("error", "account_not_verified");
         errors.put("message", exception.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errors);
+    }
+
+    @ExceptionHandler(EmailAlreadyUsedException.class)
+    public ResponseEntity<Map<String, String>> handleEmailAlreadyUsedException(EmailAlreadyUsedException exception) {
+        log.warn("Tentative d'inscription avec un email déjà utilisé: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
+    }
+
+    @ExceptionHandler(PhoneNumberAlreadyUsedException.class)
+    public ResponseEntity<Map<String, String>> handlePhoneNumberAlreadyUsedException(PhoneNumberAlreadyUsedException exception) {
+        log.warn("Tentative d'inscription avec un numéro de téléphone déjà utilisé: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
+    }
+
+    @ExceptionHandler(UsernameAlreadyUsedException.class)
+    public ResponseEntity<Map<String, String>> handleUsernameAlreadyUsedException(UsernameAlreadyUsedException exception) {
+        log.warn("Tentative d'inscription avec un pseudo déjà utilisé: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
     }
 
     @ExceptionHandler(JsonProcessingException.class)
