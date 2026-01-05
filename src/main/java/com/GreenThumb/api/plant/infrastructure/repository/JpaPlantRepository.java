@@ -113,4 +113,56 @@ public class JpaPlantRepository implements PlantRepository {
         plantImageStorageService.deletePlantImage(plant.getImageUrl());
         plantRepository.delete(plant);
     }
+
+    @Override
+    @Transactional
+    public String updateBySlug(String slug, PlantRegister plantRegister) {
+        UserEntity user = getUserAuthenticated();
+        PlantEntity plant = plantRepository.findBySlug(slug)
+                .orElseThrow(() -> new RuntimeException("Plant not found with slug: " + slug));
+
+        if (!plant.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("You can only update your own plants");
+        }
+
+        // Si l'image a changé, on supprime l'ancienne et on sauvegarde la nouvelle
+        String processedImageUrl = plant.getImageUrl();
+        if (plantRegister.imageUrl() != null && !plantRegister.imageUrl().equals(plant.getImageUrl())) {
+            plantImageStorageService.deletePlantImage(plant.getImageUrl());
+            processedImageUrl = plantImageStorageService.processPlantImage(plantRegister.imageUrl());
+        }
+
+        // Si le nom scientifique a changé, on met à jour le slug
+        String newSlug = plant.getSlug();
+        if (!plant.getScientificName().equals(plantRegister.scientificName())) {
+            newSlug = plantRegister.scientificName()
+                    .toLowerCase()
+                    .replaceAll("\\s+", "-")
+                    .replaceAll("[^a-z0-9-]", "");
+            plant.setSlug(newSlug);
+        }
+
+        // Mise à jour des champs
+        plant.setScientificName(plantRegister.scientificName());
+        plant.setCommonName(plantRegister.commonName());
+        plant.setImageUrl(processedImageUrl);
+        plant.setDuration(plantRegister.lifeCycle());
+        plant.setWaterNeed(plantRegister.waterNeed());
+        plant.setLightLevel(plantRegister.lightLevel());
+        plant.setSoilType(plantRegister.soilType());
+        plant.setSoilPhMin(plantRegister.soilPhMin());
+        plant.setSoilPhMax(plantRegister.soilPhMax());
+        plant.setTemperatureMin(plantRegister.temperatureMin());
+        plant.setTemperatureMax(plantRegister.temperatureMax());
+        plant.setHumidityNeed(plantRegister.humidityNeed());
+        plant.setBloomMonths(plantRegister.bloomMonthStart() + "-" + plantRegister.bloomMonthEnd());
+        plant.setPetToxic(plantRegister.petToxic());
+        plant.setHumanToxic(plantRegister.humanToxic());
+        plant.setIndoorFriendly(plantRegister.indoorFriendly());
+        plant.setDescription(plantRegister.description());
+
+        plantRepository.save(plant);
+
+        return newSlug;
+    }
 }
