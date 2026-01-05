@@ -1,5 +1,6 @@
 package com.GreenThumb.api.forum.domain.repository;
 
+import com.GreenThumb.api.forum.domain.entity.Message;
 import com.GreenThumb.api.forum.infrastructure.entity.MessageEntity;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 
@@ -18,4 +19,6 @@ public interface MessageRepository {
     boolean existsById(Long messageId);
 
     Optional<MessageEntity> findById(Long messageId);
+
+    List<Message> findTop3Message();
 }

@@ -1,6 +1,7 @@
 package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.apigateway.dto.CreateMessageRequest;
+import com.GreenThumb.api.forum.application.dto.MessageDto;
 import com.GreenThumb.api.forum.application.dto.ReactionDto;
 import com.GreenThumb.api.forum.application.service.ReactionService;
 import com.GreenThumb.api.infrastructure.service.RedisService;
@@ -10,8 +11,8 @@ import com.GreenThumb.api.forum.application.dto.ChatMessageDto;
 import com.GreenThumb.api.forum.application.service.ForumMessageService;
 import com.GreenThumb.api.forum.domain.services.ForumMediaStorageService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,8 +37,8 @@ public class MessageController {
             ForumMessageService forumMessageService,
             ForumMediaStorageService forumMediaStorageService,
             ReactionService reactionService,
-            RedisService redisService
-    ) {
+            RedisService redisService,
+            MessageSource messageSource) {
         this.tokenService = tokenService;
         this.extractor = extractor;
         this.forumMessageService = forumMessageService;
@@ -128,5 +129,10 @@ public class MessageController {
         List<ReactionDto> reactions = reactionService.getReactionByMessage(messageId, username);
 
         return ResponseEntity.ok(reactions);
+    }
+
+    @GetMapping("top3like")
+    public ResponseEntity<List<MessageDto>> getTopMessage() {
+        return ResponseEntity.ok(forumMessageService.getTop3Message());
     }
 }

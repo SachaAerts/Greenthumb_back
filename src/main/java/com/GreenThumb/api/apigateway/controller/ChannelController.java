@@ -59,7 +59,7 @@ public class ChannelController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<?> addChannel(
             @RequestBody ChannelRequest request
     ) {

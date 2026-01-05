@@ -1,5 +1,6 @@
 package com.GreenThumb.api.forum.application.service;
 
+import com.GreenThumb.api.forum.application.dto.MessageDto;
 import com.GreenThumb.api.forum.application.dto.ReactionDto;
 import com.GreenThumb.api.infrastructure.service.RedisService;
 import com.GreenThumb.api.forum.application.dto.ChatMessageDto;
@@ -153,6 +154,12 @@ public class ForumMessageService {
                                 ))
                                 .toList()
                 ))
+                .toList();
+    }
+
+    public List<MessageDto> getTop3Message() {
+        return messageRepository.findTop3Message().stream()
+                .map(MessageDto::to)
                 .toList();
     }
 

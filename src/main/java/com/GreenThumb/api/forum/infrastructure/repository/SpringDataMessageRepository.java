@@ -11,4 +11,6 @@ public interface SpringDataMessageRepository extends JpaRepository<MessageEntity
     List<MessageEntity> findByThreadId(Long threadId);
 
     List<MessageEntity> findByUser(UserEntity user);
+
+    List<MessageEntity> findTop3ByOrderByCreatedAtDesc();
 }
