@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface SpringDataMessageRepository extends JpaRepository<MessageEntity, Long> {
 
-    @Query("SELECT m FROM MessageEntity m WHERE m.thread.id = :threadId " +
-           "AND (m.aiModerationValid IS NULL OR m.aiModerationValid = true) " +
-           "ORDER BY m.createdAt ASC")
+    @Query("SELECT m FROM MessageEntity m WHERE m.thread.id = :threadId ORDER BY m.createdAt ASC")
     List<MessageEntity> findByThreadId(@Param("threadId") Long threadId);
 }

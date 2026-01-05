@@ -8,6 +8,7 @@ public record Message(
         String text,
         String author,
         LocalDateTime timestamp,
-        List<String> mediaUrls
+        List<String> mediaUrls,
+        Boolean aiModerationValid
 ) {
 }

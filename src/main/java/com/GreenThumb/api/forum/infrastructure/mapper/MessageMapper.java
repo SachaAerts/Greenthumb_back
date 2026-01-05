@@ -13,7 +13,8 @@ public class MessageMapper {
                 messageEntity.getDate(),
                 messageEntity.getMedias().stream()
                         .map(MediaEntity::getUrl)
-                        .toList()
+                        .toList(),
+                messageEntity.getAiModerationValid()
                 );
     }
 }

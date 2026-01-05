@@ -10,7 +10,8 @@ public record MessageDto(
         String text,
         String author,
         LocalDateTime timestamp,
-        List<String> mediaUrls
+        List<String> mediaUrls,
+        Boolean aiModerationValid
 ) {
     public static MessageDto to(Message message) {
         return new MessageDto(
@@ -18,7 +19,8 @@ public record MessageDto(
                 message.text(),
                 message.author(),
                 message.timestamp(),
-                message.mediaUrls()
+                message.mediaUrls(),
+                message.aiModerationValid()
         );
     }
 
@@ -28,7 +30,8 @@ public record MessageDto(
                 this.text,
                 this.author,
                 this.timestamp,
-                this.mediaUrls
+                this.mediaUrls,
+                this.aiModerationValid
         );
     }
 }
