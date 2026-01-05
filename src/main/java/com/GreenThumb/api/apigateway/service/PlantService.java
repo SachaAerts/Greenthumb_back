@@ -68,4 +68,9 @@ public class PlantService {
     public void createPlantApi(PlantApiDto plantApiDto) {
         plantApiRepo.createPlantApi(plantApiDto);
     }
+
+    public void deletePlant(String slug) {
+        log.info("Deleting plant with slug: {}", slug);
+        plantRepository.deleteBySlug(slug);
+    }
 }

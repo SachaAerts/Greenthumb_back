@@ -44,4 +44,11 @@ public class PlantController {
         plantService.createPlantApi(request);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{slug}")
+    public ResponseEntity<?> deletePlant(@PathVariable String slug) {
+        log.info("Received delete request for plant with slug: {}", slug);
+        plantService.deletePlant(slug);
+        return ResponseEntity.noContent().build();
+    }
 }

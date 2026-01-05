@@ -98,4 +98,19 @@ public class JpaPlantRepository implements PlantRepository {
     public Optional<PlantEntity> findbyId(Long id) {
         return plantRepository.findById(id);
     }
+
+    @Override
+    @Transactional
+    public void deleteBySlug(String slug) {
+        UserEntity user = getUserAuthenticated();
+        PlantEntity plant = plantRepository.findBySlug(slug)
+                .orElseThrow(() -> new RuntimeException("Plant not found with slug: " + slug));
+
+        if (!plant.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("You can only delete your own plants");
+        }
+
+        plantImageStorageService.deletePlantImage(plant.getImageUrl());
+        plantRepository.delete(plant);
+    }
 }

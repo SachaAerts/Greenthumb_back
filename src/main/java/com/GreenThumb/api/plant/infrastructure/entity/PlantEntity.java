@@ -4,6 +4,9 @@ import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "plants")
 @Getter
@@ -78,4 +81,8 @@ public class PlantEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", nullable = false)
     private UserEntity user;
+
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<TaskEntity> tasks = new ArrayList<>();
 }

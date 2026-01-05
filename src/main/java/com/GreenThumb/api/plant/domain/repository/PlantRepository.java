@@ -22,4 +22,6 @@ public interface PlantRepository {
 
     void createPlant(PlantRegister plant);
 
+    void deleteBySlug(String slug);
+
 }
