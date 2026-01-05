@@ -2,6 +2,7 @@ package com.GreenThumb.api.apigateway.controller;
 
 import com.GreenThumb.api.forum.application.service.CommentaryService;
 import com.GreenThumb.api.plant.application.dto.PageResponse;
+import com.GreenThumb.api.plant.application.dto.PlantFilterDto;
 import com.GreenThumb.api.apigateway.dto.user.CodeRequest;
 import com.GreenThumb.api.apigateway.service.TokenExtractor;
 import com.GreenThumb.api.user.application.dto.Passwords;
@@ -23,6 +24,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -93,6 +96,13 @@ public class UserController {
      * @param page the page number (default: 0, must be >= 0)
      * @param size the page size (default: 5, must be between 1 and 100)
      * @param search optional search query for filtering by plant name
+     * @param lifeCycle optional filter by life cycle (comma-separated values)
+     * @param waterNeed optional filter by water need (comma-separated values)
+     * @param lightLevel optional filter by light level (comma-separated values)
+     * @param soilType optional filter by soil type (comma-separated values)
+     * @param petToxic optional filter by pet toxicity
+     * @param humanToxic optional filter by human toxicity
+     * @param indoorFriendly optional filter by indoor friendly
      * @return HTTP 200 OK with a page of plants
      * @throws IllegalArgumentException if validation fails
      */
@@ -101,21 +111,52 @@ public class UserController {
             @PathVariable String username,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String lifeCycle,
+            @RequestParam(required = false) String waterNeed,
+            @RequestParam(required = false) String lightLevel,
+            @RequestParam(required = false) String soilType,
+            @RequestParam(required = false) Boolean petToxic,
+            @RequestParam(required = false) Boolean humanToxic,
+            @RequestParam(required = false) Boolean indoorFriendly
     ) {
         usernameValidator.validate(username);
         paginationValidator.validate(page, size);
 
         Pageable pageable = PageRequest.of(page, size);
-        PageResponse<PlantDto> response;
 
-        if (search != null && !search.trim().isEmpty()) {
-            response = userService.getAllPlantsByUsernameAndSearch(username, search.trim(), pageable);
-        } else {
-            response = userService.getAllPlantsByUsername(username, pageable);
-        }
+        // Construire le DTO de filtre
+        PlantFilterDto filters = new PlantFilterDto(
+                parseCommaSeparated(lifeCycle),
+                parseCommaSeparated(waterNeed),
+                parseCommaSeparated(lightLevel),
+                parseCommaSeparated(soilType),
+                petToxic,
+                humanToxic,
+                indoorFriendly
+        );
+
+        PageResponse<PlantDto> response = userService.getAllPlantsByUsernameWithFilters(
+                username,
+                search != null ? search.trim() : null,
+                filters,
+                pageable
+        );
 
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Parse une chaîne séparée par des virgules en liste de chaînes
+     */
+    private List<String> parseCommaSeparated(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+        return Arrays.stream(value.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
     }
 
 

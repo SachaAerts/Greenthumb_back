@@ -2,6 +2,7 @@ package com.GreenThumb.api.plant.application.service;
 
 import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
+import com.GreenThumb.api.plant.application.dto.PlantFilterDto;
 import com.GreenThumb.api.plant.application.dto.TaskDto;
 import com.GreenThumb.api.plant.domain.entity.Plant;
 import com.GreenThumb.api.plant.domain.repository.PlantRepository;
@@ -46,6 +47,18 @@ public class PlantModuleService {
 
     public PageResponse<PlantDto> findAllByUser_usernameAndSearch(String username, String search, Pageable pageable) {
         Page<Plant> plantsPage = plantRepository.findAllByUser_usernameAndSearch(username, search, pageable);
+
+        if (plantsPage.isEmpty()) {
+            return PageResponse.of(plantsPage, List.of());
+        }
+
+        List<PlantDto> plantDtos = toDtoOptimized(plantsPage.getContent());
+
+        return PageResponse.of(plantsPage, plantDtos);
+    }
+
+    public PageResponse<PlantDto> findAllByUser_usernameWithFilters(String username, String search, PlantFilterDto filters, Pageable pageable) {
+        Page<Plant> plantsPage = plantRepository.findAllByUser_usernameWithFilters(username, search, filters, pageable);
 
         if (plantsPage.isEmpty()) {
             return PageResponse.of(plantsPage, List.of());

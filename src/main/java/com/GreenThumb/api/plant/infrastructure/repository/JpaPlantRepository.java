@@ -1,6 +1,7 @@
 package com.GreenThumb.api.plant.infrastructure.repository;
 
 import com.GreenThumb.api.plant.application.dto.PlantApiDto;
+import com.GreenThumb.api.plant.application.dto.PlantFilterDto;
 import com.GreenThumb.api.plant.application.dto.PlantRegister;
 import com.GreenThumb.api.plant.application.events.PlantEventPublisher;
 import com.GreenThumb.api.plant.domain.entity.Plant;
@@ -57,6 +58,22 @@ public class JpaPlantRepository implements PlantRepository {
     public Page<Plant> findAllByUser_usernameAndSearch(String username, String search, Pageable pageable) {
         return plantRepository.findAllByUser_usernameAndSearch(username, search, pageable)
                 .map(PlantMapper::toDomain);
+    }
+
+    @Override
+    public Page<Plant> findAllByUser_usernameWithFilters(String username, String search, PlantFilterDto filters, Pageable pageable) {
+        return plantRepository.findAllByUser_usernameWithFilters(
+                username,
+                search,
+                filters.lifeCycle(),
+                filters.waterNeed(),
+                filters.lightLevel(),
+                filters.soilType(),
+                filters.petToxic(),
+                filters.humanToxic(),
+                filters.indoorFriendly(),
+                pageable
+        ).map(PlantMapper::toDomain);
     }
 
     @Override
