@@ -69,7 +69,8 @@ class SessionServiceTest {
                 testTierDto,
                 0,
                 "USER",
-                "default-avatar.png"
+                "default-avatar.png",
+                0
         );
 
         frontendUrl = "http://localhost:3000";

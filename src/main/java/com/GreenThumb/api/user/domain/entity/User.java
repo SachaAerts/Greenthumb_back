@@ -13,6 +13,7 @@ public record User(
         Tier tier,
         int countCreatedThread,
         Role role,
-        Avatar avatar
+        Avatar avatar,
+        Integer tasksCompleted
 ) {
 }

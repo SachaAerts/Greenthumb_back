@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record Task(
+        Long id,
+        Long plantId,
         String title,
         String description,
         TaskType taskType,

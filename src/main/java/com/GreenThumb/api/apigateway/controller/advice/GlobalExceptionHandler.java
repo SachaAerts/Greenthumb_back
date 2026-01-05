@@ -3,11 +3,15 @@ package com.GreenThumb.api.apigateway.controller.advice;
 import com.GreenThumb.api.forum.infrastructure.exception.GeminiApiException;
 import com.GreenThumb.api.apigateway.Exception.CreatedException;
 import com.GreenThumb.api.plant.domain.exceptions.PlantNotFoundException;
+import com.GreenThumb.api.plant.domain.exceptions.TaskNotFoundException;
 import com.GreenThumb.api.plant.domain.exceptions.TrefleApiException;
 import com.GreenThumb.api.user.domain.exception.AccountNotVerifiedException;
+import com.GreenThumb.api.user.domain.exception.EmailAlreadyUsedException;
 import com.GreenThumb.api.user.domain.exception.InvalidTokenException;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
+import com.GreenThumb.api.user.domain.exception.PhoneNumberAlreadyUsedException;
 import com.GreenThumb.api.user.domain.exception.UserAlreadyVerifiedException;
+import com.GreenThumb.api.user.domain.exception.UsernameAlreadyUsedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -81,6 +85,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errors);
     }
 
+    @ExceptionHandler(EmailAlreadyUsedException.class)
+    public ResponseEntity<Map<String, String>> handleEmailAlreadyUsedException(EmailAlreadyUsedException exception) {
+        log.warn("Tentative d'inscription avec un email déjà utilisé: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
+    }
+
+    @ExceptionHandler(PhoneNumberAlreadyUsedException.class)
+    public ResponseEntity<Map<String, String>> handlePhoneNumberAlreadyUsedException(PhoneNumberAlreadyUsedException exception) {
+        log.warn("Tentative d'inscription avec un numéro de téléphone déjà utilisé: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
+    }
+
+    @ExceptionHandler(UsernameAlreadyUsedException.class)
+    public ResponseEntity<Map<String, String>> handleUsernameAlreadyUsedException(UsernameAlreadyUsedException exception) {
+        log.warn("Tentative d'inscription avec un pseudo déjà utilisé: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
+    }
+
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<Map<String, String>> handleJsonProcessingException(JsonProcessingException exception) {
         log.error("Erreur de serialisation JSON lors de la mise en cache", exception);
@@ -110,6 +138,15 @@ public class GlobalExceptionHandler {
         log.warn("Plant not found: {}", exception.getMessage());
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "Plant not found");
+        errors.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+    }
+
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleTaskNotFoundException(TaskNotFoundException exception) {
+        log.warn("Task not found: {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Task not found");
         errors.put("message", exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
     }

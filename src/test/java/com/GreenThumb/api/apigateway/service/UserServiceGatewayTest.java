@@ -65,10 +65,12 @@ class UserServiceGatewayTest {
                 testTierDto,
                 0,
                 "USER",
-                "default-avatar.png"
+                "default-avatar.png",
+                0
         );
 
         testPlant = new PlantDto(
+                1L,
                 "rose-slug",
                 "Rosa",
                 "Rose",

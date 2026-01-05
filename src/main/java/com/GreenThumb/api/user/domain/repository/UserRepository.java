@@ -53,6 +53,12 @@ public interface UserRepository {
 
     boolean isAdmin(String username);
 
+    boolean isSuperAdmin(String username);
+
+    boolean isModerator(String username);
+
+    void updateUserRole(String username, String roleLabel);
+
     boolean existUser(String email);
 
     boolean existByUsername(String username);
@@ -64,4 +70,6 @@ public interface UserRepository {
     void incrementCountMessage(Long id);
 
     void updateUserTier(Long userId, Long tierId);
+
+    void incrementTasksCompleted(Long userId);
 }
