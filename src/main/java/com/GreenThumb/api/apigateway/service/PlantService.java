@@ -68,4 +68,16 @@ public class PlantService {
     public void createPlantApi(PlantApiDto plantApiDto) {
         plantApiRepo.createPlantApi(plantApiDto);
     }
+
+    public void deletePlant(String slug) {
+        log.info("Deleting plant with slug: {}", slug);
+        plantRepository.deleteBySlug(slug);
+    }
+
+    public String updatePlant(String slug, PlantRegister plantRegister) {
+        log.info("Updating plant with slug: {}", slug);
+        String newSlug = plantRepository.updateBySlug(slug, plantRegister);
+        redisService.delete(plantRegister.username());
+        return newSlug;
+    }
 }
