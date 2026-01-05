@@ -43,6 +43,10 @@ public class UserServiceGateway {
         return plantModule.getAllPlantsByUsername(username, pageable);
     }
 
+    public PageResponse<PlantDto> getAllPlantsByUsernameAndSearch(String username, String search, Pageable pageable) {
+        return plantModule.getAllPlantsByUsernameAndSearch(username, search, pageable);
+    }
+
     public UserDto getMe(String token) throws JsonProcessingException {
         String username = tokenService.extractUsername(token);
 
@@ -93,6 +97,30 @@ public class UserServiceGateway {
         return userService.isAdmin(username);
     }
 
+    public boolean isSuperAdmin(String username) {
+        return userService.isSuperAdmin(username);
+    }
+
+    public boolean isModerator(String username) {
+        return userService.isModerator(username);
+    }
+
+    public void grantAdminRole(String username) {
+        userService.grantAdminRole(username);
+    }
+
+    public void revokeAdminRole(String username) {
+        userService.revokeAdminRole(username);
+    }
+
+    public void grantModeratorRole(String username) {
+        userService.grantModeratorRole(username);
+    }
+
+    public void revokeModeratorRole(String username) {
+        userService.revokeModeratorRole(username);
+    }
+
     public UserDto getUserByUsername(String username) {
         UserDto user = userService.getUserByUsername(username);
         return normalizeAvatar(user);
@@ -124,7 +152,8 @@ public class UserServiceGateway {
                 user.tier(),
                 user.countCreatedThread(),
                 user.role(),
-                avatarUrl
+                avatarUrl,
+                user.tasksCompleted()
         );
     }
 

@@ -106,6 +106,31 @@ public class UserService {
     public boolean isAdmin(String username) {
         return userRepository.isAdmin(username);
     }
+
+    public boolean isSuperAdmin(String username) {
+        return userRepository.isSuperAdmin(username);
+    }
+
+    public boolean isModerator(String username) {
+        return userRepository.isModerator(username);
+    }
+
+    public void grantAdminRole(String username) throws NoFoundException {
+        userRepository.updateUserRole(username, "ADMIN");
+    }
+
+    public void revokeAdminRole(String username) throws NoFoundException {
+        userRepository.updateUserRole(username, "UTILISATEUR");
+    }
+
+    public void grantModeratorRole(String username) throws NoFoundException {
+        userRepository.updateUserRole(username, "MODERATEUR");
+    }
+
+    public void revokeModeratorRole(String username) throws NoFoundException {
+        userRepository.updateUserRole(username, "UTILISATEUR");
+    }
+
     public boolean existeUser(String email) throws NoFoundException {
         return userRepository.existUser(email);
     }

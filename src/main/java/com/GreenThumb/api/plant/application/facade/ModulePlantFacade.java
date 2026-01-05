@@ -44,6 +44,10 @@ public class ModulePlantFacade implements PlantFacade {
         return plantService.findAllByUser_username(username, pageable);
     }
 
+    public PageResponse<PlantDto> getAllPlantsByUsernameAndSearch(String username, String search, Pageable pageable) {
+        return plantService.findAllByUser_usernameAndSearch(username, search, pageable);
+    }
+
     public long countTask(Long userId) {
         return plantService.countTask(userId);
     }

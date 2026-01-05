@@ -90,4 +90,20 @@ public class JpaTaskRepository implements TaskRepository {
                 .map(TaskMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        springDataTaskRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<TaskEntity> findEntityById(Long id) {
+        return springDataTaskRepository.findById(id);
+    }
+
+    @Override
+    public long countCompletedTasksByUserId(Long userId) {
+        return springDataTaskRepository.countCompletedTasksByUserId(userId);
+    }
 }

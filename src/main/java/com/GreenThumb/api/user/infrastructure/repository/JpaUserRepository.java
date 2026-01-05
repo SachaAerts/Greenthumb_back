@@ -394,6 +394,35 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    public boolean isSuperAdmin(String username) {
+        String role = jpaRepo.findRoleByUsername(username);
+        return role != null && role.equalsIgnoreCase("SUPER_ADMIN");
+    }
+
+    @Override
+    public boolean isModerator(String username) {
+        String role = jpaRepo.findRoleByUsername(username);
+        return role != null && role.equalsIgnoreCase("MODERATEUR");
+    }
+
+    @Override
+    @Transactional
+    public void updateUserRole(String username, String roleLabel) {
+        UserEntity user = jpaRepo.findByUsername(username)
+                .orElseThrow(() -> new NoFoundException("Utilisateur non trouvé"));
+
+        RoleEntity newRole = roleRepository.getRoleEntity(roleLabel);
+        if (newRole == null) {
+            throw new NoFoundException("Rôle non trouvé: " + roleLabel);
+        }
+
+        user.setRole(newRole);
+        jpaRepo.save(user);
+
+        log.info("User {} role updated to {}", username, roleLabel);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public PageResponse<AdminUserDto> searchUsers(UserSearchFilters filters, int page, int size) {
         int offset = page * size;
@@ -467,7 +496,13 @@ public class JpaUserRepository implements UserRepository {
         long totalElements = ((Number) nativeCountQuery.getSingleResult()).longValue();
 
         List<AdminUserDto> content = users.stream()
-                .map(AdminUserDto::fromEntity)
+                .map(userEntity -> {
+                    // Force load the role to avoid LazyInitializationException
+                    if (userEntity.getRole() != null) {
+                        userEntity.getRole().getLabel();
+                    }
+                    return AdminUserDto.fromEntity(userEntity);
+                })
                 .toList();
 
         return PageResponse.of(content, totalElements, page, size);
@@ -486,5 +521,14 @@ public class JpaUserRepository implements UserRepository {
     @Override
     public void updateUserTier(Long userId, Long tierId) {
         jpaRepo.updateUserTier(userId, tierId);
+    }
+
+    @Override
+    @Transactional
+    public void incrementTasksCompleted(Long userId) {
+        UserEntity user = jpaRepo.findById(userId)
+                .orElseThrow(() -> new NoFoundException("L'utilisateur n'a pas été trouvé"));
+        user.setTasksCompleted(user.getTasksCompleted() + 1);
+        jpaRepo.save(user);
     }
 }

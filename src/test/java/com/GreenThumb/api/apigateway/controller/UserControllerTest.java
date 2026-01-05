@@ -6,6 +6,7 @@ import com.GreenThumb.api.apigateway.validation.PaginationValidator;
 import com.GreenThumb.api.apigateway.validation.UsernameValidator;
 import com.GreenThumb.api.apigateway.config.JwtAuthenticationFilter;
 import com.GreenThumb.api.apigateway.config.SecurityConfig;
+import com.GreenThumb.api.forum.application.service.CommentaryService;
 import com.GreenThumb.api.plant.application.dto.PageResponse;
 import com.GreenThumb.api.plant.application.dto.PlantDto;
 import com.GreenThumb.api.plant.application.facade.PlantFacade;
@@ -64,6 +65,9 @@ class UserControllerTest {
     @MockitoBean
     private PlantFacade plantFacade;
 
+    @MockitoBean
+    private CommentaryService commentaryService;
+
     @Test
     @DisplayName("GET /api/users/count - Doit retourner le nombre d'utilisateurs")
     void getUserCount_shouldReturnUserCount() throws Exception {
@@ -92,8 +96,8 @@ class UserControllerTest {
     @DisplayName("GET /api/users/{username}/plants - Doit retourner les plantes d'un utilisateur avec pagination par défaut")
     void getAllPlant_shouldReturnUserPlantsWithDefaultPagination() throws Exception {
         // Given
-        PlantDto plant1 = new PlantDto("slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
-        PlantDto plant2 = new PlantDto("slug2", "Scientific Name 2", "Common Name 2", "http://image2.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
+        PlantDto plant1 = new PlantDto(1L, "slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
+        PlantDto plant2 = new PlantDto(2L, "slug2", "Scientific Name 2", "Common Name 2", "http://image2.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
         Page<PlantDto> plantsPage = new PageImpl<>(List.of(plant1, plant2));
 
         doNothing().when(usernameValidator).validate("testuser");
@@ -112,7 +116,7 @@ class UserControllerTest {
     @DisplayName("GET /api/users/{username}/plants - Doit retourner les plantes avec pagination personnalisée")
     void getAllPlant_shouldReturnUserPlantsWithCustomPagination() throws Exception {
         // Given
-        PlantDto plant1 = new PlantDto("slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
+        PlantDto plant1 = new PlantDto(1L, "slug1", "Scientific Name 1", "Common Name 1", "http://image1.jpg", null, null, null, null, null, null, null, 0, 0, null, null, null, null, null, Collections.emptyList());
         Page<PlantDto> plantsPage = new PageImpl<>(List.of(plant1));
 
         doNothing().when(usernameValidator).validate("testuser");
@@ -235,7 +239,7 @@ class UserControllerTest {
         // Given
         TierDto tierDto = new TierDto("Nouveau membre", 0, 1);
         UserDto userDto = new UserDto("testuser", "Test", "User", "test@example.com",
-                                      "0123456789", "My bio", false, 0, tierDto, 0, "USER", null);
+                                      "0123456789", "My bio", false, 0, tierDto, 0, "USER", null, 0);
 
         when(tokenExtractor.extractToken("Bearer valid-token-123")).thenReturn("valid-token-123");
         when(userService.getMe("valid-token-123")).thenReturn(userDto);
@@ -356,7 +360,7 @@ class UserControllerTest {
         // Given
         TierDto adminTierDto = new TierDto("Nouveau membre", 0, 1);
         UserDto adminDto = new UserDto("adminuser", "Admin", "User", "admin@example.com",
-                                       "0123456789", "Admin bio", false, 0, adminTierDto, 0, "ADMIN", null);
+                                       "0123456789", "Admin bio", false, 0, adminTierDto, 0, "ADMIN", null, 0);
 
         when(tokenExtractor.extractToken("Bearer admin-token")).thenReturn("admin-token");
         when(userService.getMe("admin-token")).thenReturn(adminDto);
@@ -375,7 +379,7 @@ class UserControllerTest {
         // Given
         TierDto privateTierDto = new TierDto("Nouveau membre", 0, 1);
         UserDto privateUserDto = new UserDto("privateuser", "Private", "User", "private@example.com",
-                                             "0123456789", "Bio", true, 0, privateTierDto, 0, "USER", null);
+                                             "0123456789", "Bio", true, 0, privateTierDto, 0, "USER", null, 0);
 
         when(tokenExtractor.extractToken("Bearer token")).thenReturn("token");
         when(userService.getMe("token")).thenReturn(privateUserDto);

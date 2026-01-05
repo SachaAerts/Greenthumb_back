@@ -33,6 +33,14 @@ databaseChangeLog:
       id: 2-add-columns-to-messages
       author: system
       comment: Add user reference, channel reference and timestamps to messages table
+      validCheckSum:
+        - ANY
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: messages
+                columnName: id_user
       changes:
         - addColumn:
             tableName: messages
@@ -41,12 +49,12 @@ databaseChangeLog:
                   name: id_user
                   type: BIGINT
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: id_channel
                   type: BIGINT
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: created_at
                   type: TIMESTAMP

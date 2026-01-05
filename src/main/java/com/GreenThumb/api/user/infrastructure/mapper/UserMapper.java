@@ -21,12 +21,16 @@ public class UserMapper {
                 userEntity.getCountMessage(),
                 userEntity.getTier() != null ? TierMapper.toDomain(userEntity.getTier()) : null,
                 userEntity.getCountCreatedThread(),
-                toDomain(userEntity.getRole()),
-                new Avatar(userEntity.getAvatar())
+                userEntity.getRole() != null ? toDomain(userEntity.getRole()) : new Role("UTILISATEUR"),
+                new Avatar(userEntity.getAvatar()),
+                userEntity.getTasksCompleted()
         );
     }
 
     public static Role toDomain(RoleEntity roleEntity) {
+        if (roleEntity == null) {
+            return new Role("UTILISATEUR");
+        }
         return new Role(roleEntity.getLabel());
     }
 
