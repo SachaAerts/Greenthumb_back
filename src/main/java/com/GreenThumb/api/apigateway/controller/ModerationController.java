@@ -37,6 +37,11 @@ public class ModerationController {
             Authentication authentication
     ) {
         String moderatorUsername = authentication.getName();
+
+        log.info("User: {}, Authorities: {}",
+            moderatorUsername,
+            authentication.getAuthorities());
+
         log.info("Moderator {} fetching moderation queue - filter: {}, page: {}, size: {}",
                 moderatorUsername, filter, page, size);
 

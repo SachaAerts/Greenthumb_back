@@ -96,6 +96,8 @@ public class SessionService {
     private Map<String, String> createToken(String username, String role) {
         Map<String, String> tokens = new HashMap<>();
 
+        log.info("Generating token for user: {}, role: {}", username, role);
+
         tokens.put(ACCESS_TOKEN, tokenService.generateAccessToken(username, Map.of("role", role)));
         tokens.put(REFRESH_TOKEN, tokenService.generateRefreshToken(username));
 
