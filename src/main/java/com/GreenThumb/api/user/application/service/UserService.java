@@ -1,12 +1,6 @@
 package com.GreenThumb.api.user.application.service;
 
-import com.GreenThumb.api.user.application.dto.PageResponse;
-import com.GreenThumb.api.user.application.dto.AdminUserDto;
-import com.GreenThumb.api.user.application.dto.Passwords;
-import com.GreenThumb.api.user.application.dto.UserDto;
-import com.GreenThumb.api.user.application.dto.UserEdit;
-import com.GreenThumb.api.user.application.dto.UserRegister;
-import com.GreenThumb.api.user.application.dto.UserSearchFilters;
+import com.GreenThumb.api.user.application.dto.*;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.domain.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -49,6 +43,10 @@ public class UserService {
 
     public UserDto getUserByUsername(String username) throws NoFoundException, IllegalArgumentException {
         return UserDto.of(userRepository.getUserByUsername(username));
+    }
+
+    public UserPrivateDto getUserPrivateByUsername(String username) {
+        return UserPrivateDto.of(userRepository.getUserByUsername(username));
     }
 
     public void postUserRegistration(UserRegister registerRequest) throws NoFoundException, IllegalArgumentException {

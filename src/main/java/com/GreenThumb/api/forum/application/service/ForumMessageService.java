@@ -1,5 +1,7 @@
 package com.GreenThumb.api.forum.application.service;
 
+import com.GreenThumb.api.forum.application.dto.MessageDto;
+import com.GreenThumb.api.forum.application.dto.ReactionDto;
 import com.GreenThumb.api.infrastructure.service.RedisService;
 import com.GreenThumb.api.forum.application.dto.ChatMessageDto;
 import com.GreenThumb.api.forum.domain.repository.MessageRepository;
@@ -109,6 +111,14 @@ public class ForumMessageService {
                 messageSave.getCreatedAt(),
                 messageSave.getMedias().stream()
                         .map(MediaEntity::getUrl)
+                        .toList(),
+                messageSave.getReactions().stream()
+                        .map(r -> new ReactionDto(
+                                r.getIdReaction(),
+                                r.getEmoji(),
+                                r.getUser().getUsername(),
+                                r.getCreatedAt()
+                        ))
                         .toList()
         );
 
@@ -134,8 +144,22 @@ public class ForumMessageService {
                         messageEntity.getCreatedAt(),
                         messageEntity.getMedias().stream()
                                 .map(MediaEntity::getUrl)
+                                .toList(),
+                        messageEntity.getReactions().stream()
+                                .map(r -> new ReactionDto(
+                                        r.getIdReaction(),
+                                        r.getEmoji(),
+                                        r.getUser().getUsername(),
+                                        r.getCreatedAt()
+                                ))
                                 .toList()
                 ))
+                .toList();
+    }
+
+    public List<MessageDto> getTop3Message() {
+        return messageRepository.findTop3Message().stream()
+                .map(MessageDto::to)
                 .toList();
     }
 

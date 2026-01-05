@@ -1,8 +1,10 @@
 package com.GreenThumb.api.forum.infrastructure.repository;
 
+import com.GreenThumb.api.forum.domain.entity.Message;
 import com.GreenThumb.api.forum.domain.repository.MessageRepository;
 import com.GreenThumb.api.forum.infrastructure.entity.MessageEntity;
 import com.GreenThumb.api.forum.infrastructure.entity.ThreadEntity;
+import com.GreenThumb.api.forum.infrastructure.mapper.MessageMapper;
 import com.GreenThumb.api.user.domain.exception.NoFoundException;
 import com.GreenThumb.api.user.infrastructure.entity.UserEntity;
 import org.springframework.stereotype.Repository;
@@ -50,5 +52,22 @@ public class JpaMessageRepository implements MessageRepository {
     @Override
     public boolean existsById(Long messageId) {
         return messageRepository.existsById(messageId);
+    }
+
+    @Override
+    public List<MessageEntity> findByUser(UserEntity user) {
+        return messageRepository.findByUser(user);
+    }
+
+    @Override
+    public java.util.Optional<MessageEntity> findById(Long messageId) {
+        return messageRepository.findById(messageId);
+    }
+
+    @Override
+    public List<Message> findTop3Message() {
+        return messageRepository.findTop3ByOrderByCreatedAtDesc().stream()
+                .map(MessageMapper::toDomain)
+                .toList();
     }
 }

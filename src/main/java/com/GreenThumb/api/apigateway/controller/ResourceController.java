@@ -61,7 +61,7 @@ public class ResourceController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<?> addResource(
             @RequestBody ResourceRequest request,
             @RequestHeader(value = AUTHORIZATION_HEADER, required = false) String authorizationHeader
