@@ -32,7 +32,6 @@ public class GeminiModerationListener {
 
     @Async
     @EventListener
-    @Transactional
     public void handleMessageReported(MessageReportedEvent event) {
         Long messageId = event.getMessageId();
 
@@ -57,7 +56,7 @@ public class GeminiModerationListener {
             message.setAiModerationReason(result.raison());
             message.setAiModerationExplanation(result.categorie());
 
-            messageRepository.save(message);
+            messageRepository.saveAndFlush(message);
 
             log.info("AI moderation result saved for message {}", messageId);
 
@@ -80,7 +79,7 @@ public class GeminiModerationListener {
             log.error("Error during AI moderation for message {}: {}", messageId, e.getMessage(), e);
 
             message.setAiModerationChecked(true);
-            messageRepository.save(message);
+            messageRepository.saveAndFlush(message);
         }
     }
 }
