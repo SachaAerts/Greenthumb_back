@@ -91,6 +91,10 @@ public class UserService {
         userRepository.setUserEnabled(username, enabled);
     }
 
+    public void updateUserPrivacy(String username, boolean isPrivate) throws NoFoundException {
+        userRepository.updateUserPrivacy(username, isPrivate);
+    }
+
     public void deactivateUserByUsername(String username) throws NoFoundException {
         userRepository.deactivateUserByUsername(username);
     }
@@ -102,12 +106,46 @@ public class UserService {
     public boolean isAdmin(String username) {
         return userRepository.isAdmin(username);
     }
+
+    public boolean isSuperAdmin(String username) {
+        return userRepository.isSuperAdmin(username);
+    }
+
+    public boolean isModerator(String username) {
+        return userRepository.isModerator(username);
+    }
+
+    public void grantAdminRole(String username) throws NoFoundException {
+        userRepository.updateUserRole(username, "ADMIN");
+    }
+
+    public void revokeAdminRole(String username) throws NoFoundException {
+        userRepository.updateUserRole(username, "UTILISATEUR");
+    }
+
+    public void grantModeratorRole(String username) throws NoFoundException {
+        userRepository.updateUserRole(username, "MODERATEUR");
+    }
+
+    public void revokeModeratorRole(String username) throws NoFoundException {
+        userRepository.updateUserRole(username, "UTILISATEUR");
+    }
+
     public boolean existeUser(String email) throws NoFoundException {
         return userRepository.existUser(email);
+    }
+
+    public boolean existUserByUsername(String username) {
+        return userRepository.existByUsername(username);
     }
 
     public void sendEmailResetCode(String email) {
         emailResetCodeService.sendResetCodeMail(email);
     }
 
+    public void incrementCreatedCount(String username) {
+        Long id = getIdByUsername(username);
+
+        userRepository.incrementCreatedThread(id);
+    }
 }

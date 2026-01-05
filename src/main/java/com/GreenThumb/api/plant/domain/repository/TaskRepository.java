@@ -31,4 +31,10 @@ public interface TaskRepository {
     List<Task> findByPlantIdAndStatus(Long plantId, TaskStatus status);
 
     List<Task> findCompletedRecurrentTasks(LocalDate date);
+
+    void deleteById(Long id);
+
+    Optional<TaskEntity> findEntityById(Long id);
+
+    long countCompletedTasksByUserId(Long userId);
 }

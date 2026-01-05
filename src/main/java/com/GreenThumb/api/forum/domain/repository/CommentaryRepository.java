@@ -5,5 +5,6 @@ import com.GreenThumb.api.forum.domain.entity.Message;
 import java.util.Map;
 
 public interface CommentaryRepository {
-    public Map<Message, Long> getTopThreeLikedCommentary();
+    Map<Message, Long> getTopThreeLikedCommentary();
 }
+

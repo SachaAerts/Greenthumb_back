@@ -8,6 +8,8 @@ public class TaskMapper {
 
     public static Task toDomain(TaskEntity taskEntity) {
         return new Task(
+                taskEntity.getId(),
+                taskEntity.getPlant() != null ? taskEntity.getPlant().getId() : null,
                 taskEntity.getTitle(),
                 taskEntity.getDescription(),
                 taskEntity.getTaskType(),
@@ -28,6 +30,8 @@ public class TaskMapper {
         }
 
         return new TaskDto(
+                task.id(),
+                task.plantId(),
                 task.title(),
                 task.description(),
                 task.taskType(),

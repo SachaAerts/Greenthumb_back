@@ -1,5 +1,6 @@
 package com.GreenThumb.api.apigateway.service;
 
+import com.GreenThumb.api.infrastructure.service.RedisService;
 import com.GreenThumb.api.plant.application.dto.PlantApiDto;
 import com.GreenThumb.api.plant.application.dto.PlantRegister;
 import com.GreenThumb.api.plant.domain.repository.IPlantApiService;

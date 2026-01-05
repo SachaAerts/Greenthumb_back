@@ -27,7 +27,7 @@ public record AdminUserDto(
                 entity.getPhoneNumber(),
                 entity.getBiography(),
                 entity.isPrivate(),
-                entity.getRole().getLabel(),
+                entity.getRole() != null ? entity.getRole().getLabel() : "UTILISATEUR",
                 entity.getAvatar(),
                 entity.isEnabled(),
                 entity.getDeletedAt()

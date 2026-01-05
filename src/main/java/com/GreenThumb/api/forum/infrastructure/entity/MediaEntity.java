@@ -17,14 +17,10 @@ public class MediaEntity {
     @Column(name = "id_picture")
     private Long id;
 
-    @Column(name = "url")
+    @Column(name = "url", nullable = false)
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_message")
+    @JoinColumn(name = "id_message", nullable = false)
     private MessageEntity message;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_commentary")
-    private CommentaryEntity commentary;
 }

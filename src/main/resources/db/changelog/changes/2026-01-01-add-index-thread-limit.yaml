@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-index-thread-limit
+      author: jason engels
+      changes:
+        - createIndex:
+            indexName: idx_users_total_message_count
+            tableName: users
+            columns:
+              - column:
+                  name: total_message_count
+        - createIndex:
+            indexName: idx_tier_message_required
+            tableName: thread_limit_tiers
+            columns:
+              - column:
+                  name: messages_required

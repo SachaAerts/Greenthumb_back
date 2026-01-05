@@ -54,6 +54,12 @@ public class JpaPlantRepository implements PlantRepository {
     }
 
     @Override
+    public Page<Plant> findAllByUser_usernameAndSearch(String username, String search, Pageable pageable) {
+        return plantRepository.findAllByUser_usernameAndSearch(username, search, pageable)
+                .map(PlantMapper::toDomain);
+    }
+
+    @Override
     @Transactional
     public void createPlant(PlantRegister newPlant) {
         UserEntity user = getUserAuthenticated();

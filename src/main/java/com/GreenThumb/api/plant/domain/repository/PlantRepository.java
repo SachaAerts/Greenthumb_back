@@ -14,6 +14,8 @@ public interface PlantRepository {
 
     Page<Plant> findAllByUser_username(String username, Pageable pageable);
 
+    Page<Plant> findAllByUser_usernameAndSearch(String username, String search, Pageable pageable);
+
     Long findIdBySlug(String slug);
 
     Optional<PlantEntity> findbyId(Long id);

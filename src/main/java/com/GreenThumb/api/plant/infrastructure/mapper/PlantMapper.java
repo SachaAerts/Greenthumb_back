@@ -83,8 +83,9 @@ public class PlantMapper {
         );
     }
 
-    public static PlantDto toDto(Plant plant, List<TaskDto> tasksDto) {
+    public static PlantDto toDto(Plant plant, Long plantId, List<TaskDto> tasksDto) {
         return new PlantDto(
+                plantId,
                 plant.slug(),
                 plant.scientificName(),
                 plant.commonName(),

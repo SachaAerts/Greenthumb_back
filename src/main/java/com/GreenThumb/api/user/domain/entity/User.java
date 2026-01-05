@@ -9,7 +9,11 @@ public record User(
         PhoneNumber phoneNumber,
         String biography,
         boolean isPrivate,
+        int messageCount,
+        Tier tier,
+        int countCreatedThread,
         Role role,
-        Avatar avatar
+        Avatar avatar,
+        Integer tasksCompleted
 ) {
 }
