@@ -3,6 +3,7 @@ package com.GreenThumb.api.forum.application.service;
 import com.GreenThumb.api.forum.application.dto.ReactionDto;
 import com.GreenThumb.api.infrastructure.service.RedisService;
 import com.GreenThumb.api.forum.application.dto.ChatMessageDto;
+import com.GreenThumb.api.forum.domain.entity.Message;
 import com.GreenThumb.api.forum.domain.repository.MessageRepository;
 import com.GreenThumb.api.forum.infrastructure.entity.MediaEntity;
 import com.GreenThumb.api.forum.infrastructure.entity.MessageEntity;
@@ -34,7 +35,7 @@ public class ForumMessageService {
     private final SimpMessagingTemplate messagingTemplate;
     private final UserService userService;
     private final RedisService redisService;
-
+    private final MessageModerationFilterService moderationFilterService;
     private final TierProgressionService tierProgressionService;
 
     public ForumMessageService(
@@ -43,6 +44,7 @@ public class ForumMessageService {
             SimpMessagingTemplate messagingTemplate,
             UserService userService,
             RedisService redisService,
+            MessageModerationFilterService moderationFilterService,
             TierProgressionService tierProgressionService
     ) {
         this.messageRepository = messageRepository;
@@ -50,6 +52,7 @@ public class ForumMessageService {
         this.messagingTemplate = messagingTemplate;
         this.userService = userService;
         this.redisService = redisService;
+        this.moderationFilterService = moderationFilterService;
         this.tierProgressionService = tierProgressionService;
     }
 
@@ -136,16 +139,20 @@ public class ForumMessageService {
         List<MessageEntity> messageEntities = messageRepository.findByThreadId(threadId);
 
         return messageEntities.stream()
-                .map(messageEntity -> new ChatMessageDto(
-                        messageEntity.getId(),
-                        messageEntity.getThread().getId(),
-                        messageEntity.getUser().getUsername(),
-                        messageEntity.getText(),
-                        messageEntity.getCreatedAt(),
-                        messageEntity.getMedias().stream()
+                .filter(entity -> {
+                    Message message = MessageMapper.toDomain(entity);
+                    return moderationFilterService.isMessageVisible(message);
+                })
+                .map(entity -> new ChatMessageDto(
+                        entity.getId(),
+                        threadId,
+                        entity.getUser().getUsername(),
+                        entity.getText(),
+                        entity.getCreatedAt(),
+                        entity.getMedias().stream()
                                 .map(MediaEntity::getUrl)
                                 .toList(),
-                        messageEntity.getReactions().stream()
+                        entity.getReactions().stream()
                                 .map(r -> new ReactionDto(
                                         r.getIdReaction(),
                                         r.getEmoji(),
@@ -153,15 +160,6 @@ public class ForumMessageService {
                                         r.getCreatedAt()
                                 ))
                                 .toList()
-                .map(MessageMapper::toDomain)
-                .filter(moderationFilterService::isMessageVisible)
-                .map(message -> new ChatMessageDto(
-                        message.id(),
-                        threadId,
-                        message.author(),
-                        message.text(),
-                        message.timestamp(),
-                        message.mediaUrls()
                 ))
                 .toList();
     }

@@ -94,8 +94,13 @@ public class ModerationService {
         });
 
         reportRepository.saveAll(reports);
+        
+        reportRepository.deleteAll(reports);
+        
+        messageRepository.delete(message);
 
-        log.info("AI decision approved for message {} by {}", messageId, moderatorUsername);
+        log.info("AI decision approved for message {} by {} - Message and reports deleted from database",
+                 messageId, moderatorUsername);
 
         return ModerationDecisionResponse.approved(messageId, moderatorUsername);
     }

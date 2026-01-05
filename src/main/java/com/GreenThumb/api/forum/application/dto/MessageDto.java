@@ -21,10 +21,10 @@ public record MessageDto(
                 message.author(),
                 message.timestamp(),
                 message.mediaUrls(),
-                message.aiModerationValid(),
                 message.reactions().stream()
                         .map(ReactionDto::toDto)
-                        .toList()
+                        .toList(),
+                message.aiModerationValid()
         );
     }
 

@@ -20,7 +20,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/admin/moderation")
-@PreAuthorize("hasAnyRole('ADMIN', 'MODERATEUR')")
+@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MODERATEUR')")
 public class ModerationController {
 
     private final ModerationService moderationService;

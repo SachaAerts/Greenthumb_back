@@ -14,11 +14,10 @@ public class MessageMapper {
                 messageEntity.getMedias().stream()
                         .map(MediaEntity::getUrl)
                         .toList(),
-                messageEntity.getAiModerationValid()
-                        .toList(),
                 messageEntity.getReactions().stream()
                         .map(ReactionMapper::toDomain)
-                        .toList()
+                        .toList(),
+                messageEntity.getAiModerationValid()
                 );
     }
 }
