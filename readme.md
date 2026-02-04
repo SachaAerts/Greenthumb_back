@@ -27,3 +27,8 @@ Commande possible :
 2. Quand il affiche la fenetre d'execution de stack builder, fermez-là
 3. Ouvrer pgAdmin4 et ajouter une une base de donnée GreenThumb
 4. Configurer la bd sur intelliJ pour avoir accés depuis l'ide
+
+---
+
+## 📄 Licence
+Ce projet est réalisé dans le cadre d’un **travail pratique de développement mobile** à HELMo. 
