@@ -31,4 +31,4 @@ Commande possible :
 ---
 
 ## 📄 Licence
-Ce projet est réalisé dans le cadre d’un **travail pratique de développement mobile** à HELMo. 
+Ce projet est réalisé dans le cadre d’un **travail pratique de développement web** à HELMo. 
